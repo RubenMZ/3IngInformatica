@@ -1,0 +1,9 @@
+animal
+perro
+gato
+leon
+bicho
+oruga
+gusano
+diccionario
+abecedario
