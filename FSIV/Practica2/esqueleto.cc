@@ -1,14 +1,11 @@
-
-
 /*!
-
-  @file getStats.cc
-  @brief Esto es un esqueleto de programa para usar en las prácticas de Visión Artificial.
+  Esto es un esqueleto de programa para usar en las prácticas
+  de Visión Artificial.
 
   Se supone que se utilizará OpenCV.
 
   Para compilar, puedes ejecutar:
-    g++ -Wall -o getStats getStats.cc `pkg-config opencv --cflags --libs`
+    g++ -Wall -o esqueleto esqueleto.cc `pkg-config opencv --cflags --libs`
 
 */
 
@@ -17,26 +14,30 @@
 #include <unistd.h>
 #include <iostream>
 #include <exception>
-#include <iostream>
 
 //Includes para OpenCV, Descomentar según los módulo utilizados.
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp> 
+//#include <opencv2/highgui/highgui.hpp> 
 //#include <opencv2/imgproc/imgproc.hpp>
 //#include <opencv2/calib3d/calib3d.hpp>
 
-#include "comands.hpp"
-#include "stats.hpp"
-
-using namespace std;
-using namespace cv;
-
-/*!
-  \brief Define los parámetro opcionales de tu programa.
+/*!\brief Define los parámetro opcionales de tu programa.
 
   Redefine esta clase en función de tus necesitados
 */
-
+struct CLIParams
+{
+  CLIParams ()
+    : entero(0), //Valores por defecto de los argumentos opcionales.
+      flotante(0.0),
+      cadena(""),
+      verbose(false)
+    {}
+  int entero;
+  float flotante;  
+  const char * cadena;
+  bool verbose;
+};
 
 /*!\brief Muestra la ayuda del programa.  
   Redefinir en función de los parámetros utilizados realmente.
@@ -72,66 +73,62 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
     {
       
       case 'h':
-  mostrarUso(argv[0]);
-  exit (EXIT_SUCCESS);
-  break;
-  
+	mostrarUso(argv[0]);
+	exit (EXIT_SUCCESS);
+	break;
+	
       case 'v':
-  params.verbose=true;
-  break;
-  
+	params.verbose=true;
+	break;
+	
       case 'i':
-  params.entero = atoi (optarg);
-  break;
+	params.entero = atoi (optarg);
+	break;
 
       case 'c':
-  params.cadena = optarg;
-  break;
-  
+	params.cadena = optarg;
+	break;
+	
       case 'f':
-  params.flotante = atof(optarg);
-  break;
-  
-  
+	params.flotante = atof(optarg);
+	break;
+	
+	
       case '?': // en caso de error getopt devuelve el caracter ?
-  
-  if (isprint (optopt))
-    std::cerr << "Error: Opción desconocida \'" << optopt
-      << "\'" << std::endl;
-  else
-    std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt
-      << "\'" << std::endl;
-  mostrarUso(argv[0]);    
-  exit (EXIT_FAILURE);
-  
-  // en cualquier otro caso lo consideramos error grave y salimos
+	
+	if (isprint (optopt))
+	  std::cerr << "Error: Opción desconocida \'" << optopt
+	    << "\'" << std::endl;
+	else
+	  std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt
+	    << "\'" << std::endl;
+	mostrarUso(argv[0]);    
+	exit (EXIT_FAILURE);
+	
+	// en cualquier otro caso lo consideramos error grave y salimos
       default:
-  std::cerr << "Error: línea de comandos errónea." << std::endl;
-  mostrarUso(argv[0]);
-  exit(EXIT_FAILURE); 
+	std::cerr << "Error: línea de comandos errónea." << std::endl;
+	mostrarUso(argv[0]);
+	exit(EXIT_FAILURE);	
     }  // case
     
   }// while
   return optind;
 }
 
+
+
 int
 main (int argc, char* const* argv)
 {
   int retCode=EXIT_SUCCESS;
-
-  if(argc!=2){
-      cout<<"Error argumentos: <programa><nombre imag>"<<endl;
-      exit(-1);
-  }
   
   try {    
     CLIParams params;
 
     int argObligados = parseCLI(argc, argv, params);
-    std::vector<Mat> capas;
 
-    std::cout << "Los parámetros opcionales son:" << std::endl;
+    std::cout << "Los parámetros opcioneales son:" << std::endl;
     std::cout << "-v\t" << ((params.verbose)?"True":"False") << std::endl;
     std::cout << "-i\t" << params.entero << std::endl;
     std::cout << "-f\t" << params.flotante << std::endl;
@@ -142,37 +139,10 @@ main (int argc, char* const* argv)
     for (int i = argObligados; i<argc; ++i)
       std::cout << '\"' << argv[i] << '\"' << std::endl;
 
-  //LEEMOS LA IMAGEN
-    Mat mtx= imread(argv[1],-1);
-    split(mtx, capas);
 
-    imshow("IMAGEN", mtx);
-    waitKey();
+    /*Ahora toca que tu rellenes con lo que hay que hacer ...*/
 
-    cout<<"Canales: "<<mtx.channels()<<endl;
-    cout<<"Ancho: "<<mtx.cols<<endl;
-    cout<<"Alto: "<<mtx.rows<<endl;
-
- 
-
-    for (unsigned int i = 0; i < capas.size(); ++i)
-    {
-        cout<< "CANAL "<<i<<endl;
-        cout<< "----------"<<endl;
-        Stats results;
-        results.calculateStats(capas[i], mtx.cols, mtx.rows);
-        cout<<"min. v= "<< results.getMin()<<endl;
-        cout<<"max. v= "<< results.getMax()<<endl;
-        cout<<"media= "<< results.getMedia()<<endl;
-        cout<<"varianza= "<< results.getVarianza()<<endl;
-        cout<<"suma= "<< results.getSuma()<<endl;
-        cout<<"suma de cuadrados= "<< results.getSumaCuadrados()<<endl;
-        cout<<"Area positiva= "<< results.getAreaPos()<<endl;
-        cout<<"Area negativa= "<< results.getAreaNeg()<<endl;
-        cout<<"Num ceros= "<< results.getCeros()<<endl;
-        cout<<"Coef. asimetría= "<< results.getCoefAsim()<<endl;
-    }
-
+    
   }
   catch (std::exception& e)
   {
