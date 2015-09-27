@@ -1,3 +1,5 @@
+#ifndef METODO_H
+#define METODO_H
 #include <vector>
 
 
@@ -16,3 +18,5 @@ class Metodo{
 
 		virtual void ordenar()=0;
 };
+
+#endif

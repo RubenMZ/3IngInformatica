@@ -1,3 +1,6 @@
+#ifndef METODOINSERCION_H
+#define METODOINSERCION_H
+
 #include <vector>
 #include "metodo.hpp"
 
@@ -10,3 +13,5 @@ class InsercionBinaria:virtual public Metodo{
 		inline InsercionBinaria(){};
 		inline ~InsercionBinaria(){};
 };
+
+#endif

@@ -1,5 +1,6 @@
 #include "funciones.hpp"
 #include <cstdlib>
+#include <cassert>     /* assert */
 
 void rellenarVector(vector<int> &v, const int &n){
 
@@ -9,13 +10,23 @@ void rellenarVector(vector<int> &v, const int &n){
 	}
 }
 
-uint64_t calculaMedia(vector<uint64_t> &tiempos, const int &n){
+double calculaMedia(vector<uint64_t> &tiempos){
 
-	uint64_t suma=0;
+	double suma=0;
+	int n=tiempos.size();
 
 	for (int i = 0; i < n; ++i)
 	{
-		suma+=tiempos[0];
+		suma+=(double)tiempos[i];
 	}
 	return suma/n;
+}
+
+bool estaOrdenado(const vector <int> v){
+
+	for (int i = 1; i < v.size(); ++i)
+	{
+			assert(v[i]>=v[i-1]);
+	}
+	return true;
 }

@@ -32,6 +32,7 @@ void InsercionBinaria::ordenar()
                 }
                 auxV[izq]=aux;
     }
+    setVector(auxV);
 
 }
 

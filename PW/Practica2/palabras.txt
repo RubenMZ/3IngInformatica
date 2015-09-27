@@ -7,3 +7,5 @@ oruga
 gusano
 diccionario
 abecedario
+adios
+hola
