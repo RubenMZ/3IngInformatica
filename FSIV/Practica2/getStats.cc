@@ -19,13 +19,13 @@
 #include <exception>
 #include <iostream>
 
+
 //Includes para OpenCV, Descomentar según los módulo utilizados.
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp> 
 //#include <opencv2/imgproc/imgproc.hpp>
 //#include <opencv2/calib3d/calib3d.hpp>
 
-#include "comands.hpp"
 #include "stats.hpp"
 
 using namespace std;
@@ -37,6 +37,30 @@ using namespace cv;
   Redefine esta clase en función de tus necesitados
 */
 
+struct CLIParams
+{
+  CLIParams ()
+    : iFlag(false),
+      wFlag(false),
+      mFlag(false),
+      fFlag(false),
+      imagen(""),
+      mascara(""),
+      x1(0.0),
+      x2(0.0),
+      y1(0.0),
+      y2(0.0)
+    {}
+    bool iFlag;
+    bool wFlag;
+    bool mFlag;
+    bool fFlag;
+    string imagen;
+    string mascara;
+    double x1, x2, y1, y2;
+
+};
+
 
 /*!\brief Muestra la ayuda del programa.  
   Redefinir en función de los parámetros utilizados realmente.
@@ -45,13 +69,13 @@ using namespace cv;
 static void mostrarUso (const char * progname) throw ()
 {
   std::cout << "Esto programa sirve para ...." << std::endl;
-  std::cout << "Uso: " << progname << " [-h] [-v] [-i valor] [-c valor] [-f valor] arg1 arg2 ... argn" << std::endl;
+  std::cout << "Uso: " << progname << " [-h] [-w x1,y1,x2,y2] [-i] -v img1.png [-m masc.png]" << std::endl;
   std::cout << "Donde: " << std::endl;
   std::cout << "-h\tMuestra  esta la ayuda." << std::endl;
-  std::cout << "-v\tActiva el modo verbose." << std::endl;
-  std::cout << "-i\tPermite espacificar un valor entero. Valor por defecto 0." << std::endl;
-  std::cout << "-c\tPermite especificar una cadena. Valor por defecto NUL." << std::endl;
-  std::cout << "-f\tPermite especificar un valor flotante. Valor por defecto 0.0" << std::endl;
+  std::cout << "-w x1,y1,x2,y2\tMete valores ROI" << std::endl;
+  std::cout << "-i\tModo interactivo" << std::endl;
+  std::cout << "-f img\tPermite especificar la foto o imagen." << std::endl;
+  std::cout << "-m img\tPermite especificar la mascara" << std::endl;
 }
 
 /*!\brief Parsea la linea de comandos.
@@ -66,49 +90,71 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
   // Esta es una forma habitual de recoger argumentos con getopt
   // se usa una iteracion y cada elemento se pasa por un switch-case
   int opcion;
-  while ((opcion = getopt (argc, argv, "hvi:c:f:")) != -1)
+  string cadena;
+  string valor;
+
+  while ((opcion = getopt (argc, argv, "hiw:f:m:")) != -1)
   {
     switch (opcion)
     {
       
       case 'h':
-  mostrarUso(argv[0]);
-  exit (EXIT_SUCCESS);
-  break;
-  
-      case 'v':
-  params.verbose=true;
-  break;
+        mostrarUso(argv[0]);
+        exit (EXIT_SUCCESS);
+      break;
   
       case 'i':
-  params.entero = atoi (optarg);
-  break;
+        params.iFlag=true;
+        cout<<"Sin implementar interactivo"<<endl;
+        exit(EXIT_FAILURE);
+      break;
+  
+      case 'w':
+        params.wFlag = true;
+        cadena = optarg;
+          valor = cadena.substr(0, cadena.find(","));
+          params.x1 = strtod(valor.c_str(),NULL);
+          
+          cadena.erase(0, cadena.find(",")+1);
+          valor = cadena.substr(0, cadena.find(","));
+          params.y1 = strtod(valor.c_str(),NULL);
 
-      case 'c':
-  params.cadena = optarg;
-  break;
+          cadena.erase(0, cadena.find(",") + 1);
+          valor = cadena.substr(0, cadena.find(","));
+          params.x2 = strtod(valor.c_str(),NULL);
+          
+          cadena.erase(0, cadena.find(",") + 1);
+          valor = cadena.substr(0, cadena.find(","));         
+          params.y2 = strtod(valor.c_str(),NULL);
+
+      break;
+
+      case 'm':
+        params.mFlag = true;
+        params.mascara=optarg;
+      break;
   
       case 'f':
-  params.flotante = atof(optarg);
-  break;
+        params.fFlag = true;
+        params.imagen=optarg;
+      break;
   
   
       case '?': // en caso de error getopt devuelve el caracter ?
   
-  if (isprint (optopt))
-    std::cerr << "Error: Opción desconocida \'" << optopt
-      << "\'" << std::endl;
-  else
-    std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt
-      << "\'" << std::endl;
-  mostrarUso(argv[0]);    
-  exit (EXIT_FAILURE);
-  
-  // en cualquier otro caso lo consideramos error grave y salimos
-      default:
-  std::cerr << "Error: línea de comandos errónea." << std::endl;
-  mostrarUso(argv[0]);
-  exit(EXIT_FAILURE); 
+              if (isprint (optopt)){
+                  std::cerr << "Error: Opción desconocida \'" << optopt<< "\'" << std::endl;
+                  mostrarUso(argv[0]);
+              }else{
+                  std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt<< "\'" << std::endl;
+                  mostrarUso(argv[0]);    
+                  exit (EXIT_FAILURE);
+              }
+              // en cualquier otro caso lo consideramos error grave y salimos
+              default:
+                  std::cerr << "Error: línea de comandos errónea." << std::endl;
+                  mostrarUso(argv[0]);
+                  exit(EXIT_FAILURE); 
     }  // case
     
   }// while
@@ -120,33 +166,52 @@ main (int argc, char* const* argv)
 {
   int retCode=EXIT_SUCCESS;
 
-  if(argc!=2){
+/*  if(argc!=2&&argc!=3){
       cout<<"Error argumentos: <programa><nombre imag>"<<endl;
       exit(-1);
   }
-  
+*/  
   try {    
     CLIParams params;
 
-    int argObligados = parseCLI(argc, argv, params);
-    std::vector<Mat> capas;
-
-    std::cout << "Los parámetros opcionales son:" << std::endl;
-    std::cout << "-v\t" << ((params.verbose)?"True":"False") << std::endl;
-    std::cout << "-i\t" << params.entero << std::endl;
-    std::cout << "-f\t" << params.flotante << std::endl;
-    std::cout << "-c\t" << '\"' << params.cadena << '\"' << std::endl;
-
-    std::cout << "Hay " << argc-argObligados << " parámetros obligados que son: " << std::endl;
-
-    for (int i = argObligados; i<argc; ++i)
-      std::cout << '\"' << argv[i] << '\"' << std::endl;
+    parseCLI(argc, argv, params);
 
   //LEEMOS LA IMAGEN
-    Mat mtx= imread(argv[1],-1);
-    split(mtx, capas);
+ 
+    std::vector<Mat> capas;
+    Mat mtx;
+    Mat mask;
 
-    imshow("IMAGEN", mtx);
+    if(params.fFlag==true){
+      mtx= imread(params.imagen,-1);
+    }else{
+      cout<<"Comandos para imagen incorrectos"<<endl;
+      mostrarUso(argv[0]);
+      exit(EXIT_FAILURE);
+    }
+
+    split(mtx, capas);
+    if(params.mFlag==true)
+      mask=imread(params.mascara,0);
+
+     if(params.wFlag==true){
+      //Hacemos el roi manual
+      //Y creamos las subimagenes
+      if(params.x1<0 || params.y1<0 || params.x2 <0 || params.y2<0 || params.x1>mtx.cols || params.y1>mtx.rows || params.x2+params.x1>mtx.cols || params.y2+params.y1>mtx.rows){
+
+        cout << "No concuerdan los pixeles" << endl;
+        exit(-1);
+      }else{
+        cv::Rect roi1(params.x1,params.y1,params.x2,params.y2);
+        mtx = mtx(roi1);
+          if(params.mFlag==true){
+            cv::Rect roi2(params.x1,params.y1,params.x2,params.y2);
+            mask = mask(roi2);
+          }
+      }
+    }
+
+    imshow(params.imagen, mtx);
     waitKey();
 
     cout<<"Canales: "<<mtx.channels()<<endl;
@@ -154,13 +219,13 @@ main (int argc, char* const* argv)
     cout<<"Alto: "<<mtx.rows<<endl;
 
  
-
-    for (unsigned int i = 0; i < capas.size(); ++i)
-    {
+    if( (mtx.cols == mask.cols && mtx.rows ==mask.rows) || mask.empty() )
+      for (unsigned int i = 0; i < capas.size(); ++i)
+      {
         cout<< "CANAL "<<i<<endl;
         cout<< "----------"<<endl;
         Stats results;
-        results.calculateStats(capas[i], mtx.cols, mtx.rows);
+          results.calculateStats(capas[i], mask, mtx.cols, mtx.rows);
         cout<<"min. v= "<< results.getMin()<<endl;
         cout<<"max. v= "<< results.getMax()<<endl;
         cout<<"media= "<< results.getMedia()<<endl;
@@ -172,6 +237,8 @@ main (int argc, char* const* argv)
         cout<<"Num ceros= "<< results.getCeros()<<endl;
         cout<<"Coef. asimetría= "<< results.getCoefAsim()<<endl;
     }
+    else
+      cout<<"No cuadran las matrices de..."<<argv[1]<<" y "<<argv[2]<<endl;
 
   }
   catch (std::exception& e)

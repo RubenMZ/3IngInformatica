@@ -3,6 +3,9 @@
 
 #include <opencv2/core/core.hpp>
 #include <cmath>
+#include <iostream>
+
+using namespace std;
 
 using namespace cv;
 
@@ -35,36 +38,66 @@ class Stats{
 		};
 
 
-		void calculateStats(Mat A, int cols, int rows){
+		void calculateStats(const Mat &A, const Mat &mask, const int &cols, const int &rows){
 
 			double aux;
+			int calculate=1;
+			double num=0.0;
+			double sumaCubos=0.0;
 
 			for (int i = 0; i < rows; ++i)
 			{
 				for (int j = 0; j < cols; ++j)
 				{
-					aux= A.at <uchar> (i,j);
-					if(aux<min_)
-						min_=aux;
-					if(aux>max_)
-						max_=aux;
+					
+				if(!mask.empty() && (mask.at<uchar>(i,j)<255.0) ){
+					calculate=0;
+				}else{
+					calculate=1;
+				}
+					if(calculate==1){
+						aux= A.at <uchar> (i,j);
+						if(aux<min_)
+							min_=aux;
+						if(aux>max_)
+							max_=aux;
 
-					if(aux==0)
-						ceros_++;
+						if(aux==0)
+							ceros_++;
 
-					if (aux>=0)
-						areaPos_+=aux;
-					else
-						areaNeg_+=aux;
+						if (aux>=0)
+							areaPos_+=aux;
+						else
+							areaNeg_+=aux;
 
-					suma_+=aux;
-					sumaCuadrados_+=pow(aux,2);
+						suma_+=aux;
+						sumaCuadrados_+=pow(aux,2);
 
+						num++;
+					}
 				}
 			}
-			media_=suma_/(rows*cols);
-			varianza_=(sumaCuadrados_/(rows*cols))-pow(media_,2);
-			coefAsim_=((sumaCuadrados_*suma_)*pow(media_,3))/((rows*cols)*pow(sqrt(varianza_),3));
+			media_=suma_/(num);
+			varianza_=(sumaCuadrados_/(num))-pow(media_,2);
+
+
+			for (int i = 0; i < rows; ++i)
+			{
+				for (int j = 0; j < cols; ++j)
+				{
+					
+				if(!mask.empty() && (mask.at<uchar>(i,j)<255.0) ){
+					calculate=0;
+				}else{
+					calculate=1;
+				}
+					if(calculate==1){
+						aux= A.at <uchar> (i,j);
+						sumaCubos+=pow(aux- media_ ,3);
+					}
+				}
+			}
+			coefAsim_ =sumaCubos / (pow(sqrt(varianza_),3) *(num) );
 
 		}
 		inline double getMin(){return min_;};
