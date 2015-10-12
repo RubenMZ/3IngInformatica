@@ -1,3 +1,10 @@
+/*!
+	@author Ruben
+	@file funciones.cpp
+	@brief Definicion de las funciones basicas para el procesado de los datos
+*/
+
+
 #include "funciones.hpp"
 #include <cstdlib>
 #include <cassert>     /* assert */

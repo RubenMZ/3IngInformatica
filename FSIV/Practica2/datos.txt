@@ -40,6 +40,25 @@ Icd      	= 88
 Skewness   	= 0.856871
 Kurtosis   	= 0.112422
 
+Imagen gull.png con máscara y ROI= 50:130:110:100
+
+Geometry: 110x100
+N channels: 1
+N Elements: 5473
+--------------------------------
+Channel: 0
+Min: 2
+Max: 255
+Sum: 312439
+SqrSum: 2.96864e+07
+Zeros: 0
+Mean: 57.0873
+Variance: 2165.2
+Median: 41
+Skewness: 1.7866
+
+
+
 Imagen cells.png sin máscara:
 
 # Band 0:
@@ -158,5 +177,43 @@ Icd      	= 31
 Skewness   	= -0.493762
 Kurtosis   	= 1.09165
 
+Image cells con máscara y ROI= 50:130:110:100
+
+Geometry: 110x100
+N channels: 3
+N Elements: 4104
+--------------------------------
+Channel: 0
+Min: 73
+Max: 222
+Sum: 715088
+SqrSum: 1.26425e+08
+Zeros: 0
+Mean: 174.242
+Variance: 445.071
+Median: 175
+Skewness: -0.575222
+--------------------------------
+Channel: 1
+Min: 61
+Max: 216
+Sum: 688335
+SqrSum: 1.18289e+08
+Zeros: 0
+Mean: 167.723
+Variance: 691.758
+Median: 168
+Skewness: -0.461651
+--------------------------------
+Channel: 2
+Min: 73
+Max: 217
+Sum: 720299
+SqrSum: 1.28366e+08
+Zeros: 0
+Mean: 175.511
+Variance: 473.924
+Median: 178
+Skewness: -0.83783
 
 

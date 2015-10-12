@@ -9,17 +9,12 @@
 
 
 #define MSG_SIZE 250
-#define MAX_CLIENTS 50
+#define MAX_CLIENTS 40
 
 
 /*
  * El servidor ofrece el servicio de un chat
  */
-
-void manejador(int signum);
-void salirCliente(int socket, fd_set * readfds, int * numClientes, int arrayClientes[]);
-
-
 
 main ( )
 {
@@ -41,6 +36,8 @@ main ( )
     char identificador[MSG_SIZE];
     
     int on, ret;
+
+    srand(time(NULL));
 
     
     
@@ -148,10 +145,7 @@ main ( )
                                     send(new_sd,buffer,strlen(buffer),0);
                                     close(new_sd);
                                 }
-                                
-                            }
-                            
-                            
+                            }        
                         }
                         else if (i == 0){
                             //Se ha introducido información de teclado
@@ -194,12 +188,8 @@ main ( )
                                     
                                     for(j=0; j<numClientes; j++)
                                         if(arrayClientes[j] != i)
-                                            send(arrayClientes[j],buffer,strlen(buffer),0);
-
-                                    
-                                }
-                                                                
-                                
+                                            send(arrayClientes[j],buffer,strlen(buffer),0);                     
+                                }  
                             }
                             //Si el cliente introdujo ctrl+c
                             if(recibidos== 0)
@@ -213,42 +203,6 @@ main ( )
                 }
             }
 		}
-
-		close(sd);
-	
+		close(sd);	
 }
 
-void salirCliente(int socket, fd_set * readfds, int * numClientes, int arrayClientes[]){
-  
-    char buffer[250];
-    int j;
-    
-    close(socket);
-    FD_CLR(socket,readfds);
-    
-    //Re-estructurar el array de clientes
-    for (j = 0; j < (*numClientes) - 1; j++)
-        if (arrayClientes[j] == socket)
-            break;
-    for (; j < (*numClientes) - 1; j++)
-        (arrayClientes[j] = arrayClientes[j+1]);
-    
-    (*numClientes)--;
-    
-    bzero(buffer,sizeof(buffer));
-    sprintf(buffer,"Desconexión del cliente: %d\n",socket);
-    
-    for(j=0; j<(*numClientes); j++)
-        if(arrayClientes[j] != socket)
-            send(arrayClientes[j],buffer,strlen(buffer),0);
-
-
-}
-
-
-void manejador (int signum){
-    printf("\nSe ha recibido la señal sigint\n");
-    signal(SIGINT,manejador);
-    
-    //Implementar lo que se desee realizar cuando ocurra la excepción de ctrl+c en el servidor
-}

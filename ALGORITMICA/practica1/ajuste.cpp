@@ -1,3 +1,10 @@
+
+/*!
+	@author Ruben
+	@file ajuste.cpp
+	@brief Definicion de las funciones para la class Ajuste
+*/
+
 #include "ajuste.hpp"
 #include <cmath>
 #include <iostream>
@@ -137,9 +144,9 @@ using namespace std;
 	}
 		
 	
-double Ajuste::calculaDeterminante (const double &a1, const double &a2, const double &a3, const double &a4, const double &a5, const double &a6, const double &a7, const double &a8, const double &a9){
-	return a1*a5*a9 + a4*a8*a3 + a7*a2*a6 - (a3*a5*a7 + a6*a8*a1 + a9*a2*a4);
-}
+	double Ajuste::calculaDeterminante (const double &a1, const double &a2, const double &a3, const double &a4, const double &a5, const double &a6, const double &a7, const double &a8, const double &a9){
+		return a1*a5*a9 + a4*a8*a3 + a7*a2*a6 - (a3*a5*a7 + a6*a8*a1 + a9*a2*a4);
+	}
 
 
 	void   Ajuste::calcularTiemposEstimadosLineales(const vector<double> &x, const double &a0, const double &a1, vector<double> &yEstimada){
@@ -150,7 +157,6 @@ double Ajuste::calculaDeterminante (const double &a1, const double &a2, const do
 		{
 			yEstimada.push_back(a1*x[i]*log(x[i])+a0);
 		}
-
 	}
 
 	void   Ajuste::calcularTiemposEstimadosCuadraticos(const   vector<double>   &x,   const double &a0, const double &a1, const double &a2, vector<double> &yEstimada){

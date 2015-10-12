@@ -1,3 +1,10 @@
+/*!
+    @author Ruben
+    @file metodoInsercionBinaria.cpp
+    @brief Definicion de las funciones para Insercion Binaria
+*/
+
+
 #include "metodoInsercionBinaria.hpp"
 #include <vector>
 

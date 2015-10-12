@@ -1,3 +1,9 @@
+/*!
+	@author Ruben
+	@file metodoShell.cpp
+	@brief Definicion de las funciones para Shell
+*/
+
 #include "metodoShell.hpp"
 #include <vector>
 

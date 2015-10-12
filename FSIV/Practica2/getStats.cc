@@ -46,10 +46,10 @@ struct CLIParams
       fFlag(false),
       imagen(""),
       mascara(""),
-      x1(0.0),
-      x2(0.0),
-      y1(0.0),
-      y2(0.0)
+      x(0.0),
+      y(0.0),
+      w(0.0),
+      h(0.0)
     {}
     bool iFlag;
     bool wFlag;
@@ -57,7 +57,10 @@ struct CLIParams
     bool fFlag;
     string imagen;
     string mascara;
-    double x1, x2, y1, y2;
+    double x;
+    double y;
+    double w;
+    double h;
 
 };
 
@@ -113,19 +116,19 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
         params.wFlag = true;
         cadena = optarg;
           valor = cadena.substr(0, cadena.find(","));
-          params.x1 = strtod(valor.c_str(),NULL);
+          params.x = strtod(valor.c_str(),NULL);
           
           cadena.erase(0, cadena.find(",")+1);
           valor = cadena.substr(0, cadena.find(","));
-          params.y1 = strtod(valor.c_str(),NULL);
+          params.y = strtod(valor.c_str(),NULL);
 
           cadena.erase(0, cadena.find(",") + 1);
           valor = cadena.substr(0, cadena.find(","));
-          params.x2 = strtod(valor.c_str(),NULL);
+          params.w = strtod(valor.c_str(),NULL);
           
           cadena.erase(0, cadena.find(",") + 1);
           valor = cadena.substr(0, cadena.find(","));         
-          params.y2 = strtod(valor.c_str(),NULL);
+          params.h = strtod(valor.c_str(),NULL);
 
       break;
 
@@ -181,6 +184,8 @@ main (int argc, char* const* argv)
     std::vector<Mat> capas;
     Mat mtx;
     Mat mask;
+    Mat submask;
+    Mat submtx;
 
     if(params.fFlag==true){
       mtx= imread(params.imagen,-1);
@@ -190,29 +195,37 @@ main (int argc, char* const* argv)
       exit(EXIT_FAILURE);
     }
 
-    split(mtx, capas);
+    
     if(params.mFlag==true)
       mask=imread(params.mascara,0);
 
      if(params.wFlag==true){
       //Hacemos el roi manual
       //Y creamos las subimagenes
-      if(params.x1<0 || params.y1<0 || params.x2 <0 || params.y2<0 || params.x1>mtx.cols || params.y1>mtx.rows || params.x2+params.x1>mtx.cols || params.y2+params.y1>mtx.rows){
+      if(params.x<0 || params.y<0 || params.w <0 || params.h<0 || params.x>mtx.cols || params.y>mtx.rows || params.x+params.w>mtx.cols || params.y+params.h>mtx.rows){
 
         cout << "No concuerdan los pixeles" << endl;
         exit(-1);
       }else{
-        cv::Rect roi1(params.x1,params.y1,params.x2,params.y2);
-        mtx = mtx(roi1);
+          cv::Rect roi1(params.x,params.y,params.w,params.h);
+          submtx = mtx(roi1);
           if(params.mFlag==true){
-            cv::Rect roi2(params.x1,params.y1,params.x2,params.y2);
-            mask = mask(roi2);
+            cv::Rect roi2(params.x,params.y,params.w,params.h);
+            submask = mask(roi2);
           }
       }
     }
 
     imshow(params.imagen, mtx);
     waitKey();
+
+    imshow(params.imagen, mask);
+    waitKey();
+
+    if(params.wFlag==true)
+      split(submtx, capas);
+    else
+      split(mtx, capas);
 
     cout<<"Canales: "<<mtx.channels()<<endl;
     cout<<"Ancho: "<<mtx.cols<<endl;
@@ -225,6 +238,9 @@ main (int argc, char* const* argv)
         cout<< "CANAL "<<i<<endl;
         cout<< "----------"<<endl;
         Stats results;
+        if(params.wFlag==true)
+          results.calculateStats(capas[i], submask, submtx.cols, submtx.rows);
+        else
           results.calculateStats(capas[i], mask, mtx.cols, mtx.rows);
         cout<<"min. v= "<< results.getMin()<<endl;
         cout<<"max. v= "<< results.getMax()<<endl;
