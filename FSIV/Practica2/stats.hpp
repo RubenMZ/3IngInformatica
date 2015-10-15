@@ -50,7 +50,7 @@ class Stats{
 				for (int j = 0; j < cols; ++j)
 				{
 					
-				if(!mask.empty() && (mask.at<uchar>(i,j)<255.0) ){
+				if(!mask.empty() && (mask.at<uchar>(i,j)==0.0) ){
 					calculate=0;
 				}else{
 					calculate=1;

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
-
+#include "funcionesServidor.h"
 
 #define MSG_SIZE 250
 #define MAX_CLIENTS 40
@@ -30,6 +30,11 @@ main ( )
     int salida;
     int arrayClientes[MAX_CLIENTS];
     int numClientes = 0;
+
+    Usuario usuarios[40];
+    Partida partidas[10];
+    char* cabecera1, *cabecera2;
+    int opcion;
     //contadores
     int i,j,k;
 	int recibidos;
@@ -104,9 +109,9 @@ main ( )
             //Esperamos recibir mensajes de los clientes (nuevas conexiones o mensajes de los clientes ya conectados)
             
             auxfds = readfds;
-            
+
             salida = select(FD_SETSIZE,&auxfds,NULL,NULL,NULL);
-            
+
             if(salida > 0){
                 
                 
@@ -120,7 +125,7 @@ main ( )
                             if((new_sd = accept(sd, (struct sockaddr *)&from, &from_len)) == -1){
                                 perror("Error aceptando peticiones");
                             }
-                            else
+                            else//Acepta la peticion para la informacion
                             {
                                 if(numClientes < MAX_CLIENTS){
                                     arrayClientes[numClientes] = new_sd;
@@ -145,9 +150,11 @@ main ( )
                                     send(new_sd,buffer,strlen(buffer),0);
                                     close(new_sd);
                                 }
-                            }        
+                            }//Realiza la conexion y guarda el nuevo cliente siempre que este vacio        
                         }
-                        else if (i == 0){
+                        else 
+
+                        if (i == 0){//Se desconecta el servidor, el propio servidor introduce informacion
                             //Se ha introducido información de teclado
                             bzero(buffer, sizeof(buffer));
                             fgets(buffer, sizeof(buffer),stdin);
@@ -162,33 +169,47 @@ main ( )
                                 }
                                     close(sd);
                                     exit(-1);
-                                
-                                
                             }
                             //Mensajes que se quieran mandar a los clientes (implementar)
                             
                         } 
-                        else{
+                        else{//Recibe informacion del cliente, para distribuir y manipular
+
                             bzero(buffer,sizeof(buffer));
-                            
                             recibidos = recv(i,buffer,sizeof(buffer),0);
                             
                             if(recibidos > 0){
                                 
                                 if(strcmp(buffer,"SALIR\n") == 0){
-                                    
                                     salirCliente(i,&readfds,&numClientes,arrayClientes);
-                                    
                                 }
                                 else{
-                                    
-                                    sprintf(identificador,"%d: %s",i,buffer);
-                                    bzero(buffer,sizeof(buffer));
-                                    strcpy(buffer,identificador);
-                                    
-                                    for(j=0; j<numClientes; j++)
-                                        if(arrayClientes[j] != i)
-                                            send(arrayClientes[j],buffer,strlen(buffer),0);                     
+
+                                    cabecera1=cortarCadena(buffer, MSG_SIZE, ' ');
+                                    cabecera2=cortarCadena(buffer, MSG_SIZE, '\n');
+                                    opcion=comprobarOpcion(cabecera1, cabecera2);
+
+                                    switch(opcion){
+                                        case 1: printf("opcion registro\n");
+                                                break;
+                                        case 2: printf("opcion user\n");
+                                                break;
+                                        case 3: printf("opcion pass\n");
+                                                break;
+                                        case 4: printf("opcion partida\n");
+                                                break;
+                                        case 5: printf("opcion linea\n");
+                                                break;
+                                        case 6: printf("opcion doslineas\n");
+                                                break;
+                                        case 7: printf("opcion bingo\n");
+                                                break;
+                                        default: 
+                                                bzero(buffer,sizeof(buffer));
+                                                strcpy(buffer, "Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO");
+                                                send(i,buffer,strlen(buffer),0);
+                                                break;
+                                    }
                                 }  
                             }
                             //Si el cliente introdujo ctrl+c

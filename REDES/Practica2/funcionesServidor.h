@@ -11,21 +11,26 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
+
+#define MSG_SIZE 250
 	
 	typedef struct usuario{
 		char nombre[100];
 		char pass[100];
+		int usuarioValidado;
+		int usuarioLogueado;
+		int usuarioListo;
 		int partida;
 		int id;
 		int ** carton;
-	}usuario;
+	}Usuario;
 
 	typedef struct partida
 	{
 		int usuarios[4];
 		int comenzada;
 		int bolas[90];
-	}partida;
+	}Partida;
 
 
 	void manejador(int signum);
@@ -41,5 +46,7 @@
 	char * cortarCadena(char * cadena, int n, char c);
 	int aceptaPass(char * nombre, char* pass);
 	int registrarUsuario(char * nombre, char * pass);
+
+	int comprobarOpcion(char * cabecera1, char * cabecera2);
 
 #endif

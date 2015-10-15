@@ -2,7 +2,7 @@
 
 void salirCliente(int socket, fd_set * readfds, int * numClientes, int arrayClientes[]){
   
-    char buffer[250];
+    char buffer[MSG_SIZE];
     int j;
     
     close(socket);
@@ -113,7 +113,7 @@ void manejador (int signum){
 
 	int aceptaUsuario(char * nombre){
 		FILE* f;
-		char linea[100];
+		char linea[MSG_SIZE];
 		char * nombre2;
 
 		if ((f=fopen("usuarios.txt", "r"))==NULL)
@@ -122,9 +122,9 @@ void manejador (int signum){
 			exit(-1);
 		}
 
-		while(fgets(linea, 100, f)!=NULL){
+		while(fgets(linea, MSG_SIZE, f)!=NULL){
 			linea[strlen(linea)-1]='\0';
-			nombre2 = cortarCadena(linea, 100, ' ');
+			nombre2 = cortarCadena(linea, MSG_SIZE, ' ');
 			if (strcmp(nombre2,nombre)==0)
 				return 1;
 		}
@@ -136,7 +136,7 @@ void manejador (int signum){
 		int i=0;
 		char * cortada;
 
-		cortada = (char * )malloc(100*sizeof(char));
+		cortada = (char * )malloc(MSG_SIZE*sizeof(char));
 
 		while(i<n && cadena[i]!=c){
 			cortada[i]=cadena[i];
@@ -147,11 +147,11 @@ void manejador (int signum){
 
 	int aceptaPass(char * nombre, char* pass){
 		FILE* f;
-		char linea[100];
+		char linea[MSG_SIZE];
 		char * nombre2;
 		char * pass2;
 
-		pass2 = (char * )malloc(100*sizeof(char));
+		pass2 = (char * )malloc(MSG_SIZE*sizeof(char));
 
 		if ((f=fopen("usuarios.txt", "r"))==NULL)
 		{
@@ -159,11 +159,10 @@ void manejador (int signum){
 			exit(-1);
 		}
 
-		while(fgets(linea, 100, f)!=NULL){
+		while(fgets(linea, MSG_SIZE, f)!=NULL){
 			linea[strlen(linea)-1]='\0';
-			nombre2 = cortarCadena(linea, 100, ' ');
-			strncpy(pass2, linea+strlen(nombre2)+1, 100);
-			printf("%s - %s\n", pass, pass2 );
+			nombre2 = cortarCadena(linea, MSG_SIZE, ' ');
+			strncpy(pass2, linea+strlen(nombre2)+1, MSG_SIZE);
 			if (strcmp(nombre2,nombre)==0 && strcmp(pass2,pass)==0)
 			{
 				return 1;
@@ -176,7 +175,7 @@ void manejador (int signum){
 
 	int registrarUsuario(char * nombre, char * pass){
 		FILE* f;
-		char linea[100];
+		char linea[MSG_SIZE];
 
 		if ((f=fopen("usuarios.txt", "a"))==NULL)
 		{
@@ -187,4 +186,25 @@ void manejador (int signum){
 		fprintf(f, "%s %s\n", nombre, pass);
 		close(f);
 		return 0;
+	}
+
+	int comprobarOpcion(char * cabecera1, char * cabecera2){
+		int opcion=0;
+
+		if(strcmp(cabecera1, "REGISTER")==0 || strcmp(cabecera2, "REGISTER")==0)
+       	    opcion=1;
+       	if(strcmp(cabecera1, "USUARIO")==0 || strcmp(cabecera2, "USUARIO")==0)
+       	    opcion=2;
+       	if(strcmp(cabecera1, "PASSWORD")==0 || strcmp(cabecera2, "PASSWORD")==0)
+       	    opcion=3;
+       	if(strcmp(cabecera1, "INICIAR-PARTIDA")==0 || strcmp(cabecera2, "INICIAR-PARTIDA")==0)
+       		opcion=4;
+       	if(strcmp(cabecera1, "UNA-LINEA")==0 || strcmp(cabecera2, "UNA-LINEA")==0)
+       		opcion=5;
+       	if(strcmp(cabecera1, "DOS-LINEAS")==0 || strcmp(cabecera2, "DOS-LINEAS")==0)
+       		opcion=6;
+       	if(strcmp(cabecera1, "BINGO")==0 || strcmp(cabecera2, "BINGO")==0)
+       		opcion=7;
+
+       	return opcion;
 	}
