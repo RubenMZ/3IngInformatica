@@ -35,9 +35,9 @@ class DeterminanteRecursivo{
 							 	}
 							 }
 				 		}
-				 		det=det+m.elemento(1,p)*pow(-1,p)*determinanteRecursivo(temp,n-1);
+				 		det=det+m.elemento(1,p)*pow(-1,p+1)*determinanteRecursivo(temp,n-1);
 				 	}
-					 return (-1)*det;
+					 return det;
 			 	}
 
 		}

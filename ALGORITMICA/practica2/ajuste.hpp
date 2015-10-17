@@ -28,6 +28,8 @@ class Ajuste{
 		void calcularTiemposEstimadosLineales(const vector<double> &x, const double  &a0, const double   &a1, vector<double> &yEstimada);
 		void calcularTiemposEstimadosCubicos(const vector<double> &x, const double &a0, const double &a1, const double &a2, const double &a3, vector<double> &yEstimada); 
 		double calcularDias(const double n, const double &a0, const double &a1, const double &a2, int opcion);
+		double factorial(double n);
+
 };
 
 

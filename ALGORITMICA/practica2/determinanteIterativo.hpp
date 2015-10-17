@@ -9,12 +9,13 @@ class DeterminanteIterativo{
 
 	public:
 
-		T determinanteIterativo(Matriz <T> &a, const int &n) {
+		T determinanteIterativo(Matriz <T> &mat, const int &n) {
 
 			// Algoritmo para la eliminación simple de Gauss
 
 		    T det,aux;
 		    T factor;
+		    Matriz<T> a(mat);
 		 
 		    for (int k = 1; k < n ; k++) {
 		        for (int i = k+1; i <= n;  i++) {
@@ -27,7 +28,7 @@ class DeterminanteIterativo{
 		    }
 
 		// Cálculo del determinante
-		    det = 1;
+		    det = 1.0;
 		    for (int i = 1; i <= n; i++) {
 		        det = det * a.elemento(i,i);
 		    }

@@ -22,7 +22,7 @@ void rellenaMatriz( Matriz <T> &m, const int &fil, const int &col, const int &a,
     m.columnas(col);
 }
 
-template <class T>
+/*template <class T>
 T determinanteRecursivo(const Matriz <T> &m, const int &n){
 double det=0, p=0, h=0, k=0, i=0, j=0;
  Matriz<T> temp(n,n);
@@ -83,7 +83,7 @@ T determinanteIterativo(Matriz <T> &a, const int &n) {
 
     return det;
 }
-
+*/
 double calculaMedia(vector<uint64_t> &tiempos){
 
 	double suma=0;

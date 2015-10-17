@@ -12,7 +12,7 @@
 #include <cassert>  
 #include <cstdlib> 
 #include "matriz.hpp"
-#include "determinanteIterativo.hpp"
+#include "determinanteRecursivo.hpp"
 
 using namespace std;
 
@@ -24,19 +24,20 @@ using namespace std;
 		double sumaxy=0.0;
 		double mediax=0.0;
 		double mediay=0.0;
-		double varianzax=0.0;
 		double varianzay=0.0;
-		double covarianza=0.0;
-		double n=x.size();
+		double varianzaEstimados=0.0;
+		int n=x.size();
+
+		vector <double> tEstimados;
 
 		assert(x.size()==y.size());
 
 		for (int i = 0; i < x.size(); ++i)
 		{
-			sumax+=x[i]*log(x[i]);
+			sumax+=x[i];
 			sumay+=y[i];
-			sumaxy+=x[i]*log(x[i])*y[i];
-			sumax2+=pow(x[i]*log(x[i]),2);
+			sumaxy+=x[i]*y[i];
+			sumax2+=pow(x[i],2);
 
 			mediax+=x[i];
 			mediay+=y[i];
@@ -45,21 +46,12 @@ using namespace std;
 		a0=((sumay*sumax2)-(sumaxy*sumax)) / ((n*sumax2)-(sumax*sumax)) ;
 		a1=((n*sumaxy)-(sumax*sumay)) / ((n*sumax2)-(sumax*sumax)) ;
 
-		mediax=mediax/n;
-		mediay=mediay/n;
+		calcularTiemposEstimadosLineales(x, a0, a1, tEstimados);
 
-		for (int i = 0; i < x.size(); ++i)
-		{
-			varianzax+=pow(x[i]-mediax,2);
-			varianzay+=pow(y[i]-mediay,2);
-			covarianza+=(x[i]-mediax)*(y[i]-mediay);
-		}
+		varianzaEstimados=calcularVarianza(tEstimados);
+		varianzay=calcularVarianza(y);
 
-		varianzax=varianzax/n;
-		varianzay=varianzay/n;
-		covarianza=covarianza/n;
-
-		r2=pow(covarianza,2)/(varianzax*varianzay);
+		r2=varianzaEstimados/varianzay;
 	}
 
 	void Ajuste::calcularAjustePolinomico(const vector<double> &x, const vector<double> &y, double &a0, double &a1, double &a2, double &a3, double &r2){
@@ -77,11 +69,11 @@ using namespace std;
 
 		double varianzay=0.0;
 
-		double detA0;
-		double detA1;
-		double detA2;
-		double detA3;
-		double det;
+		double detA0=0.0;
+		double detA1=0.0;
+		double detA2=0.0;
+		double detA3=0.0;
+		double det=0.0;
 
 		vector <double> tEstimados;
 		double varianzaEstimados=0.0;
@@ -104,7 +96,7 @@ using namespace std;
 
 		Matriz<double> mat(4,4);
 		vector<double> ind;
-		DeterminanteIterativo<double> itera;
+		DeterminanteRecursivo<double> itera;
 
 		mat.elemento(1,1, x.size());
 		mat.elemento(1,2, sumax);
@@ -127,34 +119,37 @@ using namespace std;
 		ind.push_back(sumax2y);
 		ind.push_back(sumax3y);
 
-		mat.verMatriz();
-
-		det = itera.determinanteIterativo(mat, mat.filas());
+		Matriz<double> maux(mat);
+		maux.verMatriz();
+		det = itera.determinanteRecursivo(maux, 4);
 
 		for (int j = 1; j <= 4; ++j)
 		{
-			Matriz<double> maux(mat);
+			maux=mat;
 			for (int i = 1; i <= 4; ++i)
 			{
 				maux.elemento(i,j, ind[i-1]);
-				cout<<"ind "<<ind[i-1]<<endl;
 			}
-			maux.verMatriz();
-			if(j==1)
-				detA0=itera.determinanteIterativo(maux, maux.filas());
-			if(j==2)
-				detA1=itera.determinanteIterativo(maux, maux.filas());
-			if(j==3)
-				detA2=itera.determinanteIterativo(maux, maux.filas());
-			if(j==4)
-				detA3=itera.determinanteIterativo(maux, maux.filas());
+
+			if(j==1){
+				detA0=itera.determinanteRecursivo(maux, 4);
+			}
+			if(j==2){
+				detA1=itera.determinanteRecursivo(maux, 4);
+			}
+			if(j==3){
+				detA2=itera.determinanteRecursivo(maux, 4);
+			}
+			if(j==4){
+				detA3=itera.determinanteRecursivo(maux, 4);
+			}
 		}
+
 		a0=detA0/det;
 		a1=detA1/det;
 		a2=detA2/det;
 		a3=detA3/det;
 
-		/*mal*/
 		calcularTiemposEstimadosCubicos(x, a0, a1, a2, a3, tEstimados);
 
 		varianzaEstimados=calcularVarianza(tEstimados);
@@ -192,7 +187,7 @@ using namespace std;
 
 		for (int i = 0; i < x.size(); ++i)
 		{
-			yEstimada.push_back(a1*x[i]*log(x[i])+a0);
+			yEstimada.push_back(a1*x[i]+a0);
 		}
 	}
 
@@ -221,4 +216,17 @@ using namespace std;
 			retorno=retorno/24;
 		}
 		return retorno;
+	}
+
+	double Ajuste::factorial(double n){
+		
+		double aux;
+
+		if (n==1)
+			return n;
+		else{
+			aux=n*factorial(n-1);
+			return (aux);
+		}
+			
 	}

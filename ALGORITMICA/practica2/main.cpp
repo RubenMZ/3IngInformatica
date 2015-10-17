@@ -35,7 +35,7 @@ int main (int argc, char ** argv){
     vector<uint64_t> tiemposIterativo, tiemposRecursivo;//Vectores de tiempos
     vector<double> tiemposMediosIterativo, tiemposMediosRecursivo;
     vector<double> tiemposEstimadosIterativo, tiemposEstimadosRecursivo;
-    vector<double> orden;
+    vector<double> orden, ordenFactorial;
 
     DeterminanteRecursivo<double> recur;
     DeterminanteIterativo<double> itera;
@@ -47,7 +47,7 @@ int main (int argc, char ** argv){
     Ajuste ajuste1;
 
     double a0Iter, a1Iter, a2Iter, a3Iter, r2Iter;//Coeficientes de iterativo
-    double a0She, a1She, r2She;//Coeficientes de recursivo
+    double a0Recur, a1Recur, r2Recur;//Coeficientes de recursivo
 
     int k=0;//Variable para recorrer el vector de orden.
 
@@ -112,17 +112,25 @@ int main (int argc, char ** argv){
 
         //Calculamos el Ajuste para ambos algoritmos en funcion de los orden y los tiemposMedios
         //Obtenemos los coeficientes
-        ajuste1.calcularAjustePolinomico(orden, tiemposMediosIterativo, a0Iter, a1Iter, a2Iter, a3Iter , r2Iter);
-        //ajuste1.calcularAjusteLineal(orden, tiemposMediosRecursivo, a0She, a1She, r2She);
+        for (int i = 0; i < orden.size(); ++i)
+        {  
+            ordenFactorial.push_back( ajuste1.factorial(orden[i]));
+        }
 
+        ajuste1.calcularAjustePolinomico(orden, tiemposMediosIterativo, a0Iter, a1Iter, a2Iter, a3Iter , r2Iter);
+        ajuste1.calcularAjusteLineal(ordenFactorial, tiemposMediosRecursivo, a0Recur, a1Recur, r2Recur);
+
+  
         //Calculamos los tiemposEstimados para cada algoritmo en funcion de su ajuste
-        //ajuste1.calcularTiemposEstimadosLineales(orden, a0She, a1She, tiemposEstimadosRecursivo);
+        ajuste1.calcularTiemposEstimadosLineales(ordenFactorial, a0Recur, a1Recur, tiemposEstimadosRecursivo);
         ajuste1.calcularTiemposEstimadosCubicos(orden, a0Iter, a1Iter, a2Iter, a3Iter,tiemposEstimadosIterativo);
+
+        
 
         for (int i = 0; i < orden.size(); ++i)
         {
             cout<<"\t Tiempo estimado iterativo-> "<<orden[i]<<" orden = "<<tiemposEstimadosIterativo[i]<<endl;
-          //  cout<<"\t Tiempo estimado recursivo-> "<<orden[i]<<" orden = "<<tiemposEstimadosRecursivo[i]<<endl;
+            cout<<"\t Tiempo estimado recursivo-> "<<orden[i]<<" orden = "<<tiemposEstimadosRecursivo[i]<<endl;
         }
         //Guardamos los tiemposMedios y Estimados en un fichero para la posterior grafica
         //guardarTiempos(orden, tiemposMediosIterativo, tiemposEstimadosIterativo, tiemposMediosRecursivo, tiemposEstimadosRecursivo, "Datos.txt");
@@ -130,8 +138,8 @@ int main (int argc, char ** argv){
         cout<<"Coef. Determinacion R2 (iterativo) = "<<r2Iter<<endl;
         cout<<"t(n) = "<<a3Iter<<"*n³ + "<<a2Iter<<"*n² + "<<a1Iter<<"*n + "<<a0Iter<<endl;
 
-        //cout<<"Coef. Determinacion R2 (recursivo) = "<<r2She<<endl;
-        //cout<<"t(n) = "<<a1She<<"*n*ln(n) + "<<a0She<<endl;
+        cout<<"Coef. Determinacion R2 (recursivo) = "<<r2Recur<<endl;
+        cout<<"t(n) = "<<a1Recur<<"*n*ln(n) + "<<a0Recur<<endl;
 
 
 
