@@ -218,15 +218,9 @@ using namespace std;
 		return retorno;
 	}
 
-	double Ajuste::factorial(double n){
-		
-		double aux;
-
-		if (n==1)
+	double Ajuste::factorial(const double &n){
+		if (n==2)
 			return n;
-		else{
-			aux=n*factorial(n-1);
-			return (aux);
-		}
-			
+		else
+			return (n*factorial(n-1));
 	}

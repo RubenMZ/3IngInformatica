@@ -133,13 +133,13 @@ int main (int argc, char ** argv){
             cout<<"\t Tiempo estimado recursivo-> "<<orden[i]<<" orden = "<<tiemposEstimadosRecursivo[i]<<endl;
         }
         //Guardamos los tiemposMedios y Estimados en un fichero para la posterior grafica
-        //guardarTiempos(orden, tiemposMediosIterativo, tiemposEstimadosIterativo, tiemposMediosRecursivo, tiemposEstimadosRecursivo, "Datos.txt");
+        guardarTiempos(orden, tiemposMediosIterativo, tiemposEstimadosIterativo, tiemposMediosRecursivo, tiemposEstimadosRecursivo, "Datos.txt");
 
         cout<<"Coef. Determinacion R2 (iterativo) = "<<r2Iter<<endl;
         cout<<"t(n) = "<<a3Iter<<"*n³ + "<<a2Iter<<"*n² + "<<a1Iter<<"*n + "<<a0Iter<<endl;
 
         cout<<"Coef. Determinacion R2 (recursivo) = "<<r2Recur<<endl;
-        cout<<"t(n) = "<<a1Recur<<"*n*ln(n) + "<<a0Recur<<endl;
+        cout<<"t(n) = "<<a1Recur<<"*n! + "<<a0Recur<<endl;
 
 
 
