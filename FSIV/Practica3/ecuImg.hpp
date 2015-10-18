@@ -18,8 +18,8 @@
 using namespace std;
 using namespace cv;
 
-void calcularHistograma(vector <int> &histograma, const Mat imagen, const Mat mask);
-void normalizarHistograma(vector <int> &histograma);
-void ecualizacion(Mat &imagen, vector<int> histograma, Mat mask);
+void crearHistograma(vector <double> &histograma, const Mat imagen, const Mat mask);
+void normalizar(vector <double> &histograma);
+void ecualizar(vector<double> histograma, Mat &imagen, Mat mask);
 
 #endif

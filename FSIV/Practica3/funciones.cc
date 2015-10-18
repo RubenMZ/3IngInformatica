@@ -9,10 +9,8 @@
 #include "ecuImg.hpp"
 
 //Caclculo el histograma sin la mascara o con la mascara si la hubiera
-void calcularHistograma(vector <int> &histograma, const Mat imagen, const Mat mask)
+void crearHistograma(vector <double> &histograma, const Mat imagen, const Mat mask)
 {
-	//Canales
-	const int channels = imagen.channels();
 
 	//La inicializo a 0
 	for(size_t i=0; i<histograma.size();i++)
@@ -20,11 +18,10 @@ void calcularHistograma(vector <int> &histograma, const Mat imagen, const Mat ma
 		
 		
 	//Trabajo con 1 o con 3 canales
-	switch(channels)
-	{
-	case 1:{
+	if (imagen.channels()==1){
+		
 		for(int x=0; x<imagen.rows; x++)
-			for(int y=0; y<imagen.cols; y++)
+			for(int y=0; y<imagen.cols; y++){
 				if(mask.data)
 				{
 					if(mask.at<uchar>(x,y)!= 0)
@@ -38,12 +35,12 @@ void calcularHistograma(vector <int> &histograma, const Mat imagen, const Mat ma
 					int valor = imagen.at<uchar>(x,y);
 					histograma[valor]++;
 				}
-		break;
+			}
 		}
-	case 3:{
+	if(imagen.channels()==3){
 		
 		for(int x=0; x<imagen.rows; x++)
-			for(int y=0; y<imagen.cols; y++)
+			for(int y=0; y<imagen.cols; y++){
 				if(mask.data)
 				{
 					if(mask.at<uchar>(x,y) != 0)
@@ -57,72 +54,71 @@ void calcularHistograma(vector <int> &histograma, const Mat imagen, const Mat ma
 					int valor = imagen.at<Vec3b>(x,y)[2];
 					histograma[valor]++;
 				}
-		break;
+			}
 		}
-	}
+	
 }
 
 //Función que realiza la ecualización del histograma obteniendo primero el histograma acumulativo y dividiéndolo posteriormente por el número de píxeles totales
-void normalizarHistograma(vector <int> &histograma)
+void normalizar(vector <double> &histograma)
 {	
-	int pixels = histograma[0]; //Contador de píxeles totales que comienza con el número de píxeles que hay en histograma[0]
+	int pixels = histograma[0]; //Pixeles totales
 	
 	//Calculamos el histograma acumulado
-	for(size_t i = 1; i < histograma.size(); ++i)
+	for(unsigned int i = 1; i < histograma.size(); ++i)
 	{
 		pixels = pixels + histograma[i];
 		histograma[i] = histograma[i] + histograma[i-1];
 	}
 
 	//Normalizamos el histograma acumulado
-	for(size_t j = 0; j < histograma.size(); ++j)
-		histograma[j] = 255*histograma[j]/pixels; //Podemos realizar también la operación de manera vectorial con histograma = 255*histograma;
+	for(unsigned int j = 0; j < histograma.size(); ++j){
+		if(pixels!=0)
+			histograma[j] = 255*histograma[j] /pixels;
+		else
+			histograma[j] = 255*histograma[j];
+	}
 }
 
 //Ecualización de la imagen utilizando para ello el histograma por normalizacion
-void ecualizacion(Mat &imagen, vector<int> histograma, Mat mask)
+void ecualizar(vector<double> histograma, Mat &imagen, Mat mask)
 {
-	const int channels = imagen.channels();
 
-	switch(channels)
-	{
-	case 1:{
+	if(imagen.channels()==1){
 		for(int x=0; x<imagen.rows; x++)
 			for(int y=0; y<imagen.cols; y++)
 				if(mask.data)
 				{
 					if(mask.at<uchar>(x,y) != 0)
 					{
-						int valor = imagen.at<uchar>(x,y);
-						imagen.at<uchar>(x,y) = histograma[valor];
+						int pixel = imagen.at<uchar>(x,y);
+						imagen.at<uchar>(x,y) = histograma[pixel];
 					}
 				}
 				else
 				{
-					int valor = imagen.at<uchar>(x,y);
-					imagen.at<uchar>(x,y) = histograma[valor];
+					int pixel = imagen.at<uchar>(x,y);
+					imagen.at<uchar>(x,y) = histograma[pixel];
 				}
-		break;
 		}
-	case 3:{
+	if(imagen.channels()==3){
 		for(int x=0; x<imagen.rows; x++)
 			for(int y=0; y<imagen.cols; y++)
 				if(mask.data)
 				{
 					if(mask.at<uchar>(x,y) != 0)
 					{
-						int valor = imagen.at<Vec3b>(x,y)[2];
-						imagen.at<Vec3b>(x,y)[2] = histograma[valor];
+						int pixel = imagen.at<Vec3b>(x,y)[2];
+						imagen.at<Vec3b>(x,y)[2] = histograma[pixel];
 					}
 				}
 				else
 				{
-					int valor = imagen.at<Vec3b>(x,y)[2];
-					imagen.at<Vec3b>(x,y)[2] = histograma[valor];
+					int pixel = imagen.at<Vec3b>(x,y)[2];
+					imagen.at<Vec3b>(x,y)[2] = histograma[pixel];
 				}
-		break;
 		}
-	}
+	
 }
 
 //MIRAR https://es.scribd.com/doc/94351721/2/Histograma-y-Ecualizacion-del-Histograma
