@@ -22,68 +22,6 @@ void rellenaMatriz( Matriz <T> &m, const int &fil, const int &col, const int &a,
     m.columnas(col);
 }
 
-/*template <class T>
-T determinanteRecursivo(const Matriz <T> &m, const int &n){
-double det=0, p=0, h=0, k=0, i=0, j=0;
- Matriz<T> temp(n,n);
-
-	if(n==1) {
-		return m.elemento(1,1);
-	} else 
-		if(n==2) {
-		 	det=(m.elemento(1,1)*m.elemento(2,2)-m.elemento(1,2)*m.elemento(2,1));
-			return det;
-		} else {
-		 	for(p=1;p<=n;p++) {
-		 		h = 1;
-		 		k = 1;
-		 		for(i=2;i<=n;i++) {
-					 for( j=1;j<=n;j++) {
-					 	if(j==p) {
-					 		continue;
-					 	}
-					 	temp.elemento(h,k,m.elemento(i,j));
-					 	k++;
-					 	if(k==n) {
-					 		h++;
-					 		k = 1;
-					 	}
-					 }
-		 		}
-		 		det=det+m.elemento(1,p)*pow(-1,p)*determinanteRecursivo(temp,n-1);
-		 	}
-			 return (-1)*det;
-	 	}
-
-}
-
-template <class T>
-T determinanteIterativo(Matriz <T> &a, const int &n) {
-
-// Algoritmo para la eliminación simple de Gauss
-
-    T det,aux;
-    T factor;
- 
-    for (int k = 1; k < n ; k++) {
-        for (int i = k+1; i <= n;  i++) {
-            factor = a.elemento(i,k)/a.elemento(k,k);
-            for (int j = k+1; j < n+1 ; j++) {
-            	aux=a.elemento(i,j) - factor * a.elemento(k,j);
-                a.elemento(i,j, aux);
-            }
-        }
-    }
-
-// Cálculo del determinante
-    det = 1;
-    for (int i = 1; i <= n; i++) {
-        det = det * a.elemento(i,i);
-    }
-
-    return det;
-}
-*/
 double calculaMedia(vector<uint64_t> &tiempos){
 
 	double suma=0;

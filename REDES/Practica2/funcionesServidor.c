@@ -1,6 +1,7 @@
 #include "funcionesServidor.h"
 
-void salirCliente(int socket, fd_set * readfds, int * numClientes, int arrayClientes[]){
+
+void salirCliente(int socket, fd_set * readfds, int * numUsuarios, Usuario usuarios[]){
   
     char buffer[MSG_SIZE];
     int j;
@@ -9,20 +10,20 @@ void salirCliente(int socket, fd_set * readfds, int * numClientes, int arrayClie
     FD_CLR(socket,readfds);
     
     //Re-estructurar el array de clientes
-    for (j = 0; j < (*numClientes) - 1; j++)
-        if (arrayClientes[j] == socket)
+    for (j = 4; j < (*numUsuarios) - 1; j++)
+        if (usuarios[j].id == socket)
             break;
-    for (; j < (*numClientes) - 1; j++)
-        (arrayClientes[j] = arrayClientes[j+1]);
+    for (; j < (*numUsuarios) - 1; j++)
+        (usuarios[j] = usuarios[j+1]);
     
-    (*numClientes)--;
+    (*numUsuarios)--;
     
     bzero(buffer,sizeof(buffer));
     sprintf(buffer,"Desconexión del cliente: %d\n",socket);
     
-    for(j=0; j<(*numClientes); j++)
-        if(arrayClientes[j] != socket)
-            send(arrayClientes[j],buffer,strlen(buffer),0);
+    for(j=4; j<(*numUsuarios); j++)
+        if(usuarios[j].id != socket)
+            send(usuarios[j].id,buffer,strlen(buffer),0);
 
 
 }
@@ -109,83 +110,6 @@ void manejador (int signum){
 				}
 			}
 		}
-	}
-
-	int aceptaUsuario(char * nombre){
-		FILE* f;
-		char linea[MSG_SIZE];
-		char * nombre2;
-
-		if ((f=fopen("usuarios.txt", "r"))==NULL)
-		{
-			printf("No se puede abrir el fichero.\n");
-			exit(-1);
-		}
-
-		while(fgets(linea, MSG_SIZE, f)!=NULL){
-			linea[strlen(linea)-1]='\0';
-			nombre2 = cortarCadena(linea, MSG_SIZE, ' ');
-			if (strcmp(nombre2,nombre)==0)
-				return 1;
-		}
-		close(f);
-		return 0;
-	}
-
-	char * cortarCadena(char * cadena, int n, char c){
-		int i=0;
-		char * cortada;
-
-		cortada = (char * )malloc(MSG_SIZE*sizeof(char));
-
-		while(i<n && cadena[i]!=c){
-			cortada[i]=cadena[i];
-			++i;
-		}
-		return cortada;
-	}
-
-	int aceptaPass(char * nombre, char* pass){
-		FILE* f;
-		char linea[MSG_SIZE];
-		char * nombre2;
-		char * pass2;
-
-		pass2 = (char * )malloc(MSG_SIZE*sizeof(char));
-
-		if ((f=fopen("usuarios.txt", "r"))==NULL)
-		{
-			printf("No se puede abrir el fichero.\n");
-			exit(-1);
-		}
-
-		while(fgets(linea, MSG_SIZE, f)!=NULL){
-			linea[strlen(linea)-1]='\0';
-			nombre2 = cortarCadena(linea, MSG_SIZE, ' ');
-			strncpy(pass2, linea+strlen(nombre2)+1, MSG_SIZE);
-			if (strcmp(nombre2,nombre)==0 && strcmp(pass2,pass)==0)
-			{
-				return 1;
-			}
-		}
-		close(f);
-		return 0;
-	}
-
-
-	int registrarUsuario(char * nombre, char * pass){
-		FILE* f;
-		char linea[MSG_SIZE];
-
-		if ((f=fopen("usuarios.txt", "a"))==NULL)
-		{
-			printf("No se puede abrir el fichero.\n");
-			exit(-1);
-		}
-
-		fprintf(f, "%s %s\n", nombre, pass);
-		close(f);
-		return 0;
 	}
 
 	int comprobarOpcion(char * cabecera1, char * cabecera2){

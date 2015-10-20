@@ -76,7 +76,7 @@ main ( )
             bzero(buffer,sizeof(buffer));
             recv(sd,buffer,sizeof(buffer),0);
             
-            printf("\n%s\n",buffer);
+            printf("%s\n",buffer);
             
             if(strcmp(buffer,"Demasiados clientes conectados\n") == 0)
                 fin =1;

@@ -12,7 +12,7 @@
 #include <cassert>  
 #include <cstdlib> 
 #include "matriz.hpp"
-#include "determinanteRecursivo.hpp"
+#include "determinanteIterativo.hpp"
 
 using namespace std;
 
@@ -95,8 +95,9 @@ using namespace std;
 		}
 
 		Matriz<double> mat(4,4);
+		Matriz<double> maux(4,4);
 		vector<double> ind;
-		DeterminanteRecursivo<double> itera;
+		DeterminanteIterativo<double> itera;
 
 		mat.elemento(1,1, x.size());
 		mat.elemento(1,2, sumax);
@@ -119,9 +120,7 @@ using namespace std;
 		ind.push_back(sumax2y);
 		ind.push_back(sumax3y);
 
-		Matriz<double> maux(mat);
-		maux.verMatriz();
-		det = itera.determinanteRecursivo(maux, 4);
+		det = itera.determinanteIterativo(mat, 4);
 
 		for (int j = 1; j <= 4; ++j)
 		{
@@ -131,17 +130,18 @@ using namespace std;
 				maux.elemento(i,j, ind[i-1]);
 			}
 
+			maux.verMatriz();
 			if(j==1){
-				detA0=itera.determinanteRecursivo(maux, 4);
+				detA0=itera.determinanteIterativo(maux, 4);
 			}
 			if(j==2){
-				detA1=itera.determinanteRecursivo(maux, 4);
+				detA1=itera.determinanteIterativo(maux, 4);
 			}
 			if(j==3){
-				detA2=itera.determinanteRecursivo(maux, 4);
+				detA2=itera.determinanteIterativo(maux, 4);
 			}
 			if(j==4){
-				detA3=itera.determinanteRecursivo(maux, 4);
+				detA3=itera.determinanteIterativo(maux, 4);
 			}
 		}
 

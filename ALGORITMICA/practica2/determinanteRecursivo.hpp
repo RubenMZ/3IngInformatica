@@ -40,6 +40,7 @@ class DeterminanteRecursivo{
 					 return det;
 			 	}
 
+
 		}
 		inline DeterminanteRecursivo(){};
 		inline ~DeterminanteRecursivo(){};

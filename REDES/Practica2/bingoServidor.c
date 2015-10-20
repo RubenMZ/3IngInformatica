@@ -7,6 +7,8 @@
 #include <string.h>
 #include <signal.h>
 #include "funcionesServidor.h"
+#include "registro.h"
+#include "estructuras.h"
 
 #define MSG_SIZE 250
 #define MAX_CLIENTS 40
@@ -28,12 +30,12 @@ main ( )
 	socklen_t from_len;
     fd_set readfds, auxfds;
     int salida;
-    int arrayClientes[MAX_CLIENTS];
-    int numClientes = 0;
+    int numUsuarios = 4;
+    int numPartidas=0;
 
-    Usuario usuarios[40];
+    Usuario usuarios[MAX_CLIENTS+4];
     Partida partidas[10];
-    char* cabecera1, *cabecera2;
+    char* cabecera1, *cabecera2, argumento[MSG_SIZE];
     int opcion;
     //contadores
     int i,j,k;
@@ -127,20 +129,23 @@ main ( )
                             }
                             else//Acepta la peticion para la informacion
                             {
-                                if(numClientes < MAX_CLIENTS){
-                                    arrayClientes[numClientes] = new_sd;
-                                    numClientes++;
+                                if(numUsuarios < MAX_CLIENTS){
+                                    inicializarUsuario(&usuarios[new_sd], new_sd);
+
+                                    numUsuarios++;
                                     FD_SET(new_sd,&readfds);
                                 
-                                    strcpy(buffer, "Bienvenido al chat\n");
-                                
-                                    send(new_sd,buffer,strlen(buffer),0);
-                                
-                                    for(j=0; j<(numClientes-1);j++){
-                                    
+                                    send(new_sd,"Introduce usuario y contraseña:",strlen("Introduce usuario y contraseña:"),0);
+                                    send(new_sd, "+0k. Usuario conectado", strlen("+0k. Usuario conectado"),0);
+                                    sprintf(buffer, "Tu id de usuario es: %d", new_sd);
+                                    send(new_sd, buffer, strlen(buffer),0);
+
+                                    printf("Nuevo jugador conectado: %d\n", new_sd);
+
+                                    for(j=4; j<(numUsuarios-1);j++){
                                         bzero(buffer,sizeof(buffer));
-                                        sprintf(buffer, "Nuevo Cliente conectado: %d\n",new_sd);
-                                        send(arrayClientes[j],buffer,strlen(buffer),0);
+                                        sprintf(buffer, "Nuevo jugador conectado: %d\n",new_sd);
+                                        send(usuarios[j+4].id,buffer,strlen(buffer),0);
                                     }
                                 }
                                 else
@@ -162,10 +167,10 @@ main ( )
                             //Controlar si se ha introducido "SALIR", cerrando todos los sockets y finalmente saliendo del servidor. (implementar)
                             if(strcmp(buffer,"SALIR\n") == 0){
                              
-                                for (j = 0; j < numClientes; j++){
-                                    send(arrayClientes[j], "Desconexion servidor\n", strlen("Desconexion servidor\n"),0);
-                                    close(arrayClientes[j]);
-                                    FD_CLR(arrayClientes[j],&readfds);
+                                for (j = 4; j < numUsuarios+4; j++){
+                                    send(usuarios[j].id, "Desconexion servidor\n", strlen("Desconexion servidor\n"),0);
+                                    close(usuarios[j].id);
+                                    FD_CLR(usuarios[j].id,&readfds);
                                 }
                                     close(sd);
                                     exit(-1);
@@ -181,7 +186,7 @@ main ( )
                             if(recibidos > 0){
                                 
                                 if(strcmp(buffer,"SALIR\n") == 0){
-                                    salirCliente(i,&readfds,&numClientes,arrayClientes);
+                                    salirCliente(i,&readfds,&numUsuarios,usuarios);
                                 }
                                 else{
 
@@ -192,11 +197,54 @@ main ( )
                                     switch(opcion){
                                         case 1: printf("opcion registro\n");
                                                 break;
-                                        case 2: printf("opcion user\n");
+                                        case 2: 
+                                                strncpy(argumento, buffer+strlen(cabecera1)+1, MSG_SIZE);
+                                                if(argumento[strlen(argumento)-1]=='\n')
+                                                    argumento[strlen(argumento)-1]='\0';
+                                                printf("Peticion de inicio usuario: (%s)\n", argumento);
+                                                if(usuarios[i].estado==0)
+                                                    if(aceptaUsuario(argumento)==1){
+                                                        strcpy(usuarios[i].nombre,argumento);
+                                                        usuarios[i].estado=1;
+                                                        printf("\E[32mUsuario aceptado\e[0m\n");
+                                                        send(i,"\E[32m+Ok. Usuario correcto\e[0m", strlen("\E[32m+Ok. Usuario correcto\e[0m"),0);
+
+                                                    }else{
+                                                        printf("\E[31mUsuario denegado\e[0m\n");
+                                                        send(i,  "\E[31m–ERR. Usuario incorrecto\e[0m",strlen( "\E[31m–ERR. Usuario incorrecto\e[0m"),0);
+                                                    }
+                                                else{
+                                                    continuarRegistro(usuarios[i]);
+                                                }
+
                                                 break;
-                                        case 3: printf("opcion pass\n");
+                                        case 3: strncpy(argumento, buffer+strlen(cabecera1)+1, MSG_SIZE);
+                                                if(argumento[strlen(argumento)-1]=='\n')
+                                                    argumento[strlen(argumento)-1]='\0';
+                                                printf("Peticion de contraseña: (%s)\n", cifrarPass(argumento));
+                                                if(usuarios[i].estado==1)
+                                                    if(aceptaPass(usuarios[i].nombre,argumento)==1){
+                                                        usuarios[i].estado=2;
+                                                        strcpy(usuarios[i].pass, argumento);
+                                                        printf("\E[32mContraseña aceptada\e[0m\n");
+                                                        send(i,"\E[32m+Ok. Usuario validado\e[0m", strlen("\E[32m+Ok. Usuario validado\e[0m"),0);
+
+                                                    }else{
+                                                        printf("\E[31mUsuario denegado\e[0m\n");
+                                                        send(i, "\E[31m–ERR. Error en la validación\e[0m",strlen("\E[31m–ERR. Error en la validación\e[0m"),0);
+                                                    }
+                                                else{
+                                                    continuarRegistro(usuarios[i]);
+                                                }
                                                 break;
-                                        case 4: printf("opcion partida\n");
+                                        case 4: if(usuarios[i].estado==2){
+                                                    printf("Usuario %s ha iniciado partida.\n", );
+                                                    send(i, "Bienvenido al bingo.", strlen("Bienvenido al bingo."),0);
+                                                    usuarios[i].estado=3;
+                                                }else{
+                                                    continuarRegistro(usuarios[i]);
+                                                }
+
                                                 break;
                                         case 5: printf("opcion linea\n");
                                                 break;
@@ -205,25 +253,24 @@ main ( )
                                         case 7: printf("opcion bingo\n");
                                                 break;
                                         default: 
-                                                bzero(buffer,sizeof(buffer));
-                                                strcpy(buffer, "Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO");
-                                                send(i,buffer,strlen(buffer),0);
+                                                send(i,"Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO",
+                                                    strlen("Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO"),0);
                                                 break;
-                                    }
-                                }  
-                            }
+                                    }//switch(opcion)
+                                }//if(strcmp(buffer,"SALIR\n") == 0) else 
+                            }//if(recibidos > 0)
                             //Si el cliente introdujo ctrl+c
                             if(recibidos== 0)
                             {
                                 printf("El socket %d, ha introducido ctrl+c\n", i);
                                 //Eliminar ese socket
-                                salirCliente(i,&readfds,&numClientes,arrayClientes);
+                                salirCliente(i,&readfds,&numUsuarios,usuarios);
                             }
-                        }
-                    }
-                }
-            }
-		}
+                        }//if (i == 0) else
+                    }//if(FD_ISSET(i, &auxfds)) 
+                }//for(i=0; i<FD_SETSIZE; i++)
+            }//(salida > 0)
+		}//while(1)
 		close(sd);	
 }
 
