@@ -6,8 +6,8 @@
 */
 
 
-#ifndef ECUIMG_HPP
-#define ECUIMG_HPP
+#ifndef FUNCIONES_HPP
+#define FUNCIONES_HPP
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>

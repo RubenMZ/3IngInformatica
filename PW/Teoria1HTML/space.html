@@ -2,9 +2,10 @@
 	<html>
     <head>
       <meta charset="utf-8">
-      <title>Revista Mensual</title>
+      <title>Canvas...</title>
 
       <link rel="stylesheet" type="text/css" href="style.css">
+       <link rel="stylesheet" type="text/css" href="style2.css">
       <link href="css/bootstrap.min.css" rel="stylesheet">
 
       <!-- Latest compiled and minified CSS -->
@@ -15,6 +16,10 @@
 
       <!-- Latest compiled and minified JavaScript -->
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+
 
     </head>
 
@@ -41,9 +46,38 @@
         <section>
           <!--Articulos del apartado noticias-->
             <article>
-                <a href="space.html"><h1>Mi espacio audiovisual</h1></a>
+                <a href="#"><h1>Canvas</h1></a>
                 
-                <p>Enlace para mostrar un espacio que utiliza las etiquetas y el canvas de HTML5.</p>
+                <canvas id="circle" >Your browser does not support the HTML5 canvas tag.</canvas>
+                 <script>
+                  var c = document.getElementById("circle");
+                  var ctx = c.getContext("2d");
+                  ctx.beginPath();
+                  ctx.arc(95,50,40,0,2*Math.PI);
+                  ctx.stroke();
+                 </script> 
+                <canvas id="line" >Your browser does not support the HTML5 canvas tag.</canvas>
+                 <script>
+                  var c = document.getElementById("line");
+                  var ctx = c.getContext("2d");
+                  ctx.moveTo(0,0);
+                  ctx.lineTo(200,100);
+                  ctx.stroke();
+                  </script>
+                <canvas id="gradient" >Your browser does not support the HTML5 canvas tag.</canvas>
+                <script>
+                var c = document.getElementById("gradient");
+                var ctx = c.getContext("2d");
+                // Create gradient
+                var grd = ctx.createLinearGradient(0,0,200,0);
+                grd.addColorStop(0,"red");
+                grd.addColorStop(1,"white");
+                // Fill with gradient
+                ctx.fillStyle = grd;
+                ctx.fillRect(10,10,150,80);
+                </script>
+
+
 
                  <h6>Fuente <a href="index.html">miweb</a></h6>
             </article>

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <exception>
 #include <vector>
-#include "ecuImg.hpp"
+#include "funciones.hpp"
 
 //Includes para OpenCV
 #include <opencv2/core/core.hpp>
@@ -225,7 +225,8 @@ int main (int argc, char* const* argv)
 				//ecualizar
 
 				if(imagen.channels() == 3)
-				{			
+				{	
+
 					if (mask.data)
 					{
 						if(mask.at<uchar>(x,y)!=0){

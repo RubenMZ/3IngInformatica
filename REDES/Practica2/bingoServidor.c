@@ -18,6 +18,10 @@
  * El servidor ofrece el servicio de un chat
  */
 
+ void mandarBola(){
+    printf("Bola: srand() = %d\n",rand()%90+1 );
+ }
+
 main ( )
 {
   
@@ -47,7 +51,10 @@ main ( )
     srand(time(NULL));
 
     
+    struct timeval timeout;
+
     
+
 	/* --------------------------------------------------
 		Se abre el socket 
 	---------------------------------------------------*/
@@ -67,11 +74,12 @@ main ( )
     on=1;
     ret = setsockopt( sd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
-
-
 	sockname.sin_family = AF_INET;
 	sockname.sin_port = htons(2000);
 	sockname.sin_addr.s_addr =  INADDR_ANY;
+
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
 
 	if (bind (sd, (struct sockaddr *) &sockname, sizeof (sockname)) == -1)
 	{
@@ -109,11 +117,16 @@ main ( )
 		while(1){
             
             //Esperamos recibir mensajes de los clientes (nuevas conexiones o mensajes de los clientes ya conectados)
-            
+
             auxfds = readfds;
 
-            salida = select(FD_SETSIZE,&auxfds,NULL,NULL,NULL);
+                /*printf("hola1\n");
+                signal(SIGALRM,mandarBola);
+                printf("2\n");
+                alarm(5);
+                printf("adios\n");*/
 
+            salida = select(FD_SETSIZE,&auxfds,NULL,NULL,&timeout);
             if(salida > 0){
                 
                 
@@ -206,9 +219,9 @@ main ( )
                                                     if(aceptaUsuario(argumento)==1){
                                                         strcpy(usuarios[i].nombre,argumento);
                                                         usuarios[i].estado=1;
+
                                                         printf("\E[32mUsuario aceptado\e[0m\n");
                                                         send(i,"\E[32m+Ok. Usuario correcto\e[0m", strlen("\E[32m+Ok. Usuario correcto\e[0m"),0);
-
                                                     }else{
                                                         printf("\E[31mUsuario denegado\e[0m\n");
                                                         send(i,  "\E[31m–ERR. Usuario incorrecto\e[0m",strlen( "\E[31m–ERR. Usuario incorrecto\e[0m"),0);
@@ -238,7 +251,7 @@ main ( )
                                                 }
                                                 break;
                                         case 4: if(usuarios[i].estado==2){
-                                                    printf("Usuario %s ha iniciado partida.\n", );
+                                                    printf("Usuario %s ha iniciado partida.\n", usuarios[i].nombre);
                                                     send(i, "Bienvenido al bingo.", strlen("Bienvenido al bingo."),0);
                                                     usuarios[i].estado=3;
                                                 }else{
@@ -270,6 +283,13 @@ main ( )
                     }//if(FD_ISSET(i, &auxfds)) 
                 }//for(i=0; i<FD_SETSIZE; i++)
             }//(salida > 0)
+
+            if(timeout.tv_sec==0){
+                timeout.tv_sec = 10;
+                timeout.tv_usec = 0;
+                mandarBola();
+            }
+            
 		}//while(1)
 		close(sd);	
 }
