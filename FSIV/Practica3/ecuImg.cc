@@ -51,16 +51,16 @@ struct CLIParams
 static void
 mostrarUso (const char * progname) throw ()
 {
-  std::cout << std::endl;
-  std::cout << "Uso: " << progname << " [-h] [-r radio] [-b] input.png output.png [masc.png]" << std::endl;
-  std::cout << "Donde: " << std::endl;
-  std::cout << "-h\tMuestra esta ayuda." << std::endl;
-  std::cout << "-r\tIndica el radio de ventana (2r+1, 2r+1)." << std::endl;
-  std::cout << "-s\tEspecifica el espacio de color." << std::endl;
-  std::cout << "-b\tActiva la ecualización por bipartición del histograma." << std::endl;
-  std::cout << "input.png\tImagen a tratar." << std::endl;
-  std::cout << "output.png\tImagen de salida." << std::endl;
-  std::cout << "[masc.png]\tMáscara opcional para la imagen a tratar." << std::endl << std::endl;
+  cout << endl;
+  cout << "Uso: " << progname << " [-h] [-r radio] [-b] input.png output.png [masc.png]" << endl;
+  cout << "Donde: " << endl;
+  cout << "-h\tMuestra esta ayuda." << endl;
+  cout << "-r\tIndica el radio de ventana (2r+1, 2r+1)." << endl;
+  cout << "-s\tEspecifica el espacio de color." << endl;
+  cout << "-b\tActiva la biparticion." << endl;
+  cout << "input.png\tImagen entrada." << endl;
+  cout << "output.png\tImagen de salida." << endl;
+  cout << "[masc.png]\tMáscara opcional." << endl << endl;
 }
 
 /*!\brief Parsea la linea de comandos.
@@ -117,17 +117,17 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
       case '?': // en caso de error getopt devuelve el caracter ?
 	
 	if (isprint (optopt))
-	  std::cerr << "Error: Opción desconocida \'" << optopt
-	    << "\'" << std::endl;
+	  cerr << "Error: Opción desconocida \'" << optopt
+	    << "\'" << endl;
 	else
-	  std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt
-	    << "\'" << std::endl;
+	  cerr << "Error: Caracter de opcion desconocido \'x" << hex << optopt
+	    << "\'" << endl;
 	mostrarUso(argv[0]);    
 	exit (EXIT_FAILURE);
 	
 	// en cualquier otro caso lo consideramos error grave y salimos
       default:
-	std::cerr << "Error: línea de comandos errónea." << std::endl;
+	cerr << "Error: línea de comandos errónea." << endl;
 	mostrarUso(argv[0]);
 	exit(EXIT_FAILURE);	
     }  // case
@@ -151,7 +151,7 @@ int main (int argc, char* const* argv)
     cout << "Los parámetros son:" << endl;
     cout << "Radio:\t" <<  params.radio << endl;
     cout << "Espacio:\t " << params.space << endl;
-    cout << "Biparticion\t" << ((params.biparticionFlag)?"True":"False") << endl;
+    cout << "Biparticion\t" << params.biparticionFlag << endl;
     cout << "ImagenEntrada:\t" << "\"" << params.imageIn<<"\""<<endl;
     if(params.maskFlag==true)
    		cout << "Mascara:\t" << "\"" << params.mask<< "\""<< endl;
@@ -173,6 +173,10 @@ int main (int argc, char* const* argv)
 		cout << "Error al leer la imagen" << endl;
 		exit(EXIT_FAILURE);
 	}
+
+	imshow(params.imageIn, imagen);
+	waitKey();
+
 	
 	//Leemos la máscara si se ha especificado por la terminal
 	if ( params.maskFlag==true)
@@ -184,6 +188,8 @@ int main (int argc, char* const* argv)
 			cout << "Error al leer la máscara" << endl;
 			exit(EXIT_FAILURE);
 		}
+		imshow(params.mask, mask);
+		waitKey();
 	}
 	
 	cout<<"Procesando... Espere."<<endl;
@@ -220,38 +226,9 @@ int main (int argc, char* const* argv)
 					//Calcular histograma sin mascara
 					crearHistograma(histograma,ventana,mask);
 				}	
-
 				normalizar(histograma);
 				//ecualizar
-
-				if(imagen.channels() == 3)
-				{	
-
-					if (mask.data)
-					{
-						if(mask.at<uchar>(x,y)!=0){
-							int valor = salida.at<Vec3b>(x,y)[2];
-							salida.at<Vec3b>(x,y)[2] = histograma[valor];
-						}
-					}else{
-						int valor = salida.at<Vec3b>(x,y)[2];
-						salida.at<Vec3b>(x,y)[2] = histograma[valor];
-					}
-				}
-				else if(imagen.channels() == 1)
-				{
-					if (mask.data)
-					{
-						if(mask.at<uchar>(x,y)!=0){
-							int valor = salida.at<uchar>(x,y);
-							salida.at<uchar>(x,y) = histograma[valor];
-						}
-					}else{
-							int valor = salida.at<uchar>(x,y);
-							salida.at<uchar>(x,y) = histograma[valor];
-					}
-
-				}
+				ecualizarRadio(histograma, imagen, salida, mask, x, y);
 			}
 				
 	}
@@ -259,15 +236,21 @@ int main (int argc, char* const* argv)
 	if(params.imageOutFlag==false)
 		params.imageOut="salida.png";
 
-	
 
 	if(radio == 0){	
 		if(imagen.channels() == 3)
 			cvtColor(imagen,imagen,CV_HSV2BGR);
+
+		imshow(params.imageOut, imagen);
+		waitKey();
 		imwrite(params.imageOut,imagen);
+
 	}else{
 		if(imagen.channels() == 3)
 			cvtColor(salida,salida,CV_HSV2BGR);
+
+		imshow(params.imageOut, salida);
+		waitKey();
 		imwrite(params.imageOut,salida);
   	}
   }

@@ -24,6 +24,7 @@
 	void ordenarCarton(int ** carton, int fil, int col);
 
 	int comprobarOpcion(char * cabecera1, char * cabecera2);
+	int compruebaBola(int * vector, int n, int bola);
 
 
 #endif

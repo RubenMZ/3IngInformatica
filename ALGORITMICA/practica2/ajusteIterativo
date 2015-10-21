@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-2.0
 %%Title: ajusteIterativo
 %%Creator: gnuplot 4.6 patchlevel 4
-%%CreationDate: Tue Oct 20 09:25:55 2015
+%%CreationDate: Wed Oct 21 13:53:24 2015
 %%DocumentFonts: (atend)
 %%BoundingBox: 50 50 410 302
 %%EndComments
@@ -433,7 +433,7 @@ SDict begin [
   /Author (ruben)
 %  /Producer (gnuplot)
 %  /Keywords ()
-  /CreationDate (Tue Oct 20 09:25:55 2015)
+  /CreationDate (Wed Oct 21 13:53:24 2015)
   /DOCINFO pdfmark
 end
 } ifelse
@@ -461,16 +461,16 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 1080 M
+602 890 M
 63 0 V
 6282 0 R
 -63 0 V
--6366 0 R
+518 890 M
 ( 6) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
-602 1712 M
+602 1333 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -479,7 +479,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 2344 M
+602 1775 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -488,7 +488,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 2975 M
+602 2217 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -497,7 +497,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 3607 M
+602 2660 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -506,7 +506,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 4239 M
+602 3102 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -515,12 +515,39 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 4871 M
+602 3544 M
 63 0 V
 6282 0 R
 -63 0 V
 -6366 0 R
 ( 12) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+602 3986 M
+63 0 V
+6282 0 R
+-63 0 V
+-6366 0 R
+( 13) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+602 4429 M
+63 0 V
+6282 0 R
+-63 0 V
+-6366 0 R
+( 14) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+602 4871 M
+63 0 V
+6282 0 R
+-63 0 V
+-6366 0 R
+( 15) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -638,11 +665,11 @@ LCb setrgbcolor
 LT0
 6380 721 M
 399 0 V
-602 1080 M
-2188 3734 L
-1587 821 V
-5361 4113 L
-1586 253 V
+602 868 M
+2188 2460 L
+3775 4451 L
+1586 88 V
+6947 1908 L
 % End plot #1
 % Begin plot #2
 stroke
@@ -654,11 +681,11 @@ LCb setrgbcolor
 LT1
 6380 581 M
 399 0 V
-602 1060 M
-2188 3813 L
-1587 623 V
-5361 4192 L
-1586 154 V
+602 847 M
+2188 2545 L
+3775 4324 L
+1586 300 V
+6947 1886 L
 % End plot #2
 stroke
 LTb

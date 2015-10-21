@@ -132,3 +132,15 @@ void manejador (int signum){
 
        	return opcion;
 	}
+
+	int compruebaBola(int * vector,int n, int bola){
+		int i;
+		for (i = 0; i < n; ++i)
+		{
+			if (vector[i]==bola)
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}

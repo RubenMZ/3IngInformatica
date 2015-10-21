@@ -87,8 +87,10 @@
 	}
 
 	char * cifrarPass(char * cadena){
-		char ret[MSG_SIZE];
+		char *ret;
 		int i=0;
+
+		ret =(char *)malloc(MSG_SIZE*sizeof(char));
 
 		for (i = 0; i < strlen(cadena); ++i)
 		{

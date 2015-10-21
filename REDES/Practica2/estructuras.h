@@ -10,12 +10,13 @@
 		int ** carton;
 	}Usuario;
 
-	typedef struct partida
-	{
+	typedef struct partida{
+
 		int usuarios[4];
 		int comenzada;
 		int numUsuarios;
 		int bolas[90];
+		int numBolas;
 	}Partida;
 
 #endif

@@ -18,8 +18,29 @@
  * El servidor ofrece el servicio de un chat
  */
 
- void mandarBola(){
-    printf("Bola: srand() = %d\n",rand()%90+1 );
+ void mandarBola(Partida * partidas, int n){
+    int i,j, bola;
+    char buffer[MSG_SIZE];
+
+    for (i = 0; i < n; ++i)
+    {
+        bola=rand()%90+1;
+        if (compruebaBola(partidas[i].bolas, partidas[i].numBolas, bola)==0)
+        {
+            partidas[i].bolas[partidas[i].numBolas]=bola;
+            partidas[i].numBolas++;
+            for (j = 0; j < partidas[i].numUsuarios; ++j)
+            {
+                bzero(buffer,sizeof(buffer));
+                sprintf(buffer,"Bola: %d\n", bola);
+                send(partidas[i].usuarios[j],buffer,strlen(buffer),0);
+            }
+        }else
+        {
+            i--;
+        }
+
+    }
  }
 
 main ( )
@@ -34,10 +55,11 @@ main ( )
 	socklen_t from_len;
     fd_set readfds, auxfds;
     int salida;
-    int numUsuarios = 4;
+    int numUsuariosConectados = 0;
+    int numUsuariosJugando = 0;
     int numPartidas=0;
 
-    Usuario usuarios[MAX_CLIENTS+4];
+    Usuario usuarios[MAX_CLIENTS];
     Partida partidas[10];
     char* cabecera1, *cabecera2, argumento[MSG_SIZE];
     int opcion;
@@ -54,7 +76,14 @@ main ( )
     struct timeval timeout;
 
     
+    //Inicializar las partidas
 
+    for (i = 0; i < 10; ++i)
+    {
+        partidas[i].comenzada=0;
+        partidas[i].numUsuarios=0;
+        partidas[i].numBolas=0;
+    }
 	/* --------------------------------------------------
 		Se abre el socket 
 	---------------------------------------------------*/
@@ -142,20 +171,21 @@ main ( )
                             }
                             else//Acepta la peticion para la informacion
                             {
-                                if(numUsuarios < MAX_CLIENTS){
-                                    inicializarUsuario(&usuarios[new_sd], new_sd);
+                                if(numUsuariosConectados < MAX_CLIENTS){
+                                    inicializarUsuario(&usuarios[numUsuariosConectados], new_sd);
 
-                                    numUsuarios++;
+                                    numUsuariosConectados++;
                                     FD_SET(new_sd,&readfds);
-                                
-                                    send(new_sd,"Introduce usuario y contraseña:",strlen("Introduce usuario y contraseña:"),0);
                                     send(new_sd, "+0k. Usuario conectado", strlen("+0k. Usuario conectado"),0);
+                                    bzero(buffer,sizeof(buffer));
                                     sprintf(buffer, "Tu id de usuario es: %d", new_sd);
                                     send(new_sd, buffer, strlen(buffer),0);
+                                    send(new_sd,"Introduce usuario y contraseña:\n",strlen("Introduce usuario y contraseña:\n"),0);
+
 
                                     printf("Nuevo jugador conectado: %d\n", new_sd);
 
-                                    for(j=4; j<(numUsuarios-1);j++){
+                                    for(j=0; j<(numUsuariosConectados-1);j++){
                                         bzero(buffer,sizeof(buffer));
                                         sprintf(buffer, "Nuevo jugador conectado: %d\n",new_sd);
                                         send(usuarios[j+4].id,buffer,strlen(buffer),0);
@@ -180,7 +210,7 @@ main ( )
                             //Controlar si se ha introducido "SALIR", cerrando todos los sockets y finalmente saliendo del servidor. (implementar)
                             if(strcmp(buffer,"SALIR\n") == 0){
                              
-                                for (j = 4; j < numUsuarios+4; j++){
+                                for (j = 4; j < numUsuariosConectados+4; j++){
                                     send(usuarios[j].id, "Desconexion servidor\n", strlen("Desconexion servidor\n"),0);
                                     close(usuarios[j].id);
                                     FD_CLR(usuarios[j].id,&readfds);
@@ -199,7 +229,7 @@ main ( )
                             if(recibidos > 0){
                                 
                                 if(strcmp(buffer,"SALIR\n") == 0){
-                                    salirCliente(i,&readfds,&numUsuarios,usuarios);
+                                    salirCliente(i,&readfds,&numUsuariosConectados,usuarios);
                                 }
                                 else{
 
@@ -254,6 +284,18 @@ main ( )
                                                     printf("Usuario %s ha iniciado partida.\n", usuarios[i].nombre);
                                                     send(i, "Bienvenido al bingo.", strlen("Bienvenido al bingo."),0);
                                                     usuarios[i].estado=3;
+                                                    usuarios[i].partida=numPartidas;
+                                                    numUsuariosJugando++;
+                                                    partidas[numPartidas].usuarios[partidas[numPartidas].numUsuarios]=i;
+                                                    partidas[numPartidas].numUsuarios++;
+
+                                                    if (numUsuariosJugando>0 && numUsuariosJugando%4==0)
+                                                    {
+                                                        partidas[numPartidas].comenzada=1;
+                                                        printf("Partida %d iniciada.\n", numPartidas+1);
+                                                        numPartidas++;
+                                                    }
+                                                    /*MANDAR CARTON*/
                                                 }else{
                                                     continuarRegistro(usuarios[i]);
                                                 }
@@ -277,7 +319,7 @@ main ( )
                             {
                                 printf("El socket %d, ha introducido ctrl+c\n", i);
                                 //Eliminar ese socket
-                                salirCliente(i,&readfds,&numUsuarios,usuarios);
+                                salirCliente(i,&readfds,&numUsuariosConectados,usuarios);
                             }
                         }//if (i == 0) else
                     }//if(FD_ISSET(i, &auxfds)) 
@@ -287,7 +329,7 @@ main ( )
             if(timeout.tv_sec==0){
                 timeout.tv_sec = 10;
                 timeout.tv_usec = 0;
-                mandarBola();
+                mandarBola(partidas, numPartidas);
             }
             
 		}//while(1)
