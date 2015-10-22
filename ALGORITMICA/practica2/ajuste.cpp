@@ -116,7 +116,7 @@ using namespace std;
 		ind.push_back(sumax2y);
 		ind.push_back(sumax3y);
 
-		det = itera.determinanteIterativo(mat, 4);
+		det = itera.determinanteIterativo(mat);
 
 		for (int j = 1; j <= 4; ++j)
 		{
@@ -127,16 +127,16 @@ using namespace std;
 			}
 
 			if(j==1){
-				detA0=itera.determinanteIterativo(maux, 4);
+				detA0=itera.determinanteIterativo(maux);
 			}
 			if(j==2){
-				detA1=itera.determinanteIterativo(maux, 4);
+				detA1=itera.determinanteIterativo(maux);
 			}
 			if(j==3){
-				detA2=itera.determinanteIterativo(maux, 4);
+				detA2=itera.determinanteIterativo(maux);
 			}
 			if(j==4){
-				detA3=itera.determinanteIterativo(maux, 4);
+				detA3=itera.determinanteIterativo(maux);
 			}
 		}
 

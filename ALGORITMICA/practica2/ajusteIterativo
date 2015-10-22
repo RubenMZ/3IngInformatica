@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-2.0
 %%Title: ajusteIterativo
 %%Creator: gnuplot 4.6 patchlevel 4
-%%CreationDate: Wed Oct 21 22:29:58 2015
+%%CreationDate: Thu Oct 22 08:40:21 2015
 %%DocumentFonts: (atend)
 %%BoundingBox: 50 50 410 302
 %%EndComments
@@ -433,7 +433,7 @@ SDict begin [
   /Author (ruben)
 %  /Producer (gnuplot)
 %  /Keywords ()
-  /CreationDate (Wed Oct 21 22:29:58 2015)
+  /CreationDate (Thu Oct 22 08:40:21 2015)
   /DOCINFO pdfmark
 end
 } ifelse
@@ -457,20 +457,11 @@ LCb setrgbcolor
 6282 0 R
 -63 0 V
 518 448 M
-( 0) Rshow
-1.000 UL
-LTb
-LCb setrgbcolor
-602 1185 M
-63 0 V
-6282 0 R
--63 0 V
--6366 0 R
 ( 2) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
-602 1922 M
+602 1001 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -479,7 +470,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 2660 M
+602 1554 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -488,7 +479,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 3397 M
+602 2107 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -497,7 +488,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 4134 M
+602 2660 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -506,7 +497,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-602 4871 M
+602 3212 M
 63 0 V
 6282 0 R
 -63 0 V
@@ -515,16 +506,52 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
+602 3765 M
+63 0 V
+6282 0 R
+-63 0 V
+-6366 0 R
+( 14) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+602 4318 M
+63 0 V
+6282 0 R
+-63 0 V
+-6366 0 R
+( 16) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+602 4871 M
+63 0 V
+6282 0 R
+-63 0 V
+-6366 0 R
+( 18) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
 602 448 M
 0 63 V
 0 4360 R
 0 -63 V
 602 308 M
+( 2) Cshow
+1.000 UL
+LTb
+LCb setrgbcolor
+1395 448 M
+0 63 V
+0 4360 R
+0 -63 V
+0 -4500 R
 ( 3) Cshow
 1.000 UL
 LTb
 LCb setrgbcolor
-1508 448 M
+2188 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -533,7 +560,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-2415 448 M
+2981 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -542,7 +569,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-3321 448 M
+3775 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -551,7 +578,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-4228 448 M
+4568 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -560,7 +587,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-5134 448 M
+5361 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -569,7 +596,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-6041 448 M
+6154 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -621,13 +648,14 @@ LT0
 6380 721 M
 399 0 V
 602 890 M
-906 74 V
-907 295 V
-906 295 V
-907 1253 V
-906 1401 V
-907 442 V
-906 -148 V
+793 166 V
+793 774 V
+793 885 V
+794 884 V
+4568 1554 L
+793 718 V
+793 996 V
+793 1271 V
 % End plot #1
 % Begin plot #2
 stroke
@@ -639,14 +667,15 @@ LCb setrgbcolor
 LT1
 6380 581 M
 399 0 V
-602 1042 M
-1508 701 L
-907 385 V
-906 845 V
-907 1039 V
-906 968 V
-907 631 V
-906 27 V
+602 497 M
+793 1166 V
+793 567 V
+793 171 V
+794 -23 V
+793 -12 V
+793 203 V
+793 620 V
+793 1241 V
 % End plot #2
 stroke
 LTb

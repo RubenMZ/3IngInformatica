@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-2.0
 %%Title: ajusteRecursivo
 %%Creator: gnuplot 4.6 patchlevel 4
-%%CreationDate: Wed Oct 21 22:29:58 2015
+%%CreationDate: Thu Oct 22 08:40:21 2015
 %%DocumentFonts: (atend)
 %%BoundingBox: 50 50 410 302
 %%EndComments
@@ -433,7 +433,7 @@ SDict begin [
   /Author (ruben)
 %  /Producer (gnuplot)
 %  /Keywords ()
-  /CreationDate (Wed Oct 21 22:29:58 2015)
+  /CreationDate (Thu Oct 22 08:40:21 2015)
   /DOCINFO pdfmark
 end
 } ifelse
@@ -466,7 +466,7 @@ LCb setrgbcolor
 5862 0 R
 -63 0 V
 -5946 0 R
-( 200000) Rshow
+( 500000) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -475,7 +475,7 @@ LCb setrgbcolor
 5862 0 R
 -63 0 V
 -5946 0 R
-( 400000) Rshow
+( 1e+06) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -484,7 +484,7 @@ LCb setrgbcolor
 5862 0 R
 -63 0 V
 -5946 0 R
-( 600000) Rshow
+( 1.5e+06) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -493,7 +493,7 @@ LCb setrgbcolor
 5862 0 R
 -63 0 V
 -5946 0 R
-( 800000) Rshow
+( 2e+06) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -502,7 +502,7 @@ LCb setrgbcolor
 5862 0 R
 -63 0 V
 -5946 0 R
-( 1e+06) Rshow
+( 2.5e+06) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -511,7 +511,7 @@ LCb setrgbcolor
 5862 0 R
 -63 0 V
 -5946 0 R
-( 1.2e+06) Rshow
+( 3e+06) Rshow
 1.000 UL
 LTb
 LCb setrgbcolor
@@ -520,11 +520,20 @@ LCb setrgbcolor
 0 4360 R
 0 -63 V
 0 -4500 R
+( 2) Cshow
+1.000 UL
+LTb
+LCb setrgbcolor
+1763 448 M
+0 63 V
+0 4360 R
+0 -63 V
+0 -4500 R
 ( 3) Cshow
 1.000 UL
 LTb
 LCb setrgbcolor
-1868 448 M
+2503 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -533,7 +542,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-2715 448 M
+3244 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -542,7 +551,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-3561 448 M
+3985 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -551,7 +560,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-4408 448 M
+4725 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -560,7 +569,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-5254 448 M
+5466 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -569,7 +578,7 @@ LCb setrgbcolor
 1.000 UL
 LTb
 LCb setrgbcolor
-6101 448 M
+6206 448 M
 0 63 V
 0 4360 R
 0 -63 V
@@ -621,13 +630,14 @@ LT0
 6380 721 M
 399 0 V
 1022 448 M
-846 0 V
-847 0 V
-846 1 V
-847 4 V
-846 41 V
-847 351 V
-846 3466 V
+741 0 V
+740 0 V
+741 0 V
+741 2 V
+740 4 V
+741 38 V
+740 341 V
+741 3441 V
 % End plot #1
 % Begin plot #2
 stroke
@@ -639,14 +649,15 @@ LCb setrgbcolor
 LT1
 6380 581 M
 399 0 V
-1022 450 M
-846 0 V
-847 0 V
-846 0 V
-847 5 V
-846 38 V
-847 343 V
-846 3476 V
+1022 449 M
+741 0 V
+740 0 V
+741 0 V
+741 1 V
+740 4 V
+741 37 V
+740 340 V
+741 3443 V
 % End plot #2
 stroke
 LTb

@@ -86,14 +86,14 @@ int main (int argc, char ** argv){
 
             //Medimos el tiempo para iterativo
             c.start();
-            det=itera.determinanteIterativo(matriz, i);
+            det=itera.determinanteIterativo(matriz);
             c.stop();
             cout << " Deteterminante por Iterativo Gauss "<<det<<endl;
             tiemposIterativo.push_back(c.elapsed());
             
             //Medimos el tiempo para recursivo
             c.start();
-            det=recur.determinanteRecursivo(matriz2, i);
+            det=recur.determinanteRecursivo(matriz2);
             c.stop();
             cout << " Determinante por Recursivo "<<det<<endl;
             tiemposRecursivo.push_back(c.elapsed());

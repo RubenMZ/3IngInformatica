@@ -9,11 +9,12 @@ class DeterminanteIterativo{
 
 	public:
 
-		T determinanteIterativo(const Matriz <T> &mat, const int &n) {
+		T determinanteIterativo(const Matriz <T> &mat) {
 
 			// Algoritmo para la eliminación simple de Gauss
 		    Matriz <T> mAux = mat;
 	
+
 		  	int NoCero,A,NoReg = 0,Perm=0;/*permutaciones*/
 		  	double Pivote,V1,Det=1.0;
 		  	for(int i=1 ; i <= mAux.filas() ; i++){

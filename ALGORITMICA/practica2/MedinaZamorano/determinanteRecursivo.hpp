@@ -8,9 +8,12 @@ class DeterminanteRecursivo{
 
 	public:
 		
-		T determinanteRecursivo(const Matriz <T> &m, const int &n){
+		T determinanteRecursivo(const Matriz <T> &m){
 			double det=0, p=0, h=0, k=0, i=0, j=0;
-		 	Matriz<T> temp(n,n);
+		 	Matriz<T> temp(m.filas(),m.columnas());
+		 	int n= m.filas();
+
+		 	
 
 			if(n==1) {
 				return m.elemento(1,1);
@@ -35,7 +38,8 @@ class DeterminanteRecursivo{
 							 	}
 							 }
 				 		}
-				 		det=det+m.elemento(1,p)*pow(-1,p+1)*determinanteRecursivo(temp,n-1);
+						Matriz<T> aux = temp.eliminarFilaColumna(n,n);
+				 		det=det+m.elemento(1,p)*pow(-1,p+1)*determinanteRecursivo(aux);
 				 	}
 					 return det;
 			 	}
