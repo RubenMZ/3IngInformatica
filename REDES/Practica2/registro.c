@@ -1,4 +1,5 @@
 #include "registro.h"
+#include <string.h>
 
 
 	int aceptaUsuario(char * nombre){
@@ -18,7 +19,8 @@
 			if (strcmp(nombre2,nombre)==0)
 				return 1;
 		}
-		close(f);
+		fclose(f);
+			
 		return 0;
 	}
 
@@ -43,6 +45,7 @@
 		return cortada;
 	}
 
+
 	int aceptaPass(char * nombre, char* pass){
 		FILE* f;
 		char linea[MSG_SIZE];
@@ -66,7 +69,7 @@
 				return 1;
 			}
 		}
-		close(f);
+		fclose(f);
 		return 0;
 	}
 
@@ -82,9 +85,46 @@
 		}
 
 		fprintf(f, "%s %s\n", nombre, pass);
-		close(f);
+		fclose(f);
 		return 0;
 	}
+
+	int registroComandos(char* argv, Usuario* user)
+	{
+		int i;
+		char * aux1, *aux2;
+		char * str1, *str2;
+		char str[MSG_SIZE];
+		char c=' ';
+		char buffer[MSG_SIZE];
+
+		printf("%s\n", argv);
+
+			aux1=cortarCadena(argv, MSG_SIZE, c);
+			strncpy(str, argv+strlen(aux1)+1, MSG_SIZE);
+			str1=cortarCadena(str, MSG_SIZE,  c);
+			strncpy(str, str+strlen(str1)+1, MSG_SIZE);
+			aux2=cortarCadena(str, MSG_SIZE,  c);
+			strncpy(str, str+strlen(aux2)+1, MSG_SIZE);
+			str2=str;
+
+			if (strcmp(aux1,"-u")==0 && strcmp(aux2, "-p")==0)
+			{
+				strcpy(user->nombre, str1);
+				strcpy(user->pass, str2);
+			}else{
+				if (strcmp(aux1,"-p")==0 && strcmp(aux2,"-u")==0)
+				{
+					strcpy(user->pass, str1);
+					strcpy(user->nombre, str2);
+
+				}else{
+					return 0;
+				}
+			}
+		return 1;
+	}
+
 
 	char * cifrarPass(char * cadena){
 		char *ret;
@@ -104,7 +144,7 @@
 	void continuarRegistro(Usuario usuario){
 
 		if(usuario.estado==0)
-            send(usuario.id,"Introduce USUARIO <nombre>", strlen("Introduce USUARIO <nombre>"),0);
+            send(usuario.id,"Introduce USUARIO <nombre> o REGISTER -u <nombre> -p <pass>", strlen("Introduce USUARIO <nombre> o REGISTER -u <nombre> -p <pass>"),0);
         
 		if(usuario.estado==1)
             send(usuario.id,"Introduce PASSWORD <pass>", strlen("Introduce PASSWORD <pass>"),0);

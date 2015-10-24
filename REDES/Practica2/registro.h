@@ -12,6 +12,8 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
+#include <unistd.h>
+
 
 #define MSG_SIZE 250
 #define MAX_CLIENTS 40
@@ -21,6 +23,7 @@
 	char * cortarCadena(char * cadena, int n, char c);
 	int aceptaPass(char * nombre, char* pass);
 	int registrarUsuario(char * nombre, char * pass);
+	int registroComandos(char* argv, Usuario* user);
 	char * cifrarPass(char * cadena);
 	void continuarRegistro(Usuario usuario);
 

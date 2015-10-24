@@ -149,12 +149,6 @@ main ( )
 
             auxfds = readfds;
 
-                /*printf("hola1\n");
-                signal(SIGALRM,mandarBola);
-                printf("2\n");
-                alarm(5);
-                printf("adios\n");*/
-
             salida = select(FD_SETSIZE,&auxfds,NULL,NULL,&timeout);
             if(salida > 0){
                 
@@ -176,9 +170,9 @@ main ( )
 
                                     numUsuariosConectados++;
                                     FD_SET(new_sd,&readfds);
-                                    send(new_sd, "+0k. Usuario conectado", strlen("+0k. Usuario conectado"),0);
+                                    send(new_sd, "+0k. Usuario conectado\n", strlen("+0k. Usuario conectado\n"),0);
                                     bzero(buffer,sizeof(buffer));
-                                    sprintf(buffer, "Tu id de usuario es: %d", new_sd);
+                                    sprintf(buffer, "Tu id de usuario es: %d\n", new_sd);
                                     send(new_sd, buffer, strlen(buffer),0);
                                     send(new_sd,"Introduce usuario y contraseña:\n",strlen("Introduce usuario y contraseña:\n"),0);
 
@@ -208,9 +202,9 @@ main ( )
                             fgets(buffer, sizeof(buffer),stdin);
                             
                             //Controlar si se ha introducido "SALIR", cerrando todos los sockets y finalmente saliendo del servidor. (implementar)
-                            if(strcmp(buffer,"SALIR\n") == 0){
+                            if(strcmp(buffer,"SALIR\n") == 0 || strcmp(buffer,"salir\n") == 0 ||strcmp(buffer,"Salir\n") == 0){
                              
-                                for (j = 4; j < numUsuariosConectados+4; j++){
+                                for (j = 0; j < numUsuariosConectados; j++){
                                     send(usuarios[j].id, "Desconexion servidor\n", strlen("Desconexion servidor\n"),0);
                                     close(usuarios[j].id);
                                     FD_CLR(usuarios[j].id,&readfds);
@@ -228,7 +222,7 @@ main ( )
                             
                             if(recibidos > 0){
                                 
-                                if(strcmp(buffer,"SALIR\n") == 0){
+                                if(strcmp(buffer,"SALIR\n") == 0 || strcmp(buffer,"salir\n") == 0 ||strcmp(buffer,"Salir\n") == 0){
                                     salirCliente(i,&readfds,&numUsuariosConectados,usuarios);
                                 }
                                 else{
@@ -238,7 +232,32 @@ main ( )
                                     opcion=comprobarOpcion(cabecera1, cabecera2);
 
                                     switch(opcion){
-                                        case 1: printf("opcion registro\n");
+                                        case 1: strncpy(argumento, buffer+strlen(cabecera1)+1, MSG_SIZE);
+                                                if(argumento[strlen(argumento)-1]=='\n')
+                                                    argumento[strlen(argumento)-1]='\0';
+                                                printf("argumento: %s\n", argumento);
+                                                printf("Peticion de registro usuario: (%s)\n", argumento);
+                                                if(usuarios[i].estado==0){
+                                                    printf("main\n");
+                                                    if(registroComandos(argumento, &usuarios[i])==1){
+                                                        printf("nombre %s pass %s\n", usuarios[i].nombre, usuarios[i].pass);
+                                                        registrarUsuario(usuarios[i].nombre, usuarios[i].pass);
+                                                        printf("\E[32mRegistro aceptada\e[0m\n");
+                                                        send(i,"\E[32m+Ok. Usuario registrado\e[0m", strlen("\E[32m+Ok. Usuario registrado\e[0m"), 0);
+                                                    }else{
+                                                        printf("\E[31mUsuario no registrado\e[0m\n");
+                                                        printf("Parametros -u y -p incorrectos\n");
+                                                        send(i,"\E[31m+Error. Usuario no registrado\n\e[0m", strlen("\E[31m+Error. Usuario no registrado\n\e[0m"),0);
+                                                        bzero(buffer,sizeof(buffer));
+                                                        strcpy(buffer, "Parametros -u y -p incorrectos\n");
+                                                        send(i, buffer, strlen(buffer), 0);
+                                                    }
+                                                    
+
+                                                }else{
+                                                    continuarRegistro(usuarios[i]);
+                                                }
+                                                
                                                 break;
                                         case 2: 
                                                 strncpy(argumento, buffer+strlen(cabecera1)+1, MSG_SIZE);
