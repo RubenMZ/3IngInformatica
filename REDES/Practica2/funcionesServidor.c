@@ -37,81 +37,6 @@ void manejador (int signum){
 }
 
 
-	int ** generaCarton(){
-		int **carton;
-		int num=0, aux=0, fila=0, i,j;
-
-		carton =(int **)malloc(3*sizeof(int *));
-
-		for ( i = 0; i < 3; ++i)
-			carton[i]=(int *)malloc(9*sizeof(int));
-
-		for ( i = 0; i < 3; ++i)
-			for (j = 0; j< 5; ++j)
-				carton[i][j]=0;
-
-		while(num<15){
-			aux=rand()%90+1;
-			if(compruebaRepetido(carton, 3, 9, aux)==0){
-
-				if (aux==90){
-					if (carton[fila][8]==0)
-						carton[fila][8]=aux;
-				}else{
-					if (carton[fila][aux/10]==0)
-						carton[fila][aux/10]=aux;
-				}
-
-				if(compruebaRepetido(carton, 3, 9, aux)==1 && aux){
-					//Quiere decir que lo ha metido, porque no estaba antes y era posicion valida =0
-					num++;
-					if (num%5==0 && num > 1)
-						fila++;
-				}
-			}//if(compruebaRepetido(carton, 3, 9, aux)==0)	
-		}//while(num<15)
-
-		ordenarCarton(carton, 3, 9);
-		return carton;
-	}
-
-	int compruebaRepetido(int ** carton, int fil, int col, int n){
-		int i, j;
-
-		for ( i = 0; i < fil; ++i)
-		{
-			for ( j = 0; j < col; ++j)
-			{
-				if(carton[i][j]==n)
-					return 1;
-			}
-		}
-		return 0;
-	}
-
-	void ordenarCarton(int ** carton, int fil, int col){
-		int i, j;
-		int aux;
-
-		for (j = 0; j < col; ++j)
-		{
-			for (i = 1; i < fil; ++i)
-			{				
-				if(carton[i][j]!=0 && carton[i][j]<carton[i-1][j] && carton[i-1][j]!=0){
-					aux=carton[i][j];
-					carton[i][j]=carton[i-1][j];
-					carton[i-1][j]=aux;
-				}
-				if (carton[0][j]!=0 && carton[2][j]!=0 && carton[2][j]<carton[0][j])
-				{
-					aux=carton[0][j];
-					carton[0][j]=carton[2][j];
-					carton[2][j]=aux;
-				}
-			}
-		}
-	}
-
 	int comprobarOpcion(char * cabecera1, char * cabecera2){
 		int opcion=0;
 
@@ -133,14 +58,3 @@ void manejador (int signum){
        	return opcion;
 	}
 
-	int compruebaBola(int * vector,int n, int bola){
-		int i;
-		for (i = 0; i < n; ++i)
-		{
-			if (vector[i]==bola)
-			{
-				return 1;
-			}
-		}
-		return 0;
-	}

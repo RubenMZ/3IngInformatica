@@ -1,11 +1,11 @@
-INCLUDES = funcionesServidor.h registro.h estructuras.h 
-OBJECTS = bingoServidor.o funcionesServidor.o registro.o
+INCLUDES = funcionesServidor.h registro.h estructuras.h bingo.h
+OBJECTS = bingoServidor.o funcionesServidor.o registro.o bingo.o
 FLAGS = -Wall -g -o
 
 all: bingoCliente bingoServidor clean
 
-bingoCliente: bingoCliente.o
-	gcc bingoCliente.o $(FLAGS) bingoCliente
+bingoCliente: bingoCliente.o registro.o bingo.o
+	gcc bingoCliente.o bingo.o registro.o $(FLAGS) bingoCliente
 
 bingoServidor: $(INCLUDES) $(OBJECTS)
 	gcc $(OBJECTS) $(FLAGS) bingoServidor
@@ -21,6 +21,9 @@ funcionesServidor.o: funcionesServidor.c funcionesServidor.h
 
 registro.o: registro.c registro.h
 	gcc -c registro.c
+
+bingo.o: bingo.c bingo.h
+	gcc -c bingo.c
 
 clean:
 	rm *.o

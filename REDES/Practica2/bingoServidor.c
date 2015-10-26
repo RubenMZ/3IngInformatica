@@ -6,44 +6,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 #include "funcionesServidor.h"
 #include "registro.h"
 #include "estructuras.h"
+#include "bingo.h"
 
 #define MSG_SIZE 250
 #define MAX_CLIENTS 40
 
 
 /*
- * El servidor ofrece el servicio de un chat
+ * El servidor ofrece el servicio de bingo
  */
 
- void mandarBola(Partida * partidas, int n){
-    int i,j, bola;
-    char buffer[MSG_SIZE];
-
-    for (i = 0; i < n; ++i)
-    {
-        bola=rand()%90+1;
-        if (compruebaBola(partidas[i].bolas, partidas[i].numBolas, bola)==0)
-        {
-            partidas[i].bolas[partidas[i].numBolas]=bola;
-            partidas[i].numBolas++;
-            for (j = 0; j < partidas[i].numUsuarios; ++j)
-            {
-                bzero(buffer,sizeof(buffer));
-                sprintf(buffer,"Bola: %d\n", bola);
-                send(partidas[i].usuarios[j],buffer,strlen(buffer),0);
-            }
-        }else
-        {
-            i--;
-        }
-
-    }
- }
-
-main ( )
+void main ( )
 {
   
 	/*---------------------------------------------------- 
@@ -148,15 +125,15 @@ main ( )
             //Esperamos recibir mensajes de los clientes (nuevas conexiones o mensajes de los clientes ya conectados)
 
             auxfds = readfds;
-
             salida = select(FD_SETSIZE,&auxfds,NULL,NULL,&timeout);
+            //printf("FD_SETSIZE: %d\n", FD_SETSIZE);
             if(salida > 0){
-                
                 
                 for(i=0; i<FD_SETSIZE; i++){
                     
                     //Buscamos el socket por el que se ha establecido la comunicación
                     if(FD_ISSET(i, &auxfds)) {
+                        //printf("i : %d\n", i);
                         
                         if( i == sd){
                             
@@ -170,7 +147,8 @@ main ( )
 
                                     numUsuariosConectados++;
                                     FD_SET(new_sd,&readfds);
-                                    send(new_sd, "+0k. Usuario conectado\n", strlen("+0k. Usuario conectado\n"),0);
+                                    bzero(buffer,sizeof(buffer));
+                                    send(new_sd, "\E[32m+0k. Usuario conectado\e[0m\n", strlen("\E[32m+0k. Usuario conectado\e[0m\n"),0);
                                     bzero(buffer,sizeof(buffer));
                                     sprintf(buffer, "Tu id de usuario es: %d\n", new_sd);
                                     send(new_sd, buffer, strlen(buffer),0);
@@ -219,7 +197,7 @@ main ( )
 
                             bzero(buffer,sizeof(buffer));
                             recibidos = recv(i,buffer,sizeof(buffer),0);
-                            
+                            //printf("i: %d", i);
                             if(recibidos > 0){
                                 
                                 if(strcmp(buffer,"SALIR\n") == 0 || strcmp(buffer,"salir\n") == 0 ||strcmp(buffer,"Salir\n") == 0){
@@ -243,10 +221,12 @@ main ( )
                                                         printf("nombre %s pass %s\n", usuarios[i].nombre, usuarios[i].pass);
                                                         registrarUsuario(usuarios[i].nombre, usuarios[i].pass);
                                                         printf("\E[32mRegistro aceptada\e[0m\n");
+                                                        bzero(buffer,sizeof(buffer));
                                                         send(i,"\E[32m+Ok. Usuario registrado\e[0m", strlen("\E[32m+Ok. Usuario registrado\e[0m"), 0);
                                                     }else{
                                                         printf("\E[31mUsuario no registrado\e[0m\n");
                                                         printf("Parametros -u y -p incorrectos\n");
+                                                        bzero(buffer,sizeof(buffer));
                                                         send(i,"\E[31m+Error. Usuario no registrado\n\e[0m", strlen("\E[31m+Error. Usuario no registrado\n\e[0m"),0);
                                                         bzero(buffer,sizeof(buffer));
                                                         strcpy(buffer, "Parametros -u y -p incorrectos\n");
@@ -268,10 +248,11 @@ main ( )
                                                     if(aceptaUsuario(argumento)==1){
                                                         strcpy(usuarios[i].nombre,argumento);
                                                         usuarios[i].estado=1;
-
+                                                        bzero(buffer,sizeof(buffer));
                                                         printf("\E[32mUsuario aceptado\e[0m\n");
                                                         send(i,"\E[32m+Ok. Usuario correcto\e[0m", strlen("\E[32m+Ok. Usuario correcto\e[0m"),0);
                                                     }else{
+                                                        bzero(buffer,sizeof(buffer));
                                                         printf("\E[31mUsuario denegado\e[0m\n");
                                                         send(i,  "\E[31m–ERR. Usuario incorrecto\e[0m",strlen( "\E[31m–ERR. Usuario incorrecto\e[0m"),0);
                                                     }
@@ -288,10 +269,12 @@ main ( )
                                                     if(aceptaPass(usuarios[i].nombre,argumento)==1){
                                                         usuarios[i].estado=2;
                                                         strcpy(usuarios[i].pass, argumento);
+                                                        bzero(buffer,sizeof(buffer));
                                                         printf("\E[32mContraseña aceptada\e[0m\n");
                                                         send(i,"\E[32m+Ok. Usuario validado\e[0m", strlen("\E[32m+Ok. Usuario validado\e[0m"),0);
 
                                                     }else{
+                                                        bzero(buffer,sizeof(buffer));
                                                         printf("\E[31mUsuario denegado\e[0m\n");
                                                         send(i, "\E[31m–ERR. Error en la validación\e[0m",strlen("\E[31m–ERR. Error en la validación\e[0m"),0);
                                                     }
@@ -301,7 +284,10 @@ main ( )
                                                 break;
                                         case 4: if(usuarios[i].estado==2){
                                                     printf("Usuario %s ha iniciado partida.\n", usuarios[i].nombre);
-                                                    send(i, "Bienvenido al bingo.", strlen("Bienvenido al bingo."),0);
+                                                    bzero(buffer,sizeof(buffer));
+                                                    send(i, "Bienvenido al bingo.\n", strlen("Bienvenido al bingo.\n"),0);
+                                                    bzero(buffer,sizeof(buffer));
+                                                    send(i, "\E[32m+Ok. Petición Recibida. Quedamos a la espera de más jugadores\e[0m", strlen("\E[32m+Ok. Petición Recibida. Quedamos a la espera de más jugadores\e[0m"),0);
                                                     usuarios[i].estado=3;
                                                     usuarios[i].partida=numPartidas;
                                                     numUsuariosJugando++;
@@ -311,10 +297,16 @@ main ( )
                                                     if (numUsuariosJugando>0 && numUsuariosJugando%4==0)
                                                     {
                                                         partidas[numPartidas].comenzada=1;
-                                                        printf("Partida %d iniciada.\n", numPartidas+1);
+                                                        /*printf("Partida %d iniciada.\n", numPartidas+1);
+                                                        for (i = 0; i < partidas[numPartidas].numUsuarios; ++i)
+                                                        {
+                                                            send(partidas[numPartidas].usuarios[i],"\E[32m+Ok. Empieza la partida\e[0m", strlen("\E[32m+Ok. Empieza la partida\e[0m"),0);
+                                                        }*/
+                                                        //mandarCarton(&partidas[numPartidas]);
                                                         numPartidas++;
                                                     }
-                                                    /*MANDAR CARTON*/
+                                                    printf("hola\n");
+                                                    
                                                 }else{
                                                     continuarRegistro(usuarios[i]);
                                                 }
@@ -326,7 +318,7 @@ main ( )
                                                 break;
                                         case 7: printf("opcion bingo\n");
                                                 break;
-                                        default: 
+                                        default: bzero(buffer,sizeof(buffer));
                                                 send(i,"Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO",
                                                     strlen("Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO"),0);
                                                 break;
@@ -344,11 +336,11 @@ main ( )
                     }//if(FD_ISSET(i, &auxfds)) 
                 }//for(i=0; i<FD_SETSIZE; i++)
             }//(salida > 0)
-
             if(timeout.tv_sec==0){
                 timeout.tv_sec = 10;
                 timeout.tv_usec = 0;
-                mandarBola(partidas, numPartidas);
+                if(numPartidas>0)
+                    mandarBola(partidas, numPartidas);
             }
             
 		}//while(1)

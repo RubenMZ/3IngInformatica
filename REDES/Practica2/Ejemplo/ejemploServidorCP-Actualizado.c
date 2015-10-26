@@ -5,7 +5,7 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
-#include<signal.h>
+#include <signal.h>
 
 
 #define MSG_SIZE 250
@@ -175,6 +175,9 @@ main ( )
                             
                         } 
                         else{
+                            
+                            printf("i: %d", i);
+                            
                             bzero(buffer,sizeof(buffer));
                             
                             recibidos = recv(i,buffer,sizeof(buffer),0);

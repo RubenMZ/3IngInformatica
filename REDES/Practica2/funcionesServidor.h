@@ -19,12 +19,9 @@
 	void manejador(int signum);
 	void salirCliente(int socket, fd_set * readfds, int * numUsuarios, Usuario usuarios[]);
 
-	int ** generaCarton();
-	int compruebaRepetido(int ** carton, int fil, int col, int n);
-	void ordenarCarton(int ** carton, int fil, int col);
-
 	int comprobarOpcion(char * cabecera1, char * cabecera2);
-	int compruebaBola(int * vector, int n, int bola);
+
+
 
 
 #endif

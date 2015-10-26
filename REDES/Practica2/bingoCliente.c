@@ -5,10 +5,11 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
+#include "bingo.h"
+#include "registro.h"
 
 
-
-main ( )
+void main ( )
 {
   
 	/*---------------------------------------------------- 
@@ -17,6 +18,9 @@ main ( )
 	int sd;
 	struct sockaddr_in sockname;
 	char buffer[250];
+	int ** carton;
+	char* cartonAux;
+	int i, j;
 	socklen_t len_sockname;
     fd_set readfds, auxfds;
     int salida;
@@ -76,8 +80,23 @@ main ( )
             bzero(buffer,sizeof(buffer));
             recv(sd,buffer,sizeof(buffer),0);
             
-            printf("%s\n",buffer);
-            
+            cartonAux=cortarCadena(buffer, 250, ' ');
+
+            if(strcmp(cartonAux, "CARTON")==0){
+            	strncpy(cartonAux, buffer+strlen(buffer)+1, 0);
+            	printf("carton %s\n", cartonAux);
+            	carton=chartoint(cartonAux);
+				for (i = 0; i < 3; ++i)
+				{
+					for (j = 0; j < 9; ++j)
+					{
+						printf("( %d )", carton[i][j]);
+					}
+					printf("\n");
+				}
+            }else{
+	            printf("%s\n",buffer);
+            }
             if(strcmp(buffer,"Demasiados clientes conectados\n") == 0)
                 fin =1;
             
