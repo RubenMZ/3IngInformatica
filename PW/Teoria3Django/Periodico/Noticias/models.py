@@ -5,11 +5,15 @@ from django.contrib import admin
 
 class Section(models.Model):
 	name = models.CharField(max_length=100)
+	def __unicode__(self):
+		return self.name
 
 
 class Author(models.Model):
 	name = models.CharField(max_length=100)
 	age = models.IntegerField(blank=True, null=True)
+	def __unicode__(self):
+		return self.name
 
 
 class New(models.Model):
