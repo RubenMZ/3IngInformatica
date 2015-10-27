@@ -115,10 +115,11 @@ void main ( )
     
    	
     //Capturamos la señal SIGINT (Ctrl+c)
-    signal(SIGINT,manejador);
+    //signal(SIGINT,manejador);
     
 	/*-----------------------------------------------------------------------
 		El servidor acepta una petición
+
 	------------------------------------------------------------------------ */
 		while(1){
             
@@ -133,7 +134,7 @@ void main ( )
                     
                     //Buscamos el socket por el que se ha establecido la comunicación
                     if(FD_ISSET(i, &auxfds)) {
-                        //printf("i : %d\n", i);
+                        printf("i : %d\n", i);
                         
                         if( i == sd){
                             
@@ -294,15 +295,15 @@ void main ( )
                                                     partidas[numPartidas].usuarios[partidas[numPartidas].numUsuarios]=i;
                                                     partidas[numPartidas].numUsuarios++;
 
-                                                    if (numUsuariosJugando>0 && numUsuariosJugando%4==0)
+                                                    if (numUsuariosJugando>0 && numUsuariosJugando%1==0)
                                                     {
                                                         partidas[numPartidas].comenzada=1;
-                                                        /*printf("Partida %d iniciada.\n", numPartidas+1);
+                                                        printf("Partida %d iniciada.\n", numPartidas+1);
                                                         for (i = 0; i < partidas[numPartidas].numUsuarios; ++i)
                                                         {
                                                             send(partidas[numPartidas].usuarios[i],"\E[32m+Ok. Empieza la partida\e[0m", strlen("\E[32m+Ok. Empieza la partida\e[0m"),0);
-                                                        }*/
-                                                        //mandarCarton(&partidas[numPartidas]);
+                                                        }
+                                                        mandarCarton(&partidas[numPartidas]);
                                                         numPartidas++;
                                                     }
                                                     printf("hola\n");

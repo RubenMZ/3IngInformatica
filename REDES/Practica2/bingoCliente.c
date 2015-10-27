@@ -7,7 +7,7 @@
 #include <string.h>
 #include "bingo.h"
 #include "registro.h"
-
+#define MSG_SIZE 250
 
 void main ( )
 {
@@ -19,7 +19,7 @@ void main ( )
 	struct sockaddr_in sockname;
 	char buffer[250];
 	int ** carton;
-	char* cartonAux;
+	char* cartonAux, *cartonCad;
 	int i, j;
 	socklen_t len_sockname;
     fd_set readfds, auxfds;
@@ -83,9 +83,9 @@ void main ( )
             cartonAux=cortarCadena(buffer, 250, ' ');
 
             if(strcmp(cartonAux, "CARTON")==0){
-            	strncpy(cartonAux, buffer+strlen(buffer)+1, 0);
-            	printf("carton %s\n", cartonAux);
-            	carton=chartoint(cartonAux);
+            	strncpy(cartonCad, buffer+strlen(cartonAux)+1, MSG_SIZE);
+            	printf("carton %s\n", cartonCad);
+            	carton=chartoint(cartonCad);
 				for (i = 0; i < 3; ++i)
 				{
 					for (j = 0; j < 9; ++j)
