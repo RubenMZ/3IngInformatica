@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=1000)),
-                ('author', models.ForeignKey(to='Noticias.Author')),
+                ('author', models.ManyToManyField(to='Noticias.Author', blank=True)),
             ],
             options={
             },

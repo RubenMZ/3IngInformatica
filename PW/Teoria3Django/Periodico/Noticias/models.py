@@ -19,7 +19,7 @@ class Author(models.Model):
 class New(models.Model):
 	title = models.CharField(max_length=100)
 	description = models.CharField(max_length=1000)
-	author = models.ForeignKey(Author)
+	author = models.ManyToManyField(Author, blank=True)
 	section = models.ForeignKey(Section)
 
 	def __unicode__(self):
