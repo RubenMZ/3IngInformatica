@@ -11,12 +11,16 @@
 #include <iostream>
 #include <exception>
 #include <vector>
-#include "unsharp.hpp"
+#include "funciones.hpp"
 
 //Includes para OpenCV
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
+
+  using namespace std;
+  using namespace cv;
 
 /*!\brief Define los parámetro opcionales de tu programa.
 
@@ -28,13 +32,25 @@ struct CLIParams
       space(0),
       interactivo(false),
       orden(2),
-      ganancia(1.0)
+      ganancia(1.0),
+      imagenInFlag(false),
+      imagenOutFlag(false),
+      maskFlag(false),
+      imagenIn(""),
+      imagenOut(""),
+      mask("")
     {}
   float fcorte;
   int space;
   bool interactivo;
   int orden;
   float ganancia;
+  bool imagenInFlag;
+  bool imagenOutFlag;
+  bool maskFlag;
+  string imagenIn;
+  string imagenOut;
+  string mask;
 };
 
 /*!\brief Muestra la ayuda del programa.  
@@ -45,17 +61,17 @@ mostrarUso (const char * progname) throw ()
 {
   std::cout << std::endl;
   std::cout << "Este programa sirve para realzar una imagen utilizando para ello una máscara de desenfoque" << std::endl;
-  std::cout << "Uso: " << progname << " [-i] [-s <int>] [-r <float>] [-n <int>] [-g <float>] input.png output.png [masc.png]" << std::endl;
+  std::cout << "Uso: " << progname << " [-i] [-s <int>] [-r <float>] [-n <int>] [-g <float>] -f input.png -o output.png [-m masc.png]" << std::endl;
   std::cout << "Donde: " << std::endl;
   std::cout << "-h\t\tMuestra esta ayuda." << std::endl;
   std::cout << "-i\t\tActiva el modo interactivo." << std::endl;
-  std::cout << "-s\t\tEspecifica el espacio de color. Valor por defecto 0 (HSV)." << std::endl;
-  std::cout << "-r\t\tProporciona la frecuencia de corte del filtro. Intervalo [0-1], por defecto 0.5" << std::endl;
-  std::cout << "-n\t\tIndica el orden del filtro Butterworth paso baja. Intervalo [1-10], por defecto 2" << std::endl;
-  std::cout << "-g\t\tIndica la ganancia del realce. Intervalo [0.0-5.0], por defecto 1.0" << std::endl;
-  std::cout << "input.png\tImagen a tratar." << std::endl;
-  std::cout << "output.png\tImagen de salida." << std::endl;
-  std::cout << "[masc.png]\tMáscara opcional para la imagen a tratar." << std::endl << std::endl;
+  std::cout << "-s\t\tEspacio de color. Valor por defecto 0 (HSV)." << std::endl;
+  std::cout << "-r\t\tFrecuencia de corte del filtro. Intervalo [0-1], defecto 0.5" << std::endl;
+  std::cout << "-n\t\tOrden del filtro Butterworth paso baja. Intervalo [1-10], defecto 2" << std::endl;
+  std::cout << "-g\t\tGanancia del realce. Intervalo [0.0-5.0], defecto 1.0" << std::endl;
+  std::cout << "-f input.png\tImagen a tratar." << std::endl;
+  std::cout << "-o output.png\tImagen de salida." << std::endl;
+  std::cout << "[-m masc.png]\tMáscara opcional" << std::endl << std::endl;
 }
 
 /*!\brief Parsea la linea de comandos.
@@ -65,25 +81,24 @@ mostrarUso (const char * progname) throw ()
   \return El índice del primer argumento no opcional de la línea.
   \warning Esta función no retorna si hay algún error en la cli.
 */
-static int
-parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
+static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
 {
   // Esta es una forma habitual de recoger argumentos con getopt
   // se usa una iteracion y cada elemento se pasa por un switch-case
   int opcion;
-  while ((opcion = getopt (argc, argv, "hn:s:ir:g:")) != -1)
+  while ((opcion = getopt (argc, argv, "hn:s:ir:g:f:o:m:")) != -1)
   {
     switch (opcion)
     {
       
       case 'h':
-	mostrarUso(argv[0]);
-	exit (EXIT_SUCCESS);
-	break;
+      	mostrarUso(argv[0]);
+      	exit (EXIT_SUCCESS);
+      	break;
 
       case 'n':
-	params.orden = atoi(optarg);
-	break;
+      	params.orden = atoi(optarg);
+      	break;
 
       case 's':
         params.space = atoi(optarg);
@@ -100,23 +115,36 @@ parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
       case 'g':
       	params.ganancia = atof(optarg);
       	break;
+
+        case 'f': params.imagenInFlag=true;
+                  params.imagenIn=optarg;
+                  break;
+
+        case 'o':
+                  params.imagenOutFlag=true;
+                  params.imagenOut=optarg;
+                  break;
+
+        case 'm': params.maskFlag=true;
+                  params.mask=optarg;
+                  break;
 	
       case '?': // en caso de error getopt devuelve el caracter ?
 	
-	if (isprint (optopt))
-	  std::cerr << "Error: Opción desconocida \'" << optopt
-	    << "\'" << std::endl;
-	else
-	  std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt
-	    << "\'" << std::endl;
-	mostrarUso(argv[0]);    
-	exit (EXIT_FAILURE);
-	
-	// en cualquier otro caso lo consideramos error grave y salimos
-      default:
-	std::cerr << "Error: línea de comandos errónea." << std::endl;
-	mostrarUso(argv[0]);
-	exit(EXIT_FAILURE);	
+              	if (isprint (optopt))
+              	  std::cerr << "Error: Opción desconocida \'" << optopt
+              	    << "\'" << std::endl;
+              	else
+              	  std::cerr << "Error: Caracter de opcion desconocido \'x" << std::hex << optopt
+              	    << "\'" << std::endl;
+              	mostrarUso(argv[0]);    
+              	exit (EXIT_FAILURE);
+              	
+              	// en cualquier otro caso lo consideramos error grave y salimos
+                    default:
+              	std::cerr << "Error: línea de comandos errónea." << std::endl;
+              	mostrarUso(argv[0]);
+              	exit(EXIT_FAILURE);	
     }  // case
     
   }// while
@@ -125,15 +153,14 @@ parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
 
 
 
-int
-main (int argc, char* const* argv)
+int main (int argc, char* const* argv)
 {
   int retCode=EXIT_SUCCESS;
   
   try {    
     CLIParams params;
 
-    int argOpt = parseCLI(argc, argv, params);
+    parseCLI(argc, argv, params);
 
     std::cout << std::endl;
     std::cout << "Los parámetros opcionales son:" << std::endl;
@@ -143,52 +170,37 @@ main (int argc, char* const* argv)
     std::cout << "-n\t" << '\"' << params.orden << '\"' << std::endl;
     std::cout << "-g\t" << '\"' << params.ganancia << '\"' << std::endl;
 
-    std::cout << "Hay " << argc-argOpt << " parámetros obligados que son: " << std::endl;
-
-    for (int i = argOpt; i<argc; ++i)
-      std::cout << '\"' << argv[i] << '\"' << std::endl;
-    std::cout << std::endl;
-
-	using namespace std;
-	using namespace cv;
-
 	//Inicialización de variables
-	char *nombre;
-  	char *destino;
- 	char *mascara=NULL;
+	string nombre;
+  string destino;
+ 	string mascara;
 	Mat imagen, mask, imgOutput, filter, filterOutput, padded, canal, complexImg, imgGrayScale, temporal, img;
 	vector <Mat> canales; //Vector para almacenar canales
 	int orden = params.orden;
-	int fcorte = params.fcorte, ganancia = params.ganancia;
+	int fcorte = params.fcorte;
+  int ganancia = params.ganancia;
 	
-	for (int i=argOpt; i<argc; ++i)
-	{
-		if(i==argOpt)
-			nombre=argv[i];
-		else
-			if(i==argOpt+1)
-				destino=argv[i];
-        		else
-				mascara=argv[i];
-    	}
-    	
-/*----------------------------------------------------------
-		LECTURA DE LA IMAGEN Y CREACIÓN DE LAS BARRAS
-----------------------------------------------------------*/
-	//Lectura de la imagen
-	imagen = imread(nombre,-1);
-	
-	//Comprobamos que la imagen se ha leído de manera correcta
+  if(params.imagenInFlag){
+	   imagen = imread(params.imagenIn,-1);
+	}else{
+    mostrarUso(argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  if (params.imagenOutFlag)
+      destino=params.imagenOut;
+  else
+      destino="salida.png";
+
 	if (!imagen.data)
 	{
 		cout << "Error al leer la imagen" << endl;
 		exit(EXIT_FAILURE);
 	}
 	
-	//Leemos la máscara si se ha especificado por la terminal
-	if (mascara!=NULL)
+	if (params.maskFlag)
 	{
-		mask = imread(mascara, 0);
+		mask = imread(params.mask, 0);
 		
 		if (!mask.data)
 		{
@@ -197,19 +209,17 @@ main (int argc, char* const* argv)
 		}
 	}
 	
-	fcorte=fcorte*sqrt(pow((imagen.rows/2),2.0)+pow((imagen.cols/2),2.0));
-	     	
-	namedWindow("Imagen original", WINDOW_AUTOSIZE);
-        namedWindow("Imagen de salida", WINDOW_AUTOSIZE);
-        moveWindow("Imagen original",500,200);
-        createTrackbar("Orden del filtro", "Imagen de salida", &orden, 10);
-        int maxfcorte=sqrt(pow((imagen.rows/2),2)+pow((imagen.cols/2),2));
-    	createTrackbar("Frecuencia de corte", "Imagen de salida", &fcorte, maxfcorte);
-    	createTrackbar("Ganancia", "Imagen de salida", &ganancia, 5.0);
+	fcorte=fcorte*sqrt((pow((imagen.rows/2),2.0)+pow((imagen.cols/2),2.0))/2);
+  int maxfcorte=sqrt((pow((imagen.rows/2),2)+pow((imagen.cols/2),2))/2);
+	  namedWindow(params.imagenIn, WINDOW_AUTOSIZE);
+    namedWindow(destino, WINDOW_AUTOSIZE);
+    createTrackbar("Orden del filtro", destino, &orden, 10);
+    createTrackbar("Frecuencia de corte", destino, &fcorte, maxfcorte);
+    createTrackbar("Ganancia", destino, &ganancia, 5.0);
         
 	//Obtengo el tamaño óptimo para realizar la transformada de Fourier sobre la imagen
-	int M = getOptimalDFTSize(imagen.rows);
-     	int N = getOptimalDFTSize(imagen.cols);
+	  int M = getOptimalDFTSize(imagen.rows);
+    int N = getOptimalDFTSize(imagen.cols);
      	
 /*----------------------------------------------------------
 		CONVERSION DE LA IMAGEN AL ESPACIO DE COLOR ADECUADO
@@ -304,14 +314,14 @@ main (int argc, char* const* argv)
 /*----------------------------------------------------------
 		MUESTRO
 ----------------------------------------------------------*/
-      	imshow("Imagen de salida", salida);
-      	imshow("Imagen original", imagen);
+      	imshow(destino, salida);
+      	imshow(params.imagenIn, imagen);
       	imwrite(destino, salida);
       
       	char c = waitKey(10)&0xFF;
 
       	if (c == 27)
-		break;
+		      break;
 	}
 
   }

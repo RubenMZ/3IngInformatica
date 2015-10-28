@@ -4,17 +4,17 @@ from django.contrib import admin
 # Create your models here.
 
 class Section(models.Model):
-	name = models.CharField(max_lenght=100)
+	name = models.CharField(max_length=100)
 
 
 class Author(models.Model):
-	name = models.CharField(max_lenght=100)
+	name = models.CharField(max_length=100)
 	age = models.IntegerField(blank=True, null=True)
 
 
 class New(models.Model):
-	title = models.CharField(max_lenght=100)
-	description = models.CharField(max_lenght=1000)
+	title = models.CharField(max_length=100)
+	description = models.CharField(max_length=1000)
 	author = models.ForeignKey(Author)
 	section = models.ForeignKey(Section)
 
