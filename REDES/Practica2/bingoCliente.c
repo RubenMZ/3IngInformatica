@@ -19,7 +19,7 @@ void main ( )
 	struct sockaddr_in sockname;
 	char buffer[250];
 	int ** carton;
-	char* cartonAux, *cartonCad;
+	char* cartonAux=NULL, *cartonCad;
 	int i, j;
 	socklen_t len_sockname;
     fd_set readfds, auxfds;
@@ -80,6 +80,8 @@ void main ( )
             bzero(buffer,sizeof(buffer));
             recv(sd,buffer,sizeof(buffer),0);
             
+            printf("BUFFER - <%s> \n", buffer);
+
             cartonAux=cortarCadena(buffer, 250, ' ');
 
             if(strcmp(cartonAux, "CARTON")==0){

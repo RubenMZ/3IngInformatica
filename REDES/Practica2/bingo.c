@@ -119,6 +119,7 @@
 
  		for (i = 0; i < partida->numUsuarios; ++i)
  		{
+ 			bzero(buffer,sizeof(buffer));
  			strcpy(buffer, "CARTON ");
  			strcat(buffer, inttochar(generaCarton()));
  			send(partida->usuarios[i], buffer, strlen(buffer), 0);

@@ -198,7 +198,7 @@ void main ( )
 
                             bzero(buffer,sizeof(buffer));
                             recibidos = recv(i,buffer,sizeof(buffer),0);
-                            //printf("i: %d", i);
+                            printf("i: %d", i);
                             if(recibidos > 0){
                                 
                                 if(strcmp(buffer,"SALIR\n") == 0 || strcmp(buffer,"salir\n") == 0 ||strcmp(buffer,"Salir\n") == 0){
@@ -295,7 +295,7 @@ void main ( )
                                                     partidas[numPartidas].usuarios[partidas[numPartidas].numUsuarios]=i;
                                                     partidas[numPartidas].numUsuarios++;
 
-                                                    if (numUsuariosJugando>0 && numUsuariosJugando%1==0)
+                                                    if (numUsuariosJugando>0 && numUsuariosJugando%2==0)
                                                     {
                                                         partidas[numPartidas].comenzada=1;
                                                         printf("Partida %d iniciada.\n", numPartidas+1);
@@ -303,7 +303,9 @@ void main ( )
                                                         {
                                                             send(partidas[numPartidas].usuarios[i],"\E[32m+Ok. Empieza la partida\e[0m", strlen("\E[32m+Ok. Empieza la partida\e[0m"),0);
                                                         }
+                                                        printf("MANDAR\n");
                                                         mandarCarton(&partidas[numPartidas]);
+                                                        printf("fuera\n");
                                                         numPartidas++;
                                                     }
                                                     printf("hola\n");
@@ -334,8 +336,11 @@ void main ( )
                                 salirCliente(i,&readfds,&numUsuariosConectados,usuarios);
                             }
                         }//if (i == 0) else
+                        printf("if(FD_ISSET(i, &auxfds))\n");
                     }//if(FD_ISSET(i, &auxfds)) 
+                    printf("for(i=0; i<FD_SETSIZE; i++)\n");
                 }//for(i=0; i<FD_SETSIZE; i++)
+                printf("(salida > 0)\n");
             }//(salida > 0)
             if(timeout.tv_sec==0){
                 timeout.tv_sec = 10;

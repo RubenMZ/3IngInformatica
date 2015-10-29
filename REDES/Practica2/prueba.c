@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "funcionesServidor.h"
+#include "bingo.h"
 #include "registro.h"
+
+#define MSG_SIZE 250
 
 int main (){
 
 	srand(time(NULL));
 	char* buffer;
+	char bufferAux[MSG_SIZE]="";
 	int i,j;
 	int ** carton;
 	int ** carton2;
@@ -22,7 +25,22 @@ int main (){
 		}
 		printf("\n");
 	}
+
+
 	buffer = inttochar(carton);
+
+	strcat(bufferAux, "CARTON ");
+	strcat(bufferAux, buffer);
+
+	fflush(stdout);
+
+	printf("<%s>\n", bufferAux);
+
+	buffer=NULL;
+
+	buffer=cortarCadena(bufferAux, 250, ' ');
+
+	strncpy(buffer, bufferAux+strlen(buffer)+1, MSG_SIZE);
 
 	printf("%s\n", buffer);
 
