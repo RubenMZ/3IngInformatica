@@ -12,5 +12,6 @@ using namespace cv;
 
 void shiftDFT(Mat& fImage );
 void create_butterworth_lowpass_filter(Mat &dft_Filter, float D, int n);
+Mat create_spectrum_magnitude_display(Mat &complexImg, bool rearrange);
 
 #endif

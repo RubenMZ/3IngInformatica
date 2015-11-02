@@ -174,11 +174,12 @@ int main (int argc, char* const* argv)
 	string nombre;
   string destino;
  	string mascara;
-	Mat imagen, mask, imgOutput, filter, filterOutput, padded, canal, complexImg, imgGrayScale, temporal, img;
+	Mat imagen, mask, imgOutput, filter, filterOutput, padded, canal, complexImg, imgGrayScale, temporal, img, mag;
 	vector <Mat> canales; //Vector para almacenar canales
 	int orden = params.orden;
-	int fcorte = params.fcorte;
+	int fcorte;
   int ganancia = params.ganancia;
+  int maxfcorte;
 	
   if(params.imagenInFlag){
 	   imagen = imread(params.imagenIn,-1);
@@ -187,7 +188,7 @@ int main (int argc, char* const* argv)
     exit(EXIT_FAILURE);
   }
 
-  if (params.imagenOutFlag)
+  if (params.imagenOutFlag==true)
       destino=params.imagenOut;
   else
       destino="salida.png";
@@ -209,119 +210,104 @@ int main (int argc, char* const* argv)
 		}
 	}
 	
-	fcorte=fcorte*sqrt((pow((imagen.rows/2),2.0)+pow((imagen.cols/2),2.0))/2);
-  int maxfcorte=sqrt((pow((imagen.rows/2),2)+pow((imagen.cols/2),2))/2);
-	  namedWindow(params.imagenIn, WINDOW_AUTOSIZE);
-    namedWindow(destino, WINDOW_AUTOSIZE);
-    createTrackbar("Orden del filtro", destino, &orden, 10);
-    createTrackbar("Frecuencia de corte", destino, &fcorte, maxfcorte);
-    createTrackbar("Ganancia", destino, &ganancia, 5.0);
+  fcorte=(params.fcorte)*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
+  maxfcorte=1.0*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
+
+  //Crear las barras para el modo interactivo
+	namedWindow(params.imagenIn, WINDOW_AUTOSIZE);
+  namedWindow(destino, WINDOW_AUTOSIZE);
+  moveWindow("Imagen original",500,200);
+  createTrackbar("Orden del filtro", destino, &orden, 10);
+  createTrackbar("Frecuencia de corte", destino, &fcorte, maxfcorte);
+  createTrackbar("Ganancia", destino, &ganancia, 5.0);
+
+
         
 	//Obtengo el tamaño óptimo para realizar la transformada de Fourier sobre la imagen
 	  int M = getOptimalDFTSize(imagen.rows);
     int N = getOptimalDFTSize(imagen.cols);
      	
-/*----------------------------------------------------------
-		CONVERSION DE LA IMAGEN AL ESPACIO DE COLOR ADECUADO
-----------------------------------------------------------*/
-     	while(true)
-     	{
-	//Convertimos la imagen al espacio de color indicado si la imagen tiene 3 canales
-	const int channels = imagen.channels();
-	if(channels == 3)
-	{
-			//En cada caso convierto al espacio de color indicado, divido la imagen en 3 canales y escojo el canal que contiene la intensidad para tratarlo
-			cvtColor(imagen, imgGrayScale, CV_BGR2HSV);
-			split(imgGrayScale, canales);
-      			canales[2].convertTo(temporal,CV_32F,1.0/255.0);
-      			copyMakeBorder(temporal, padded, 0, M - temporal.rows, 0, N - temporal.cols, BORDER_CONSTANT, Scalar::all(0)); //Le añado borde a la imagen
-	}
-	else if (channels == 1)
-	{
-		imagen.convertTo(img,CV_32F,1.0/255.0); //Convierto la imagen a flotante (de 1 a 255 valores posibles)
-		copyMakeBorder(img, padded, 0, M - img.rows, 0, N - img.cols, BORDER_CONSTANT, Scalar::all(0)); //Le añado borde a la imagen
-	}
-      	
-
-/*----------------------------------------------------------
-		CONFIGURACION DE IMAGEN 
-----------------------------------------------------------*/
-    	Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)}; //Configuro imagen para aplicar transformada de fourier, la paso a flotante
-		
-      	merge(planes, 2, complexImg); //Creo la imagen compleja con la que voy a trabajar
-		
-/*----------------------------------------------------------
-		TRANSFORMADA DE FOURIER
-----------------------------------------------------------*/		
-
-    	dft(complexImg, complexImg); 
-		
-      	filter = complexImg.clone(); //Filtro 
-		
-/*----------------------------------------------------------
-		REORDENACION, CONVOLUCION DEL DOMINIO FRECUENCIAL,  APLICO FILTRO BUTTERWORTHY VUELVO A REORDENAR
-----------------------------------------------------------*/
-
-	shiftDFT(complexImg); 
-
-      	create_butterworth_lowpass_filter(filter, fcorte, orden); 
-      	
-	mulSpectrums(complexImg, filter, complexImg, 0); 
-
-      	shiftDFT(complexImg); 
-		
-/*----------------------------------------------------------
-		CALCULO INVERSA TRANSFORMADA Y NORMALIZO
-----------------------------------------------------------*/
-
-      	idft(complexImg, complexImg, DFT_SCALE); 
-      
-      	split(complexImg, planes);
-	
-      	normalize(planes[0], imgOutput, 0, 1, CV_MINMAX); //PLANO REAL
-  
-      	split(filter, planes);
-      	normalize(planes[0], filterOutput, 0, 1, CV_MINMAX); //Normalizo el plano real
-	
-	Mat salida = img.clone(); //Copio la imagen de entrada en la de salida para que tenga las mismas características
-	
-/*----------------------------------------------------------
-		APLICO GANANCIA
-----------------------------------------------------------*/			
-		
-	//Ahora aplico la ganancia a cada píxel de la imagen en el canal indicado y teniendo en cuenta la máscara, en caso de haberla
+  while(true)
+  {
+      	//Convertimos la imagen al espacio de color indicado si la imagen tiene 3 canales
+      	const int channels = imagen.channels();
       	if(channels == 3)
       	{
-		canales[2] = temporal.clone();
-	
-	    	for(int i=0; i < imagen.rows; i++)
-	      		for(int j=0; j < imagen.cols; j++) 
-				if(mask.empty() || mask.at<unsigned char>(i,j)!=0)
-		   			canales[2].at<float>(i,j)=(temporal.at<float>(i,j)*(ganancia+1)-(imgOutput.at<float>(i,j)*ganancia));
-
-		canales[2].convertTo(canales[2], CV_8U, 255.0, 0.0); //Convierto la imagen a uchar para que se pueda visualizar de manera correcta
-		merge(canales, imgGrayScale); //Uno los canales
-	    	cvtColor(imgGrayScale, salida, CV_HSV2BGR); //Deshago el cambio del espacio de color pasando la imagen a BGR
+      			//En cada caso convierto al espacio de color indicado, divido la imagen en 3 canales y escojo el canal que contiene la intensidad para tratarlo
+      			cvtColor(imagen, imgGrayScale, CV_BGR2HSV);
+      			split(imgGrayScale, canales);
+            canales[2].convertTo(temporal,CV_32F,1.0/255.0);
+            copyMakeBorder(temporal, padded, 0, M - temporal.rows, 0, N - temporal.cols, BORDER_CONSTANT, Scalar::all(0)); //Le añado borde a la imagen
       	}
-      	else //Si es en blanco y negro la imagen, debemos tener en cuenta los pixeles de la mascara (si la hay)
+      	else if (channels == 1)
       	{
-		for(int i=0; i < imagen.rows; i++)
-			for(int j=0; j < imagen.cols; j++)			
-				if(mask.empty() || mask.at<unsigned char>(i,j)!=0)
-					salida.at<float>(i,j)=(img.at<float>(i,j)*(ganancia+1)-(imgOutput.at<float>(i,j)*ganancia));
-	}
+      		imagen.convertTo(img,CV_32F,1.0/255.0); //Convierto la imagen a flotante (de 1 a 255 valores posibles)
+      		copyMakeBorder(img, padded, 0, M - img.rows, 0, N - img.cols, BORDER_CONSTANT, Scalar::all(0)); //Le añado borde a la imagen
+      	}
+            
+      //Configuracion de la imagen
+        Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)}; //Configuro imagen para aplicar transformada de fourier, la paso a flotante
+        merge(planes, 2, complexImg); //Creo la imagen compleja con la que voy a trabajar
       		
-/*----------------------------------------------------------
-		MUESTRO
-----------------------------------------------------------*/
-      	imshow(destino, salida);
-      	imshow(params.imagenIn, imagen);
-      	imwrite(destino, salida);
-      
-      	char c = waitKey(10)&0xFF;
+      //Transformada Fourier		
+          	dft(complexImg, complexImg); 
+            filter = complexImg.clone(); //Filtro 
 
-      	if (c == 27)
-		      break;
+      //Reordenacion, convolucion del dominio frecuencial, aplico filtro butterworth y reordenar
+      	shiftDFT(complexImg); 
+        create_butterworth_lowpass_filter(filter, fcorte, orden);  	
+      	mulSpectrums(complexImg, filter, complexImg, 0); 
+        shiftDFT(complexImg); 
+
+        //Calculo el espectro
+        mag = create_spectrum_magnitude_display(complexImg, true);
+      //Calculo de la inversa transformada y normalizar
+
+        idft(complexImg, complexImg, DFT_SCALE);      
+        split(complexImg, planes);
+        normalize(planes[0], imgOutput, 0, 1, CV_MINMAX); //PLANO REAL
+        split(filter, planes);
+        normalize(planes[0], filterOutput, 0, 1, CV_MINMAX); //Normalizo el plano real
+      	
+      	Mat salida = img.clone(); //Copio la imagen de entrada en la de salida para que tenga las mismas características
+
+      	//Aplicar Ganancia
+
+      	//Ahora aplico la ganancia a cada píxel de la imagen en el canal indicado y teniendo en cuenta la máscara, en caso de haberla
+            	if(channels == 3)
+            	{
+              		canales[2] = temporal.clone();
+              	
+              	    	for(int i=0; i < imagen.rows; i++)
+              	      		for(int j=0; j < imagen.cols; j++) 
+              				if(mask.empty() || mask.at<unsigned char>(i,j)!=0)
+              		   			canales[2].at<float>(i,j)=(temporal.at<float>(i,j)*(ganancia+1)-(imgOutput.at<float>(i,j)*ganancia));
+                    
+              		canales[2].convertTo(canales[2], CV_8U, 255.0, 0.0); //Convierto la imagen a uchar para que se pueda visualizar de manera correcta
+              		merge(canales, imgGrayScale); //Uno los canales
+              	    	cvtColor(imgGrayScale, salida, CV_HSV2BGR); //Deshago el cambio del espacio de color pasando la imagen a BGR
+            	}
+            	else //Si es en blanco y negro la imagen, debemos tener en cuenta los pixeles de la mascara (si la hay)
+            	{
+            		for(int i=0; i < imagen.rows; i++)
+            			for(int j=0; j < imagen.cols; j++)			
+            				if(mask.empty() || mask.at<unsigned char>(i,j)!=0)
+            					salida.at<float>(i,j)=(img.at<float>(i,j)*(ganancia+1)-(imgOutput.at<float>(i,j)*ganancia));
+      	         salida.convertTo(salida,CV_8U, 255.0, 0.0);
+               }
+  
+
+          //Mostrar las imagenes
+              imshow("Filtro", filterOutput);
+              imshow("Espectro", mag);
+            	imshow(destino, salida);
+            	imshow(params.imagenIn, imagen);
+            	imwrite(destino, salida);
+            
+          //Esperar para pulsar enter
+            	char c = waitKey(10)&0xFF;
+            	if (c == '\n')
+      		      break;
 	}
 
   }

@@ -48,3 +48,29 @@ void create_butterworth_lowpass_filter(Mat &dft_Filter, float D, int n)
 	Mat toMerge[] = {tmp, tmp};
 	merge(toMerge, 2, dft_Filter);
 }
+
+Mat create_spectrum_magnitude_display(Mat &complexImg, bool rearrange)
+{
+    Mat planes[2];
+
+    // compute magnitude spectrum (N.B. for display)
+    // compute log(1 + sqrt(Re(DFT(img))**2 + Im(DFT(img))**2))
+
+    split(complexImg, planes);
+    magnitude(planes[0], planes[1], planes[0]);
+
+    Mat mag = (planes[0]).clone();
+    mag += Scalar::all(1);
+    log(mag, mag);
+
+    if (rearrange)
+    {
+        // re-arrange the quaderants
+        shiftDFT(mag);
+    }
+
+    normalize(mag, mag, 0, 1, CV_MINMAX);
+
+    return mag;
+
+}
