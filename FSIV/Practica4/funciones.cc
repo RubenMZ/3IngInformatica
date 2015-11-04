@@ -49,7 +49,7 @@ void create_butterworth_lowpass_filter(Mat &dft_Filter, float D, int n)
 	merge(toMerge, 2, dft_Filter);
 }
 
-Mat create_spectrum_magnitude_display(Mat &complexImg, bool rearrange)
+Mat create_spectrum_magnitude_display(Mat &complexImg)
 {
     Mat planes[2];
 
@@ -63,11 +63,8 @@ Mat create_spectrum_magnitude_display(Mat &complexImg, bool rearrange)
     mag += Scalar::all(1);
     log(mag, mag);
 
-    if (rearrange)
-    {
-        // re-arrange the quaderants
-        shiftDFT(mag);
-    }
+    // re-arrange the quaderants
+    shiftDFT(mag);
 
     normalize(mag, mag, 0, 1, CV_MINMAX);
 

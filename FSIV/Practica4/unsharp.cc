@@ -38,7 +38,8 @@ struct CLIParams
       maskFlag(false),
       imagenIn(""),
       imagenOut(""),
-      mask("")
+      mask(""),
+      verbose(false)
     {}
   float fcorte;
   int space;
@@ -51,6 +52,7 @@ struct CLIParams
   string imagenIn;
   string imagenOut;
   string mask;
+  bool verbose;
 };
 
 /*!\brief Muestra la ayuda del programa.  
@@ -86,7 +88,7 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
   // Esta es una forma habitual de recoger argumentos con getopt
   // se usa una iteracion y cada elemento se pasa por un switch-case
   int opcion;
-  while ((opcion = getopt (argc, argv, "hn:s:ir:g:f:o:m:")) != -1)
+  while ((opcion = getopt (argc, argv, "hn:s:ir:g:f:o:m:v")) != -1)
   {
     switch (opcion)
     {
@@ -127,6 +129,9 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
 
         case 'm': params.maskFlag=true;
                   params.mask=optarg;
+                  break;
+
+        case 'v': params.verbose=true;
                   break;
 	
       case '?': // en caso de error getopt devuelve el caracter ?
@@ -177,8 +182,8 @@ int main (int argc, char* const* argv)
 	Mat imagen, mask, imgOutput, filter, filterOutput, padded, canal, complexImg, imgGrayScale, temporal, img, mag;
 	vector <Mat> canales; //Vector para almacenar canales
 	int orden = params.orden;
-	int fcorte;
-  int ganancia = params.ganancia;
+	float fcorte;
+  float ganancia = params.ganancia;
   int maxfcorte;
 	
   if(params.imagenInFlag){
@@ -213,14 +218,23 @@ int main (int argc, char* const* argv)
   fcorte=(params.fcorte)*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
   maxfcorte=1.0*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
 
+
+
   //Crear las barras para el modo interactivo
 	namedWindow(params.imagenIn, WINDOW_AUTOSIZE);
   namedWindow(destino, WINDOW_AUTOSIZE);
   moveWindow("Imagen original",500,200);
-  createTrackbar("Orden del filtro", destino, &orden, 10);
-  createTrackbar("Frecuencia de corte", destino, &fcorte, maxfcorte);
-  createTrackbar("Ganancia", destino, &ganancia, 5.0);
 
+      float barraGanancia = (ganancia/5.0) * 50;
+      float barraFcorte = (fcorte/maxfcorte)*100;
+      float barraOrden =  (orden/10)*50;
+
+      if (params.interactivo==true){
+      
+      createTrackbar("Orden del filtro", destino,(int*) &barraOrden, 50);
+      createTrackbar("Frecuencia de corte", destino, (int*) &barraFcorte, 100);
+      createTrackbar("Ganancia", destino, (int*) &barraGanancia, 50);
+    }
 
         
 	//Obtengo el tamaño óptimo para realizar la transformada de Fourier sobre la imagen
@@ -230,6 +244,13 @@ int main (int argc, char* const* argv)
   while(true)
   {
       	//Convertimos la imagen al espacio de color indicado si la imagen tiene 3 canales
+
+      if (params.interactivo==true){
+
+        ganancia = (barraGanancia/50)*5.0;
+        fcorte = (barraFcorte/100)*1.0;
+        orden =  (barraOrden/50)*10;
+      }
       	const int channels = imagen.channels();
       	if(channels == 3)
       	{
@@ -260,8 +281,8 @@ int main (int argc, char* const* argv)
         shiftDFT(complexImg); 
 
         //Calculo el espectro
-        mag = create_spectrum_magnitude_display(complexImg, true);
-      //Calculo de la inversa transformada y normalizar
+        mag = create_spectrum_magnitude_display(complexImg);
+        //Calculo de la inversa transformada y normalizar
 
         idft(complexImg, complexImg, DFT_SCALE);      
         split(complexImg, planes);
@@ -298,11 +319,16 @@ int main (int argc, char* const* argv)
   
 
           //Mostrar las imagenes
-              imshow("Filtro", filterOutput);
-              imshow("Espectro", mag);
+              if(params.verbose==true){
+                imshow("Filtro", filterOutput);
+                imshow("Espectro", mag);
+              }
             	imshow(destino, salida);
             	imshow(params.imagenIn, imagen);
             	imwrite(destino, salida);
+
+              filterOutput.convertTo(filterOutput,CV_8U, 255.0, 0.0);
+              imwrite("filtro.png", filterOutput);
             
           //Esperar para pulsar enter
             	char c = waitKey(10)&0xFF;

@@ -30,20 +30,24 @@
 	Mat imagen2= imread(argv[2],-1);
 	Mat final = imagen.clone();
 
-	for (int i = 0; i < imagen.rows; ++i)
+	/*for (int i = 0; i < imagen.rows; ++i)
 	{
 		for (int j = 0; j < imagen.cols; ++j)
 		{
-			if(imagen.at<uchar>(i,j)==imagen2.at<uchar>(i,j))
-				final.at<uchar>(i,j)=0.0;
-			else
-				final.at<uchar>(i,j)=255.0;
+			//if(imagen.at<uchar>(i,j)<=imagen2.at<uchar>(i,j)+5.0 && imagen.at<uchar>(i,j)>=imagen2.at<uchar>(i,j)-5.0)
+			//	final.at<uchar>(i,j)=0.0;
+			//else
+				final.at<uchar>(i,j)=255.0-imagen.at<uchar>(i,j);
 		}
-	}
+	}*/
 
 
-	imwrite("Comparacion.png", final);
 
+	final =imagen- imagen2;
+
+
+	imshow("Comparacion.png", final);
+	waitKey();
 	return 0;
 
 }
