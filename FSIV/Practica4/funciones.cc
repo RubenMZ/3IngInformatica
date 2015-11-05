@@ -1,23 +1,17 @@
 #include "funciones.hpp"
-/*FUENTES:
-	http://breckon.eu/toby/teaching/dip/opencv/lecture_demos/c++/butterworth_lowpass.cpp
-	https://github.com/alessandro-gentilini/opencv_exercises-butterworth/blob/master/butterworth.cpp
-*/
 
-//Reordena los cuadrantes de una imagen de Fourier de manera que el origen esté en el centro de la imagen
-void shiftDFT(Mat& fImage )
+
+void centrarDFT(Mat& img )
 {
   	Mat tmp, q0, q1, q2, q3;
 
-	//fImage = fImage(Rect(0, 0, fImage.cols & -2, fImage.rows & -2));
+	int cx = img.cols/2;
+	int cy = img.rows/2;
 
-	int cx = fImage.cols/2;
-	int cy = fImage.rows/2;
-
-	q0 = fImage(Rect(0, 0, cx, cy));
-	q1 = fImage(Rect(cx, 0, cx, cy));
-	q2 = fImage(Rect(0, cy, cx, cy));
-	q3 = fImage(Rect(cx, cy, cx, cy));
+	q0 = img(Rect(0, 0, cx, cy));
+	q1 = img(Rect(cx, 0, cx, cy));
+	q2 = img(Rect(0, cy, cx, cy));
+	q3 = img(Rect(cx, cy, cx, cy));
 
 	q0.copyTo(tmp);
 	q3.copyTo(q0);
@@ -28,46 +22,41 @@ void shiftDFT(Mat& fImage )
 	tmp.copyTo(q2);
 }
 
-//Función que crea un filtro Butterworth de paso baja de 2 canales con radio D (frecuencia de corte) y orden n
-void create_butterworth_lowpass_filter(Mat &dft_Filter, float D, int n)
+void crearFiltroButterworth(Mat &filtro, float r, int n)
 {
-	Mat tmp = Mat(dft_Filter.rows, dft_Filter.cols, CV_32F); //Guardo la imagen en un auxiliar
+	Mat tmp = Mat(filtro.rows, filtro.cols, CV_32F);
 	
-	Point centre = Point(dft_Filter.rows / 2, dft_Filter.cols / 2); //Almaceno el punto central de la imagen para trabajar con el radio desde el centro de la imagen
+	Point centre = Point(filtro.rows / 2, filtro.cols / 2);
 	double radius;
 	
-	for (int i = 0; i < dft_Filter.rows; i++)
+	for (int i = 0; i < filtro.rows; i++)
 	{
-		for (int j = 0; j < dft_Filter.cols; j++)
+		for (int j = 0; j < filtro.cols; j++)
 		{
 			radius = (double) sqrt(pow((i - centre.x), 2.0) + pow((double) (j - centre.y), 2.0));
-			tmp.at<float>(i, j) = (float) ( 1 / (1 + pow( (double) (radius / D), (double) (2 * n))));
+			tmp.at<float>(i, j) = (float) ( 1 / (1 + pow( (double) (radius / r), (double) (2 * n))));
 		}
 	}
 	
 	Mat toMerge[] = {tmp, tmp};
-	merge(toMerge, 2, dft_Filter);
+	merge(toMerge, 2, filtro);
 }
 
-Mat create_spectrum_magnitude_display(Mat &complexImg)
+Mat crearEspectro(Mat &imagenCompleja)
 {
-    Mat planes[2];
+    Mat planos[2];
 
-    // compute magnitude spectrum (N.B. for display)
-    // compute log(1 + sqrt(Re(DFT(img))**2 + Im(DFT(img))**2))
+    split(imagenCompleja, planos);
+    magnitude(planos[0], planos[1], planos[0]);
 
-    split(complexImg, planes);
-    magnitude(planes[0], planes[1], planes[0]);
+    Mat espectro = (planos[0]).clone();
+    espectro += Scalar::all(1);
+    log(espectro, espectro);
 
-    Mat mag = (planes[0]).clone();
-    mag += Scalar::all(1);
-    log(mag, mag);
+    centrarDFT(espectro);
 
-    // re-arrange the quaderants
-    shiftDFT(mag);
+    normalize(espectro, espectro, 0, 1, CV_MINMAX);
 
-    normalize(mag, mag, 0, 1, CV_MINMAX);
-
-    return mag;
+    return espectro;
 
 }

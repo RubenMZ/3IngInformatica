@@ -4,6 +4,9 @@
 
 */
 
+//#include <stdio.h>
+//#include <ctype.h>
+//#include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
 #include <exception>
@@ -73,9 +76,17 @@ mostrarUso (const char * progname) throw ()
   std::cout << "[-m masc.png]\tMáscara opcional" << std::endl << std::endl;
 }
 
+/*!\brief Parsea la linea de comandos.
+  \arg[in] argc es el número de argumentos en la línea.
+  \arg[in] argv son los argumentos de la línea.
+  \arg[out] params son los parámetros opcionales parseados.
+  \return El índice del primer argumento no opcional de la línea.
+  \warning Esta función no retorna si hay algún error en la cli.
+*/
 static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
 {
-  
+  // Esta es una forma habitual de recoger argumentos con getopt
+  // se usa una iteracion y cada elemento se pasa por un switch-case
   int opcion;
   while ((opcion = getopt (argc, argv, "hn:s:ir:g:f:o:m:v")) != -1)
   {
@@ -123,7 +134,7 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
         case 'v': params.verbose=true;
                   break;
 	
-      case '?': 
+      case '?': // en caso de error getopt devuelve el caracter ?
 	
               	if (isprint (optopt))
               	  std::cerr << "Error: Opción desconocida \'" << optopt
@@ -134,13 +145,14 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
               	mostrarUso(argv[0]);    
               	exit (EXIT_FAILURE);
               	
+              	// en cualquier otro caso lo consideramos error grave y salimos
                     default:
               	std::cerr << "Error: línea de comandos errónea." << std::endl;
               	mostrarUso(argv[0]);
               	exit(EXIT_FAILURE);	
-    }  
+    }  // case
     
-  }
+  }// while
   return optind;
 }
 
@@ -148,37 +160,33 @@ static int parseCLI (int argc, char* const* argv, CLIParams& params) throw ()
 
 int main (int argc, char* const* argv)
 {
+  int retCode=EXIT_SUCCESS;
   
   try {    
     CLIParams params;
 
     parseCLI(argc, argv, params);
 
-    cout << endl;
-    cout << "Los parámetros opcionales son:" << endl;
-    cout << "-i\t" << ((params.interactivo)?"True":"False") << endl;
-    cout << "-s\t" << '\"' << params.space << '\"' << endl;
-    cout << "-r\t" << '\"' << params.fcorte << '\"' << endl;
-    cout << "-n\t" << '\"' << params.orden << '\"' << endl;
-    cout << "-g\t" << '\"' << params.ganancia << '\"' << endl;
+    std::cout << std::endl;
+    std::cout << "Los parámetros opcionales son:" << std::endl;
+    std::cout << "-i\t" << ((params.interactivo)?"True":"False") << std::endl;
+    std::cout << "-s\t" << '\"' << params.space << '\"' << std::endl;
+    std::cout << "-r\t" << '\"' << params.fcorte << '\"' << std::endl;
+    std::cout << "-n\t" << '\"' << params.orden << '\"' << std::endl;
+    std::cout << "-g\t" << '\"' << params.ganancia << '\"' << std::endl;
 
-	//VARIABLES
+	//Inicialización de variables
 	string nombre;
   string destino;
  	string mascara;
-	Mat imagen, mask, imagenSalida, filtro, filtroSalida, padded, canal, imagenCompleja, imgGrayScale, temporal, img, spectroFiltro;
-	vector <Mat> canales;
+	Mat imagen, mask, imgOutput, filter, filterOutput, padded, canal, complex, imgGrayScale, temporal, img, spectroFilter;
+	vector <Mat> canales; //Vector para almacenar canales
 	int orden = params.orden;
   float fcorteW = params.fcorte;
   int fcorte = fcorteW*100;
   float gananciaW = params.ganancia;
   int ganancia = gananciaW*10;
   int canalColor;
-
-     if(gananciaW>5.0 || gananciaW<0.0 || orden>10 || orden <0 || fcorteW > 1.0 || fcorteW < 0.0|| params.space > 3 || params.space<0 ){
-      mostrarUso(argv[0]);
-      exit(EXIT_FAILURE);
-     }
 	
   if(params.imagenInFlag){
 	   imagen = imread(params.imagenIn,-1);
@@ -210,136 +218,170 @@ int main (int argc, char* const* argv)
 	}
 	
   fcorteW=fcorteW*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
+  //maxfcorte=1.0*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
 
     if (params.interactivo==true){
+
+      //Crear las barras para el modo interactivo
     	namedWindow(params.imagenIn, WINDOW_AUTOSIZE);
       namedWindow(destino, WINDOW_AUTOSIZE);
+      moveWindow("Imagen original",500,200);
 
       createTrackbar("Orden del filtro", destino, &orden, 10);
       createTrackbar("Frecuencia de corte", destino, &fcorte, 100);
       createTrackbar("Ganancia", destino, &ganancia, 50);
     }
 
+        
+	//Obtengo el tamaño óptimo para realizar la transformada de Fourier sobre la imagen
 	  int M = getOptimalDFTSize(imagen.rows);
     int N = getOptimalDFTSize(imagen.cols);
      	
   while(true)
   {
+      	//Convertimos la imagen al espacio de color indicado si la imagen tiene 3 canales
     if(params.interactivo==true){
           gananciaW = (ganancia/10.0);
           fcorteW = (fcorte/100.0);
           fcorteW=(fcorteW)*(sqrt(pow((imagen.rows),2.0)+pow((imagen.cols),2.0))/2);
      }
+
       	const int channels = imagen.channels();
       	if(channels == 3)
       	{
+      			//En cada caso convierto al espacio de color indicado, divido la imagen en 3 canales y escojo el canal que contiene la intensidad para tratarlo
+      			//cvtColor(imagen, imgGrayScale, CV_BGR2HSV);
+
                     switch(params.space){
+                    
                       case 0:
                         cvtColor(imagen, imgGrayScale, CV_BGR2HSV);
                         canalColor=2;
                         break;
+                      
                       case 1:
                         cvtColor(imagen, imgGrayScale, CV_BGR2HLS);
                         canalColor=1;
                         break;
+                        
                       case 2:
                         cvtColor(imagen, imgGrayScale, CV_BGR2YCrCb);
                         canalColor=0;
-                        break; 
+                        break;
+                        
                       case 3:
                         cvtColor(imagen, imgGrayScale, CV_BGR2Lab);
                         canalColor=0;
                         break;
                     }
       			split(imgGrayScale, canales);
-            canales[canalColor].convertTo(temporal,CV_32F,1.0/255.0);
-            copyMakeBorder(temporal, padded, 0, M - temporal.rows, 0, N - temporal.cols, BORDER_CONSTANT, Scalar::all(0)); 
+              canales[canalColor].convertTo(temporal,CV_32F,1.0/255.0);
+            copyMakeBorder(temporal, padded, 0, M - temporal.rows, 0, N - temporal.cols, BORDER_CONSTANT, Scalar::all(0)); //Le añado borde a la imagen
       	}
       	else if (channels == 1)
       	{
-      		imagen.convertTo(img,CV_32F,1.0/255.0);
-      		copyMakeBorder(img, padded, 0, M - img.rows, 0, N - img.cols, BORDER_CONSTANT, Scalar::all(0));
+      		imagen.convertTo(img,CV_32F,1.0/255.0); //Convierto la imagen a flotante (de 1 a 255 valores posibles)
+      		copyMakeBorder(img, padded, 0, M - img.rows, 0, N - img.cols, BORDER_CONSTANT, Scalar::all(0)); //Le añado borde a la imagen
       	}
             
+      //Configuracion de la imagen
+        Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)}; //Configuro imagen para aplicar transformada de fourier, la paso a flotante
+        merge(planes, 2, complex); //Creo la imagen compleja con la que voy a trabajar
+      		
+      //Transformada Fourier		
+          	dft(complex, complex); 
+            filter = complex.clone(); //Filtro
+            Mat auxfilter = complex.clone(); 
+            
 
-        Mat planos[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
-        merge(planos, 2, imagenCompleja);  
+      //Reordenacion, convolucion del dominio frecuencial, aplico filtro butterworth y reordenar
+      	shiftDFT(complex); 
+        create_butterworth_lowpass_filter(filter, fcorteW, orden); 
+        create_butterworth_lowpass_filter(auxfilter, fcorteW, 0); 
 
-        dft(imagenCompleja, imagenCompleja); 
-        filtro = imagenCompleja.clone();
-        Mat auxfiltro = imagenCompleja.clone();     
-
-
-      	centrarDFT(imagenCompleja); 
-        crearFiltroButterworth(filtro, fcorteW, orden); 
-        crearFiltroButterworth(auxfiltro, fcorteW, 0); 
-
-        Mat auximagenCompleja = imagenCompleja.clone(); 	
+        Mat auxComplex = complex.clone(); 	
   
-        mulSpectrums(auximagenCompleja, auxfiltro, auximagenCompleja, 0); 
-        centrarDFT(auximagenCompleja); 
+        mulSpectrums(auxComplex, auxfilter, auxComplex, 0); 
+        shiftDFT(auxComplex); 
 
-        mulSpectrums(imagenCompleja, filtro, imagenCompleja, 0); 
-        centrarDFT(imagenCompleja); 
+        mulSpectrums(complex, filter, complex, 0); 
+        shiftDFT(complex); 
 
-        spectroFiltro = crearEspectro(imagenCompleja);
-        Mat spectroImg = crearEspectro(auximagenCompleja);
+        //Calculo el espectro
+        spectroFilter = crearEspectro(complex);
+        Mat spectroImg = crearEspectro(auxComplex);
+        //Calculo de la inversa transformada y normalizar
 
-        idft(imagenCompleja, imagenCompleja, DFT_SCALE);      
-        split(imagenCompleja, planos);
-        normalize(planos[0], imagenSalida, 0, 1, CV_MINMAX);
-        split(filtro, planos);
-        normalize(planos[0], filtroSalida, 0, 1, CV_MINMAX); 
+        idft(complex, complex, DFT_SCALE);      
+        split(complex, planes);
+        normalize(planes[0], imgOutput, 0, 1, CV_MINMAX); //PLANO REAL
+        split(filter, planes);
+        normalize(planes[0], filterOutput, 0, 1, CV_MINMAX); //Normalizo el plano real
       	
-      	Mat salida = img.clone(); 
+      	Mat salida = img.clone(); //Copio la imagen de entrada en la de salida para que tenga las mismas características
 
+      	//Aplicar Ganancia
+
+      	//Ahora aplico la ganancia a cada píxel de la imagen en el canal indicado y teniendo en cuenta la máscara, en caso de haberla
             	if(channels == 3)
             	{  
               		canales[canalColor] = temporal.clone();
+
+
               	    	for(int i=0; i < imagen.rows; i++)
               	      		for(int j=0; j < imagen.cols; j++) 
               				      if(mask.empty() || mask.at<unsigned char>(i,j)!=0){
-                                  canales[canalColor].at<float>(i,j)=(temporal.at<float>(i,j)*(gananciaW+1)-(imagenSalida.at<float>(i,j)*gananciaW));
+                                  canales[canalColor].at<float>(i,j)=(temporal.at<float>(i,j)*(gananciaW+1)-(imgOutput.at<float>(i,j)*gananciaW));
                              }
-              		canales[canalColor].convertTo(canales[canalColor], CV_8U, 255.0, 0.0); 
-                  merge(canales, imgGrayScale); 
+
+              		  canales[canalColor].convertTo(canales[canalColor], CV_8U, 255.0, 0.0); //Convierto la imagen a uchar para que se pueda visualizar de manera correcta
+
+                  merge(canales, imgGrayScale); //Uno los canales
               	         switch(params.space){
       
                             case 0:
                               cvtColor(imgGrayScale, salida, CV_HSV2BGR);
                               break;
+                            
                             case 1:
                               cvtColor(imgGrayScale, salida, CV_HLS2BGR);
                               break;
+                              
                             case 2:
                               cvtColor(imgGrayScale, salida, CV_YCrCb2BGR);
                               break;
+                              
                             case 3:
                               cvtColor(imgGrayScale, salida, CV_Lab2BGR);
                               break;
                           }
+
+                   //cvtColor(imgGrayScale, salida, CV_HSV2BGR); //Deshago el cambio del espacio de color pasando la imagen a BGR
             	}
-            	else
+            	else //Si es en blanco y negro la imagen, debemos tener en cuenta los pixeles de la mascara (si la hay)
             	{
             		for(int i=0; i < imagen.rows; i++)
             			for(int j=0; j < imagen.cols; j++)			
             				if(mask.empty() || mask.at<unsigned char>(i,j)!=0)
-            					salida.at<float>(i,j)=(img.at<float>(i,j)*(gananciaW+1)-(imagenSalida.at<float>(i,j)*gananciaW));
+            					salida.at<float>(i,j)=(img.at<float>(i,j)*(gananciaW+1)-(imgOutput.at<float>(i,j)*gananciaW));
       	         salida.convertTo(salida,CV_8U, 255.0, 0.0);
                }
   
+
+          //Mostrar las imagenes
               if(params.verbose==true){
-                imshow("Filtro", filtroSalida);
-                imshow("Espectro filtro", spectroFiltro);
+                imshow("Filtro", filterOutput);
+                imshow("Espectro filtro", spectroFilter);
                 imshow("Espectro imagen", spectroImg);
               }
             	imshow(destino, salida);
             	imshow(params.imagenIn, imagen);
             	imwrite(destino, salida);
 
-              filtroSalida.convertTo(filtroSalida,CV_8U, 255.0, 0.0);
-              imwrite("filtro.png", filtroSalida);
-
+              filterOutput.convertTo(filterOutput,CV_8U, 255.0, 0.0);
+              imwrite("filtro.png", filterOutput);
+            
+          //Esperar para pulsar enter
             	char c = waitKey(10)&0xFF;
             	if (c == '\n')
       		      break;
@@ -349,7 +391,7 @@ int main (int argc, char* const* argv)
   catch (std::exception& e)
   {
     std::cerr << "Capturada excepcion: " << e.what() << std::endl;
-    exit(EXIT_FAILURE);
+    retCode = EXIT_FAILURE;
   }
-  return 0;
+  return retCode;
 }

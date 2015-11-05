@@ -10,8 +10,8 @@
 using namespace std;
 using namespace cv;
 
-void centrarDFT(Mat& img );
-void crearFiltroButterworth(Mat &filtro, float r, int n);
+void shiftDFT(Mat& fImage );
+void create_butterworth_lowpass_filter(Mat &dft_Filter, float D, int n);
 Mat crearEspectro(Mat &complexImg);
 
 #endif
