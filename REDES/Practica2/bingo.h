@@ -17,6 +17,7 @@
 	int compruebaBola(int * vector, int n, int bola);
 	char * inttochar(int ** matriz);
 	int ** chartoint(char * cadena);
-	void mandarCarton(Partida * partida);
+	void mandarCarton(Partida * partida, Usuario usuarios[], int n);
+	void actualizarPartidas(int numPartidas, Partida partidas[]);
 
 #endif

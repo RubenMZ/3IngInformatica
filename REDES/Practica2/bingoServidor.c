@@ -42,9 +42,15 @@ void main ( )
     int opcion;
     //contadores
     int i,j,k;
+    int iterador;
 	int recibidos;
     char identificador[MSG_SIZE];
     
+    //Variables auxiliares para buscar con i del socket
+    int posAux;
+    Usuario uAux;
+    Partida* pAux;
+
     int on, ret;
 
     srand(time(NULL));
@@ -134,7 +140,7 @@ void main ( )
                     
                     //Buscamos el socket por el que se ha establecido la comunicación
                     if(FD_ISSET(i, &auxfds)) {
-                        printf("i : %d\n", i);
+                        //printf("i : %d\n", i);
                         
                         if( i == sd){
                             
@@ -198,13 +204,18 @@ void main ( )
 
                             bzero(buffer,sizeof(buffer));
                             recibidos = recv(i,buffer,sizeof(buffer),0);
-                            printf("i: %d", i);
+                            //printf("i: %d", i);
                             if(recibidos > 0){
                                 
                                 if(strcmp(buffer,"SALIR\n") == 0 || strcmp(buffer,"salir\n") == 0 ||strcmp(buffer,"Salir\n") == 0){
-                                    salirCliente(i,&readfds,&numUsuariosConectados,usuarios);
+                                    send(i, "+Ok. Desconexión procesada", strlen("+Ok. Desconexión procesada"), 0);
+                                    salirCliente(i,&readfds,&numUsuariosConectados,usuarios, numPartidas, partidas);
                                 }
                                 else{
+                                    posAux = buscarPosicion(i, usuarios, numUsuariosConectados);
+                                    uAux =  buscarUsuario(i, usuarios, numUsuariosConectados);
+                                    if(uAux.estado==3)
+                                        pAux = buscarPartida(i, partidas, numPartidas);
 
                                     cabecera1=cortarCadena(buffer, MSG_SIZE, ' ');
                                     cabecera2=cortarCadena(buffer, MSG_SIZE, '\n');
@@ -216,11 +227,12 @@ void main ( )
                                                     argumento[strlen(argumento)-1]='\0';
                                                 printf("argumento: %s\n", argumento);
                                                 printf("Peticion de registro usuario: (%s)\n", argumento);
-                                                if(usuarios[i].estado==0){
+
+                                                if(usuarios[posAux].estado==0){
                                                     printf("main\n");
-                                                    if(registroComandos(argumento, &usuarios[i])==1){
-                                                        printf("nombre %s pass %s\n", usuarios[i].nombre, usuarios[i].pass);
-                                                        registrarUsuario(usuarios[i].nombre, usuarios[i].pass);
+                                                    if(registroComandos(argumento, &usuarios[posAux])==1){
+                                                        printf("nombre %s pass %s\n", usuarios[posAux].nombre, usuarios[posAux].pass);
+                                                        registrarUsuario(usuarios[posAux].nombre, usuarios[posAux].pass);
                                                         printf("\E[32mRegistro aceptada\e[0m\n");
                                                         bzero(buffer,sizeof(buffer));
                                                         send(i,"\E[32m+Ok. Usuario registrado\e[0m", strlen("\E[32m+Ok. Usuario registrado\e[0m"), 0);
@@ -236,7 +248,7 @@ void main ( )
                                                     
 
                                                 }else{
-                                                    continuarRegistro(usuarios[i]);
+                                                    continuarRegistro(usuarios[posAux]);
                                                 }
                                                 
                                                 break;
@@ -245,10 +257,10 @@ void main ( )
                                                 if(argumento[strlen(argumento)-1]=='\n')
                                                     argumento[strlen(argumento)-1]='\0';
                                                 printf("Peticion de inicio usuario: (%s)\n", argumento);
-                                                if(usuarios[i].estado==0)
+                                                if(usuarios[posAux].estado==0)
                                                     if(aceptaUsuario(argumento)==1){
-                                                        strcpy(usuarios[i].nombre,argumento);
-                                                        usuarios[i].estado=1;
+                                                        strcpy(usuarios[posAux].nombre,argumento);
+                                                        usuarios[posAux].estado=1;
                                                         bzero(buffer,sizeof(buffer));
                                                         printf("\E[32mUsuario aceptado\e[0m\n");
                                                         send(i,"\E[32m+Ok. Usuario correcto\e[0m", strlen("\E[32m+Ok. Usuario correcto\e[0m"),0);
@@ -258,7 +270,7 @@ void main ( )
                                                         send(i,  "\E[31m–ERR. Usuario incorrecto\e[0m",strlen( "\E[31m–ERR. Usuario incorrecto\e[0m"),0);
                                                     }
                                                 else{
-                                                    continuarRegistro(usuarios[i]);
+                                                    continuarRegistro(usuarios[posAux]);
                                                 }
 
                                                 break;
@@ -266,10 +278,10 @@ void main ( )
                                                 if(argumento[strlen(argumento)-1]=='\n')
                                                     argumento[strlen(argumento)-1]='\0';
                                                 printf("Peticion de contraseña: (%s)\n", cifrarPass(argumento));
-                                                if(usuarios[i].estado==1)
-                                                    if(aceptaPass(usuarios[i].nombre,argumento)==1){
-                                                        usuarios[i].estado=2;
-                                                        strcpy(usuarios[i].pass, argumento);
+                                                if(usuarios[posAux].estado==1)
+                                                    if(aceptaPass(usuarios[posAux].nombre,argumento)==1){
+                                                        usuarios[posAux].estado=2;
+                                                        strcpy(usuarios[posAux].pass, argumento);
                                                         bzero(buffer,sizeof(buffer));
                                                         printf("\E[32mContraseña aceptada\e[0m\n");
                                                         send(i,"\E[32m+Ok. Usuario validado\e[0m", strlen("\E[32m+Ok. Usuario validado\e[0m"),0);
@@ -280,46 +292,116 @@ void main ( )
                                                         send(i, "\E[31m–ERR. Error en la validación\e[0m",strlen("\E[31m–ERR. Error en la validación\e[0m"),0);
                                                     }
                                                 else{
-                                                    continuarRegistro(usuarios[i]);
+                                                    continuarRegistro(usuarios[posAux]);
                                                 }
                                                 break;
-                                        case 4: if(usuarios[i].estado==2){
-                                                    printf("Usuario %s ha iniciado partida.\n", usuarios[i].nombre);
-                                                    bzero(buffer,sizeof(buffer));
-                                                    send(i, "Bienvenido al bingo.\n", strlen("Bienvenido al bingo.\n"),0);
-                                                    bzero(buffer,sizeof(buffer));
-                                                    send(i, "\E[32m+Ok. Petición Recibida. Quedamos a la espera de más jugadores\e[0m", strlen("\E[32m+Ok. Petición Recibida. Quedamos a la espera de más jugadores\e[0m"),0);
-                                                    usuarios[i].estado=3;
-                                                    usuarios[i].partida=numPartidas;
-                                                    numUsuariosJugando++;
-                                                    partidas[numPartidas].usuarios[partidas[numPartidas].numUsuarios]=i;
-                                                    partidas[numPartidas].numUsuarios++;
-
-                                                    if (numUsuariosJugando>0 && numUsuariosJugando%2==0)
-                                                    {
-                                                        partidas[numPartidas].comenzada=1;
-                                                        printf("Partida %d iniciada.\n", numPartidas+1);
-                                                        for (i = 0; i < partidas[numPartidas].numUsuarios; ++i)
-                                                        {
-                                                            send(partidas[numPartidas].usuarios[i],"\E[32m+Ok. Empieza la partida\e[0m", strlen("\E[32m+Ok. Empieza la partida\e[0m"),0);
-                                                        }
-                                                        printf("MANDAR\n");
-                                                        mandarCarton(&partidas[numPartidas]);
-                                                        printf("fuera\n");
-                                                        numPartidas++;
-                                                    }
-                                                    printf("hola\n");
+                                        case 4: if(usuarios[posAux].estado==2){
                                                     
                                                 }else{
-                                                    continuarRegistro(usuarios[i]);
+                                                    continuarRegistro(usuarios[posAux]);
                                                 }
 
                                                 break;
-                                        case 5: printf("opcion linea\n");
+                                        case 5: 
+                                                if(usuarios[posAux].estado==3 && pAux->estado<=0){
+                                                    if(comprobarBingo(usuarios[posAux], 1, *pAux)==1){
+                                                        pAux->estado=1;
+                                                        printf("\E[32m+Ok. Jugador %d ha cantado una linea\e[0m\n", usuarios[posAux].id);
+                                                        send(i, "\E[32m+Ok. UNA-LINEA aceptada\e[0m", strlen("\E[32m+Ok. UNA-LINEA aceptada\e[0m"),0);
+                                                        bzero(buffer,sizeof(buffer));
+                                                        sprintf(buffer, "\E[32m+Ok. Jugador %d ha cantado una linea\e[0m\n", usuarios[posAux].id);
+                                                            for (iterador = 0; iterador< pAux->numUsuarios; ++iterador)
+                                                            {
+                                                                if (pAux->usuarios[iterador]!=i)
+                                                                {
+                                                                    send(pAux->usuarios[iterador], buffer, strlen(buffer),0);
+                                                                }
+                                                            }
+                                                    }else{
+                                                        if (comprobarBingo(usuarios[posAux],1, *pAux)==0)
+                                                        {
+                                                            printf("\E[31m-Err. Usuario %d no satisface UNA-LINEA con los números actuales\e[0m\n", usuarios[posAux].id);
+                                                            send(i, "\E[31m-Err. Su cartón no satisface UNA-LINEA con los números actuales\e[0m", strlen("\E[31m-Err. Su cartón no satisface UNA-LINEA con los números actuales\e[0m"),0);
+                                                        }else{
+                                                            printf("-ERR. Ya se ha cantado UNA-LINEA\n");
+                                                            send(i, "-ERR. Ya se ha cantado UNA-LINEA", strlen("-ERR. Ya se ha cantado UNA-LINEA"), 0);
+                                                        }
+                                                    }
+                                                }else{
+                                                    if(usuarios[posAux].estado!=3)
+                                                        continuarRegistro(usuarios[posAux]);
+                                                    else
+                                                        continuarJugando(usuarios[posAux], pAux->estado);
+                                                }
+
                                                 break;
-                                        case 6: printf("opcion doslineas\n");
+                                        case 6: if(usuarios[posAux].estado==3 && pAux->estado<=1){
+                                                    if(comprobarBingo(usuarios[posAux], 2, *pAux)==1){
+                                                        pAux->estado=2;
+                                                        printf("\E[32m+Ok. Jugador %d ha cantado dos lineas\e[0m", usuarios[posAux].id);
+                                                        send(i, "\E[32m+Ok. DOS-LINEAS aceptada\e[0m", strlen("\E[32m+Ok. DOS-LINEAS aceptada\e[0m"),0);
+                                                        bzero(buffer,sizeof(buffer));
+                                                        sprintf(buffer, "\E[32m+Ok. Jugador %d ha cantado dos lineas\e[0m\n", usuarios[posAux].id);
+                                                            for (iterador = 0; iterador< pAux->numUsuarios; ++iterador)
+                                                            {
+                                                                if (pAux->usuarios[iterador]!=i)
+                                                                {
+                                                                    send(pAux->usuarios[iterador], buffer, strlen(buffer),0);
+                                                                }
+                                                            }
+                                                    }else{
+                                                        if (comprobarBingo(usuarios[posAux],2, *pAux)==0)
+                                                        {
+                                                            printf("\E[31m-Err. Usuario %d no satisface DOS-LINEAS con los números actuales\e[0m", usuarios[posAux].id);
+                                                            send(i, "\E[31m-Err. Su cartón no satisface DOS-LINEAS con los números actuales\e[0m", strlen("\E[31m-Err. Su cartón no satisface DOS-LINEAS con los números actuales\e[0m"),0);
+
+                                                        }else{
+                                                            printf("-ERR. Ya se ha cantado DOS-LINEAS\n");
+                                                            send(i, "-ERR. Ya se ha cantado DOS-LINEAS", strlen("-ERR. Ya se ha cantado DOS-LINEAS"), 0);
+                                                        }
+                                                    }
+                                                }else{
+                                                    if(usuarios[posAux].estado!=3)
+                                                        continuarRegistro(usuarios[posAux]);
+                                                    else
+                                                        continuarJugando(usuarios[posAux], pAux->estado);
+                                                }
                                                 break;
-                                        case 7: printf("opcion bingo\n");
+                                        case 7: if(usuarios[posAux].estado==3 && pAux->estado<=2){
+                                                    if(comprobarBingo(usuarios[posAux], 3, *pAux)==1){
+                                                        pAux->estado=3;
+                                                        printf("\E[32m+Ok. Jugador %d ha cantado bingo\e[0m", usuarios[posAux].id);
+                                                        send(i, "\E[32m+Ok. BINGO aceptado\e[0m", strlen("\E[32m+Ok. BINGO aceptado\e[0m"),0);
+                                                        bzero(buffer,sizeof(buffer));
+                                                        sprintf(buffer, "\E[32m+Ok. Jugador %d ha cantado bingo\e[0m\n", usuarios[posAux].id);
+                                                            for (iterador = 0; iterador< pAux->numUsuarios; ++iterador)
+                                                            {
+                                                                if (pAux->usuarios[iterador]!=i)
+                                                                {
+                                                                    send(pAux->usuarios[iterador], buffer, strlen(buffer),0);
+                                                                }
+                                                            }
+                                                    }else{
+                                                        if (comprobarBingo(usuarios[posAux],3, *pAux)==0)
+                                                        {
+                                                            printf("\E[31m-Err. Usuario %d no satisface BINGO con los números actuales\e[0m", usuarios[posAux].id);
+                                                            send(i, "\E[31m-Err. Su cartón no satisface BINGO con los números actuales\e[0m", strlen("\E[31m-Err. Su cartón no satisface BINGO con los números actuales\e[0m"),0);
+                                                        }else{
+                                                            printf("-ERR. Ya se ha cantado BINGO\n");
+                                                            send(i, "-ERR. Ya se ha cantado BINGO", strlen("-ERR. Ya se ha cantado BINGO"), 0);
+                                                        }
+                                                    }
+                                                }else{
+                                                    if(usuarios[posAux].estado!=3)
+                                                        continuarRegistro(usuarios[posAux]);
+                                                    else
+                                                        continuarJugando(usuarios[posAux], pAux->estado);
+                                                }
+                                                break;
+
+                                        case 8: usuarios[posAux].estado=2;
+
+                                                salirPartida(i, numPartidas, partidas);
                                                 break;
                                         default: bzero(buffer,sizeof(buffer));
                                                 send(i,"Opción para cliente incorrecta REGISTER|USUARIO|INICIAR-PARTIDA|...|UNA-LINEA|BINGO",
@@ -333,18 +415,16 @@ void main ( )
                             {
                                 printf("El socket %d, ha introducido ctrl+c\n", i);
                                 //Eliminar ese socket
-                                salirCliente(i,&readfds,&numUsuariosConectados,usuarios);
+                                salirCliente(i,&readfds,&numUsuariosConectados,usuarios, numPartidas, partidas);
                             }
                         }//if (i == 0) else
-                        printf("if(FD_ISSET(i, &auxfds))\n");
                     }//if(FD_ISSET(i, &auxfds)) 
-                    printf("for(i=0; i<FD_SETSIZE; i++)\n");
                 }//for(i=0; i<FD_SETSIZE; i++)
-                printf("(salida > 0)\n");
             }//(salida > 0)
             if(timeout.tv_sec==0){
-                timeout.tv_sec = 10;
-                timeout.tv_usec = 0;
+                //timeout.tv_sec = 10;
+                //timeout.tv_usec = 0;
+                //actualizarPartidas(numPartidas, partidas);
                 if(numPartidas>0)
                     mandarBola(partidas, numPartidas);
             }

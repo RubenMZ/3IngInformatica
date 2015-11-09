@@ -144,10 +144,10 @@
 	void continuarRegistro(Usuario usuario){
 
 		if(usuario.estado==0)
-            send(usuario.id,"Introduce USUARIO <nombre> o REGISTER -u <nombre> -p <pass>", strlen("Introduce USUARIO <nombre> o REGISTER -u <nombre> -p <pass>"),0);
+            send(usuario.id,"-ERR. Introduce USUARIO <nombre> o REGISTER -u <nombre> -p <pass>", strlen("-ERR. Introduce USUARIO <nombre> o REGISTER -u <nombre> -p <pass>"),0);
         
 		if(usuario.estado==1)
-            send(usuario.id,"Introduce PASSWORD <pass>", strlen("Introduce PASSWORD <pass>"),0);
+            send(usuario.id,"-ERR. Introduce PASSWORD <pass>", strlen("-ERR. Introduce PASSWORD <pass>"),0);
         
         if(usuario.estado==2)
             send(usuario.id,"Introduce INICIAR-PARTIDA", strlen("Introduce INICIAR-PARTIDA"),0);
@@ -155,4 +155,43 @@
      	if(usuario.estado==3)
      		send(usuario.id, "Esperando partida... o partida ya comenzada",
      			strlen("Esperando partida... o partida ya comenzada"),0);   
+	}
+
+	Usuario buscarUsuario(int id, Usuario usuarios[], int n){
+		int i;
+
+		for (i = 0; i < n; ++i)
+		{
+			if (usuarios[i].id==id)
+			{
+				return usuarios[i];
+			}
+		}
+	}
+
+	int buscarPosicion(int id, Usuario usuarios[], int n){
+		int i;
+
+		for (i = 0; i < n; ++i)
+		{
+			if (usuarios[i].id==id)
+			{
+				return i;
+			}
+		}
+	}
+
+	Partida * buscarPartida(int id, Partida partidas[], int n){
+		int i,j;
+
+		for (i = 0; i < n; ++i)
+		{
+			for (j = 0; j < partidas[i].numUsuarios; ++j)
+			{
+				if (partidas[i].usuarios[j]==id)
+				{
+					return &partidas[i];
+				}
+			}
+		}
 	}

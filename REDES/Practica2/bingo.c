@@ -82,20 +82,21 @@
     for (i = 0; i < n; ++i)
     {
         bola=rand()%90+1;
-        if (compruebaBola(partidas[i].bolas, partidas[i].numBolas, bola)==0)
-        {
-            partidas[i].bolas[partidas[i].numBolas]=bola;
-            partidas[i].numBolas++;
-            for (j = 0; j < partidas[i].numUsuarios; ++j)
-            {
-                bzero(buffer,sizeof(buffer));
-                sprintf(buffer,"Bola: %d\n", bola);
-                send(partidas[i].usuarios[j],buffer,strlen(buffer),0);
-            }
-        }else
-        {
-            i--;
-        }
+        if(partidas[i].comenzada==1 && partidas[i].numBolas!=90)
+	        if (compruebaBola(partidas[i].bolas, partidas[i].numBolas, bola)==0)
+	        {
+	            partidas[i].bolas[partidas[i].numBolas]=bola;
+	            partidas[i].numBolas++;
+	            for (j = 0; j < partidas[i].numUsuarios; ++j)
+	            {
+	                bzero(buffer,sizeof(buffer));
+	                sprintf(buffer,"NUMERO-OBTENIDO %d", bola);
+	                send(partidas[i].usuarios[j],buffer,strlen(buffer),0);
+	            }
+	        }else
+	        {
+	            i--;
+	        }
 
     }
  }
@@ -106,25 +107,66 @@
 		{
 			if (vector[i]==bola)
 			{
+
 				return 1;
 			}
 		}
+
 		return 0;
 	}
 
 
- void mandarCarton(Partida * partida){
+ void mandarCarton(Partida * partida, Usuario usuarios[], int n){
  		char buffer[MSG_SIZE];
- 		int i;
+ 		int i, j;
+ 		int ** carton;
 
  		for (i = 0; i < partida->numUsuarios; ++i)
  		{
  			bzero(buffer,sizeof(buffer));
  			strcpy(buffer, "CARTON ");
- 			strcat(buffer, inttochar(generaCarton()));
+ 			carton = generaCarton();
+ 			strcat(buffer, inttochar(carton));
  			send(partida->usuarios[i], buffer, strlen(buffer), 0);
+ 			for (j = 0; j < n; ++j)
+ 			{
+ 				if (usuarios[j].id==partida->usuarios[i])
+ 				{
+ 					usuarios[j].carton=carton;
+ 				}
+ 			}
  		}
  }
+
+ int comprobarBingo(Usuario u, int opcion, Partida partida){
+
+ 	int i,j,k=0;
+ 	int lineas=0;
+
+ 	if(opcion>partida.estado){
+
+	 	for (i = 0; i < 3; ++i)
+	 	{
+	 		k=0;
+	 		for (j=0; j < 9; ++j)
+	 		{	
+	 			if(compruebaBola(partida.bolas, partida.numBolas, u.carton[i][j])==1)
+	 				k++;
+	 		}
+	 		if(k==5)
+	 			lineas++;
+	 	}
+
+ 	if(lineas>=opcion)
+ 		return 1;
+ 	else
+ 		return 0;
+
+ 	}else{
+ 		return -1;
+ 	}
+ }
+
 
  	char * inttochar(int ** matriz){
  		char * cadena;
@@ -205,4 +247,17 @@
 
 		}
 		return carton;
+	}
+
+	void actualizarPartidas(int numPartidas, Partida partidas[]){
+		int i;
+		for (i = 0; i < numPartidas; ++i)
+		{
+			if (partidas[i].bandera!=0)
+			{
+				partidas[i].estado=partidas[i].bandera;
+				partidas[i].bandera=0;
+			}
+		}
+
 	}

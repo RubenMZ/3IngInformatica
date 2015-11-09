@@ -26,5 +26,8 @@
 	int registroComandos(char* argv, Usuario* user);
 	char * cifrarPass(char * cadena);
 	void continuarRegistro(Usuario usuario);
+	Usuario buscarUsuario(int id, Usuario usuarios[],int n);
+	int buscarPosicion(int id, Usuario usuarios[],int n);
+	Partida * buscarPartida(int id, Partida partidas[], int n);
 
 #endif

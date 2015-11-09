@@ -17,9 +17,9 @@ void main ( )
 	-----------------------------------------------------*/
 	int sd;
 	struct sockaddr_in sockname;
-	char buffer[250];
+	char buffer[MSG_SIZE];
 	int ** carton;
-	char* cartonAux=NULL, *cartonCad;
+	char* cartonAux=NULL, cartonCad[MSG_SIZE];
 	int i, j;
 	socklen_t len_sockname;
     fd_set readfds, auxfds;
@@ -80,13 +80,12 @@ void main ( )
             bzero(buffer,sizeof(buffer));
             recv(sd,buffer,sizeof(buffer),0);
             
-            printf("BUFFER - <%s> \n", buffer);
+            //printf("BUFFER - <%s> \n", buffer);
 
             cartonAux=cortarCadena(buffer, 250, ' ');
 
             if(strcmp(cartonAux, "CARTON")==0){
             	strncpy(cartonCad, buffer+strlen(cartonAux)+1, MSG_SIZE);
-            	printf("carton %s\n", cartonCad);
             	carton=chartoint(cartonCad);
 				for (i = 0; i < 3; ++i)
 				{
@@ -97,6 +96,7 @@ void main ( )
 					printf("\n");
 				}
             }else{
+            	printf("%s\n", cartonAux);
 	            printf("%s\n",buffer);
             }
             if(strcmp(buffer,"Demasiados clientes conectados\n") == 0)
@@ -108,7 +108,6 @@ void main ( )
         }
         else
         {
-            
             //He introducido información por teclado
             if(FD_ISSET(0,&auxfds)){
                 bzero(buffer,sizeof(buffer));
@@ -126,11 +125,7 @@ void main ( )
             
             
         }
-        
-        
-				
+
     }while(fin == 0);
-		
     close(sd);
-		
 }

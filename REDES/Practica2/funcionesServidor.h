@@ -17,9 +17,10 @@
 #define MAX_CLIENTS 40
 
 	void manejador(int signum);
-	void salirCliente(int socket, fd_set * readfds, int * numUsuarios, Usuario usuarios[]);
+	void salirCliente(int socket, fd_set * readfds, int * numUsuarios, Usuario usuarios[], int numPartidas, Partida partidas[]);
 
 	int comprobarOpcion(char * cabecera1, char * cabecera2);
+	void continuarJugando(Usuario u, int estado);
 
 
 
