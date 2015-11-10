@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from Noticias.models import New, Author, Section
 from django.template import loader, Context, RequestContext
 
@@ -10,7 +10,9 @@ def index(request):
 	return HttpResponse(plantilla.render(contexto))
 
 def detail(request, noticia_id):
-	aux = New.objects.get(id=noticia_id)
-	title = aux.title
-	descrip = aux.description
+	try:
+		aux = New.objects.get(id=noticia_id)
+		descrip = aux.description
+	except New.DoesNotExist:
+		raise Http404
 	return HttpResponse("Descripcion: %s" %descrip)
