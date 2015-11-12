@@ -5,6 +5,8 @@ int main(){
 
 	Cambio c("monedas.txt");
 	vector<int> solucion;
+	vector<int> monedas;
+	int ** matriz;
 	int suma=0;
 	int dinero;
 
@@ -22,7 +24,24 @@ int main(){
 		imprimeSolucion(solucion);
 	else
 		cout<<"No se ha calculado correctamente"<<endl;
+
+	c.hacerAlgoritmoDinamico(dinero);
+
+
+	monedas=c.getMonedas();
+	matriz= c.getMatriz();
 	
+	for (unsigned int i = 0; i <monedas.size() ; ++i)
+	{
+		cout<<monedas[i]<<"-> ";
+		for (int j = 0; j <= dinero; ++j)
+		{
+			cout<<"  "<<matriz[i][j]<<"  ";
+		}
+		cout<<endl;
+	}
+
+	imprimeSolucionDinamica(matriz, monedas.size(), dinero, monedas);
 
 	exit(EXIT_SUCCESS);
 }

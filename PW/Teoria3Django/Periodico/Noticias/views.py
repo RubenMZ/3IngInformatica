@@ -9,9 +9,9 @@ def index(request):
 	contexto = RequestContext(request, {'lista': lista,} )
 	return HttpResponse(plantilla.render(contexto))
 
-def detail(request, noticia_id):
+def detail(request, slug, noticia_id):
 	try:
-		aux = New.objects.get(id=noticia_id)
+		aux = New.objects.get(slug=slug, id=noticia_id)
 		descrip = aux.description
 	except New.DoesNotExist:
 		raise Http404

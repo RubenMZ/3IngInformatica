@@ -143,6 +143,7 @@
  	int i,j,k=0;
  	int lineas=0;
 
+ 	printf("hola\n");
  	if(opcion>partida.estado){
 
 	 	for (i = 0; i < 3; ++i)
@@ -156,6 +157,8 @@
 	 		if(k==5)
 	 			lineas++;
 	 	}
+
+	 	printf("adios\n");
 
  	if(lineas>=opcion)
  		return 1;

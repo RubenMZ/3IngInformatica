@@ -296,7 +296,26 @@ void main ( )
                                                 }
                                                 break;
                                         case 4: if(usuarios[posAux].estado==2){
-                                                    
+                                                    printf("Usuario %s ha iniciado partida.\n", usuarios[posAux].nombre);
+                                                    bzero(buffer,sizeof(buffer));
+                                                    send(i, "Bienvenido al bingo.\n", strlen("Bienvenido al bingo.\n"),0);
+                                                    bzero(buffer,sizeof(buffer));
+                                                    send(i, "\E[32m+Ok. Petición Recibida. Quedamos a la espera de más jugadores\e[0m", strlen("\E[32m+Ok. Petición Recibida. Quedamos a la espera de más jugadores\e[0m"),0);
+                                                        usuarios[posAux].estado=3;
+                                                    usuarios[posAux].partida=numPartidas;
+                                                    numUsuariosJugando++;
+                                                    partidas[numPartidas].usuarios[partidas[numPartidas].numUsuarios]=i;
+                                                    partidas[numPartidas].numUsuarios++;
+                                                    if (numUsuariosJugando>0 && numUsuariosJugando%2==0){
+                                                        partidas[numPartidas].comenzada=1;
+                                                        partidas[numPartidas].estado=0;
+                                                        printf("Partida %d iniciada.\n", numPartidas+1);
+                                                        fflush(stdout);
+                                                        for (iterador = 0; iterador < partidas[numPartidas].numUsuarios; ++iterador){
+                                                            send(iterador, "Comienza la partida", strlen("Comienza la partida"),0 );
+                                                        }
+                                                        numPartidas++;
+                                                    }
                                                 }else{
                                                     continuarRegistro(usuarios[posAux]);
                                                 }
