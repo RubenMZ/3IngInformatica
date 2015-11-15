@@ -18,7 +18,7 @@
 
 	void manejador(int signum);
 	void salirCliente(int socket, fd_set * readfds, int * numUsuarios, Usuario usuarios[], int numPartidas, Partida partidas[]);
-
+	void salirPartida(int socket, int numPartidas, Partida partidas[]);
 	int comprobarOpcion(char * cabecera1, char * cabecera2);
 	void continuarJugando(Usuario u, int estado);
 

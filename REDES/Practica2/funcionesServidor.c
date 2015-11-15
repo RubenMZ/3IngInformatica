@@ -61,7 +61,7 @@ void salirPartida(int socket, int numPartidas, Partida partidas[]){
     }
     printf("Salida de partida del cliente: %d\n",socket);
     bzero(buffer,sizeof(buffer));
-    sprintf(buffer,"Salida del cliente: %d\n",socket);
+    sprintf(buffer,"+Ok. Usuario %d ha abandonado la partida.\n",socket);
 
     for (i=0; i < numPartidas; ++i){
       for(j=0; j<partidas[i].numUsuarios; j++){
@@ -69,14 +69,24 @@ void salirPartida(int socket, int numPartidas, Partida partidas[]){
         }
     }
 
+    send(socket, "\E[32m+Ok. Ha salido de la partida\e[0m", strlen("\E[32m+Ok. Ha salido de la partida\e[0m"),0);
+
 }
 
 
 void manejador (int signum){
     printf("\nSe ha recibido la señal sigint\n");
     signal(SIGINT,manejador);
-    
-    //Implementar lo que se desee realizar cuando ocurra la excepción de ctrl+c en el servidor
+    int i;
+
+    printf("Desconectando clientes...\n");
+    for(i=4; i<FD_SETSIZE; i++){
+        send(i, "Desconexion servidor\n", strlen("Desconexion servidor\n"),0);
+        close(i);
+    }
+
+    close(0);
+    exit(-1);
 }
 
 

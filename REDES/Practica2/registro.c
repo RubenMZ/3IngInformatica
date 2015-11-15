@@ -83,10 +83,13 @@
 			printf("No se puede abrir el fichero.\n");
 			exit(-1);
 		}
-
-		fprintf(f, "%s %s\n", nombre, pass);
+		if(aceptaUsuario(nombre)==1)
+			return 0;
+		else
+			fprintf(f, "%s %s\n", nombre, pass);
+		
 		fclose(f);
-		return 0;
+		return 1;
 	}
 
 	int registroComandos(char* argv, Usuario* user)

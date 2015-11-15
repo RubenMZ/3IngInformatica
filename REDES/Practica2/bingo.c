@@ -82,7 +82,7 @@
     for (i = 0; i < n; ++i)
     {
         bola=rand()%90+1;
-        if(partidas[i].comenzada==1 && partidas[i].numBolas!=90)
+        if(partidas[i].comenzada==1)
 	        if (compruebaBola(partidas[i].bolas, partidas[i].numBolas, bola)==0)
 	        {
 	            partidas[i].bolas[partidas[i].numBolas]=bola;
@@ -142,8 +142,8 @@
 
  	int i,j,k=0;
  	int lineas=0;
+ 	int ** x=u.carton;
 
- 	printf("hola\n");
  	if(opcion>partida.estado){
 
 	 	for (i = 0; i < 3; ++i)
@@ -151,14 +151,12 @@
 	 		k=0;
 	 		for (j=0; j < 9; ++j)
 	 		{	
-	 			if(compruebaBola(partida.bolas, partida.numBolas, u.carton[i][j])==1)
+	 			if(compruebaBola(partida.bolas, partida.numBolas, x[i][j])==1)
 	 				k++;
 	 		}
 	 		if(k==5)
 	 			lineas++;
 	 	}
-
-	 	printf("adios\n");
 
  	if(lineas>=opcion)
  		return 1;
@@ -252,14 +250,33 @@
 		return carton;
 	}
 
-	void actualizarPartidas(int numPartidas, Partida partidas[]){
-		int i;
+	void actualizarPartidas(int numPartidas, Partida partidas[], int numUsuarios, Usuario usuarios[]){
+		int i,j;
 		for (i = 0; i < numPartidas; ++i)
 		{
-			if (partidas[i].bandera!=0)
+			if (partidas[i].bandera!=-1)
 			{
-				partidas[i].estado=partidas[i].bandera;
-				partidas[i].bandera=0;
+				if (partidas[i].bandera==0)
+				{
+					mandarCarton(&partidas[i], usuarios, numUsuarios);
+					partidas[i].comenzada=1;
+				}else{
+					partidas[i].estado=partidas[i].bandera;
+				}
+				partidas[i].bandera=-1;
+			}
+
+			if(partidas[i].numUsuarios==0 || partidas[i].numBolas==90 || partidas[i].estado==3){
+				partidas[i].comenzada=0;
+				for (j = 0; j < partidas[i].numUsuarios; ++j)
+				{
+					send(j, "\E[32m+Ok. Partida finalizada\e[0m", strlen("\E[32m+Ok. Partida finalizada\e[0m"), 0);
+				}
+			}
+
+			if(partidas[i].numUsuarios==1 && partidas[i].comenzada==1 && partidas[i].estado!=3){
+				send(partidas[i].usuarios[0], "Has ganado la partida. No hay mas usuarios", strlen("Has ganado la partida. No hay mas usuarios"),0);
+				partidas[i].comenzada=0;
 			}
 		}
 

@@ -83,20 +83,19 @@ void main ( )
             //printf("BUFFER - <%s> \n", buffer);
 
             cartonAux=cortarCadena(buffer, 250, ' ');
-
+            //fflush(stdout);
             if(strcmp(cartonAux, "CARTON")==0){
             	strncpy(cartonCad, buffer+strlen(cartonAux)+1, MSG_SIZE);
             	carton=chartoint(cartonCad);
 				for (i = 0; i < 3; ++i)
 				{
 					for (j = 0; j < 9; ++j)
-					{
+					{	
 						printf("( %d )", carton[i][j]);
 					}
 					printf("\n");
 				}
             }else{
-            	printf("%s\n", cartonAux);
 	            printf("%s\n",buffer);
             }
             if(strcmp(buffer,"Demasiados clientes conectados\n") == 0)
@@ -114,7 +113,7 @@ void main ( )
                 
                 fgets(buffer,sizeof(buffer),stdin);
                 
-                if(strcmp(buffer,"SALIR\n") == 0 || strcmp(buffer,"salir\n") == 0 ||strcmp(buffer,"Salir\n") == 0){
+                if(strcmp(buffer,"SALIR\n") == 0){
                         fin = 1;
                 
                 }

@@ -17,8 +17,9 @@
 		int numUsuarios;
 		int bolas[90];
 		int numBolas;
-		int estado;//0-> comenzada, 1->una linea 2->dos lineas 3->bingo
-		int bandera; //0-> no cambia nada, 1-> se aumenta el estado
+		int estado;//0-> comenzada, 1->UNA-LINEA 2->DOS-LINEAS 3->BINGO
+		int bandera; /*-1-> no cambia nada, 0->empieza partida, mandar cartones 
+					>0-> cambia estado UNA-LINEA, DOS-LINEAS , BINGO*/
 	}Partida;
 
 #endif
