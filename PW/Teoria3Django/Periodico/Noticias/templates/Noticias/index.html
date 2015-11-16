@@ -8,7 +8,7 @@
 {% if lista %}
 <ul>
 	{% for x in lista %}
-	<li><a href = "/Noticias/{{x.slug}}/">{{x.title}}</a></li>
+	<li><a href = "/Noticias/{{x.id}}/">{{x.title}}</a></li>
 	{% endfor %}
 </ul>
 {% else %}

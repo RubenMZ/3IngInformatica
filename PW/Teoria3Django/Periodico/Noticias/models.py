@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib import admin
-from django.template.defaultfilters import slugify
 
 # Create your models here.
 
@@ -24,14 +23,10 @@ class New(models.Model):
 	author = models.ForeignKey(Author)
 	author = models.ManyToManyField(Author, blank=True)
 	section = models.ForeignKey(Section)
-	slug = models.SlugField(max_length=100)
 
 	def __unicode__(self):
 		return self.title
 
-	def save(self, *args, **kwargs):
-		self.slug =  slugify(self.title)
-		super(New, self).save(*args, **kwargs)
 
 
 admin.site.register(Section)

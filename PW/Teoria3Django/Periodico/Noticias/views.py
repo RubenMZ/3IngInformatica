@@ -9,10 +9,23 @@ def index(request):
 	contexto = RequestContext(request, {'lista': lista,} )
 	return HttpResponse(plantilla.render(contexto))
 
-def detail(request, slug, noticia_id):
+def detail(request, noticia_id):
 	try:
-		aux = New.objects.get(slug=slug, id=noticia_id)
+		aux = New.objects.get(id=noticia_id)
 		descrip = aux.description
 	except New.DoesNotExist:
 		raise Http404
 	return HttpResponse("Descripcion: %s" %descrip)
+
+
+def noticia_new(request):
+	if request.method = 'POST':
+		form = NoticiaForm(request.POST, request.FILES)
+		if form.is_valid():
+			form.save()
+			return redirect(reverse_lazy())
+	else:
+		form=NoticiaForm()
+	context = {'form':form}
+	return render(request, 'Noticias/form.htmlo', context)
+	

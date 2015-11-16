@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', views.index, name='index'),
-    url(r'^(?P<slug>[-\w]+)/(?P<noticia_id>\d+)/$', views.detail, name = 'detail')
+    url(r'^(?P<noticia_id>\d+)/$', views.detail, name = 'detail')
 )
