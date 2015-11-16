@@ -449,11 +449,11 @@ void main ( )
                 }//for(i=0; i<FD_SETSIZE; i++)
             }//(salida > 0)
             if(timeout.tv_sec==0){
-                timeout.tv_sec = 5;
+                timeout.tv_sec = 0;
                 timeout.tv_usec = 0;
                 if(numPartidas>0){
+		    actualizarPartidas(numPartidas, partidas, numUsuariosConectados, usuarios);
                     mandarBola(partidas, numPartidas);
-                    actualizarPartidas(numPartidas, partidas, numUsuariosConectados, usuarios);
                 }
             }
             
