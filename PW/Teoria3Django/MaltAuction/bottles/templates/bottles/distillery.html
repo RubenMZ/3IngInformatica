@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block Contents %}
+	<h3><a href="{% url 'bottles:bottles_list_distillery' distillery.name %}" alt="">{{ distillery.name }}</a></h3>
+	<p>Region: {{ distillery.get_region_display }}</p>
+	<p>{{ distillery.get_status_display }}</p>
+	<p>Founded: {{ distillery.yearFounded }}</p>				
+	{% if distilley.yearClosed %}
+		<p>Closed: {{ distillery.yearClosed }}</p>
+	{% endif %}
+	{% if distilley.webpage %}
+		<a href="{{distillery.webpage}}" alt="">Webpage</a>
+	{% endif %}
+	<p>{{ distillery.description }}</p>
+	<img src='{{ MEDIA_URL }}{{ distillery.picture }}' alt=""/>
+	<div style ="clear: left; float: left; margin-top: 10px">
+	<a class="btn btn-small btn-default" href="{% url 'bottles:distillery_delete' distillery.name %}" role="button"><span class="glyphicon glyphicon-remove"></span> Delete</a>
+	<a class="btn btn-small btn-default" href="{% url 'bottles:distillery_edit' distillery.name %}" role="button"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+	</div>
+{% endblock %}
+
+{% block Aside %}
+	{% if brands %}
+		<h4>Brands from {{ distillery.name }} distillery</h4>
+		{% for brand in brands %}
+			<p><a href="#" alt="">{{ brand.name }}</a></p>
+		{% endfor %}
+	{% else %}
+		<h4>No brands from {{ distillery.name }} distillery.</h4>
+	{% endif %}
+{% endblock %}

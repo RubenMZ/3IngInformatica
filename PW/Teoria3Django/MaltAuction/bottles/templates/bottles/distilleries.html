@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block Contents %}
+	<div class="btn-toolbar" role="toolbar" aria-label="letters">
+		<div class="btn-group" role="group" aria-label="new">
+			<a class="btn btn-mini btn-default" href="{% url 'bottles:distillery_new' %}" role="button">New distillery</a>
+		</div>
+		<div class="btn-group" role="group" aria-label="all">
+			<a class="btn btn-mini btn-default" href="{% url 'bottles:distilleries_list' %}" role="button">All</a>
+		</div>
+		<div class="btn-group" role="group" aria-label="letters">
+			{% for letter in letters %}
+				<a class="btn btn-mini btn-default" href="{% url 'bottles:distilleries_list_alpha' letter %}" role="button">{{ letter }}</a>			
+			{% endfor %} 
+		</div>
+	</div>
+	{% if distilleries %}
+		<table class="distilleries-list">
+	  		<tr>	    		
+				{% for distillery in distilleries %}
+					<td>
+						<img style="width:150px;" src='{{ MEDIA_URL }}{{ distillery.picture }}' alt=""/><br>
+						<a href="{% url 'bottles:distillery' distillery.name %}" alt="">{{ distillery.name }}</a><br>
+						<p>{{ distillery.get_region_display }}</p>
+						<p>{{ distillery.get_status_display }}</p>
+					</td>
+					{% if forloop.counter|divisibleby:"5" %}
+						</tr><tr>
+					{% endif %}
+				{% endfor %}
+			</tr>
+		</table>
+	{% else %}
+		<p>No distilleries in the database</p>
+	{% endif %}
+{% endblock %}
+
+{% block Aside %}
+<form class="form-inline" role="search" action="{% url 'bottles:distillery_search' %}" method="get">
+	<div class="form-group">
+		<input type="text" class="form-control" placeholder="Distillery..." name="query">
+	</div>
+	<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"> Search</button>
+</form>
+{% endblock %}

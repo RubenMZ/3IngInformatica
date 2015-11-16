@@ -18,14 +18,5 @@ def detail(request, noticia_id):
 	return HttpResponse("Descripcion: %s" %descrip)
 
 
-def noticia_new(request):
-	if request.method = 'POST':
-		form = NoticiaForm(request.POST, request.FILES)
-		if form.is_valid():
-			form.save()
-			return redirect(reverse_lazy())
-	else:
-		form=NoticiaForm()
-	context = {'form':form}
-	return render(request, 'Noticias/form.htmlo', context)
+
 	

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block Contents %}
+	<h2>MALT WHISKY REGIONS AROUND THE WORLD</h2>
+	{% for dists in by_region %}
+		<div class='fivecolumns'>
+		{% for data in dists %}
+			{% if forloop.first %}
+				<h3><a href="{% url 'bottles:region' data.region %}">{{data.get_region_display}}</a></h3>
+			{% endif %}
+	    	<div class='cell'>
+	    		<div class='celltext'>
+	    			<div class='{{data.status}}'>
+	    				<a href="{% url 'bottles:distillery' data.name %}">
+ 							<img src='{{MEDIA_URL}}{{data.picture}}' alt=""/>{{ data.name }} ({{ data.yearFounded }})
+ 						</a>
+	            		<p>{{data.description|truncatewords:"10"}}</p>
+					</div>
+				</div>
+			</div>
+			{% if forloop.counter|divisibleby:"5" %}
+			</div>
+			<div class='fivecolumns'>
+			{% endif %}
+		{% endfor %}
+		</div>
+	{% endfor %}
+{% endblock %}
+
+{% block Aside %}
+	<h3>Last added bottles</h3>
+	{% for bottle in bottles %}
+		<img style="width:50px;" align="right" src='{{MEDIA_URL}}{{bottle.picture}}'>
+		<h5>{{ bottle.name }}</h5>	
+		<p>		
+		From {{ bottle.brand.distillery.name }} distillery<br>
+		{% if bottle.age %}
+			{{ bottle.age }} year(s) old<br>
+		{% endif %}
+		{{ bottle.strength }} abv<br>	
+		</p>
+	{% endfor %}
+{% endblock %}

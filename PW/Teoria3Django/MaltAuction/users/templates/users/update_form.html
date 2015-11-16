@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block Header %}
+<h2>Malt Auction</h2>
+{% endblock %}
+
+{% block Contents %}
+	<h2>Update profile of {{ user.username }}</h2>	
+	<form id='form' method='post' enctype='multipart/form-data' action=''>{% csrf_token %}
+	    {{form.as_p}}
+		<p><input type='submit' value='Update'></p>
+	</form>
+{% endblock %}

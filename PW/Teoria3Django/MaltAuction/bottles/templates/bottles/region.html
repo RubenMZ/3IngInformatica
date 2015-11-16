@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block Contents %}
+		<div class='fivecolumns'>
+		{% for data in distilleries %}
+			{% if forloop.first %}
+				<h2>Region: {{ data.get_region_display }}</h2>
+			{% endif %}
+	    	<div class='cell'>
+	    		<div class='celltext'>
+	    			<div class='{{data.status}}'>
+	    				<a href="{% url 'bottles:distillery' data.name %}">
+ 							<img src='{{MEDIA_URL}}{{data.picture}}' alt=""/>{{ data.name }} ({{ data.yearFounded }})
+ 						</a>
+	            		<p>{{data.description|truncatewords:"10"}}</p>
+					</div>
+				</div>
+			</div>
+			{% if forloop.counter|divisibleby:"5" %}
+			</div>
+			<div class='fivecolumns'>
+			{% endif %}
+		{% endfor %}
+		</div>
+{% endblock %}

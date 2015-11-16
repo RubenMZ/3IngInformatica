@@ -1,0 +1,84 @@
+body {
+	background-color: floralwhite;
+}
+
+.fivecolums {
+	display: table;
+	width: 940px;
+	float: center;
+	border-collapse: collapse;
+	background-color: black;
+}
+
+.cell {
+	display: table-cell;
+	width: 178px;
+	padding: 0px 5px 5px 5px;
+}
+
+.celltext {
+	color: black;
+	background-color: ghostwhite;
+	border-left: 1px solid darkgrey;
+	padding: 0 5px 0 5px;
+}
+
+.celltext a {
+	color: black;
+	text-transform:uppercase;
+}
+
+.celltext img {
+	padding: 12px 0px 0px 5px;
+	width: 150px;
+}
+
+.cell p {
+	color: black;
+	font-size: 12px;
+}
+
+/* Bottles list */
+table.bottles-list td {
+    text-align: center;
+    font-family: "New Century Schoolbook"; 
+    font-size: 2em;
+    font-variant: small-caps;
+    line-height: 150%;
+    width: 150px;
+    border: 10px solid transparent;
+}
+
+table.bottles-list {
+	table-layout: fixed;
+}
+
+/* Distilleries list */
+table.distilleries-list td {
+    text-align: center;
+    font-family: "New Century Schoolbook"; 
+    font-size: 1.5em;
+    font-variant: small-caps;
+    line-height: 125%;
+    width: 150px;
+    border: 10px solid transparent;
+}
+
+table.distilleries-list {
+	table-layout: fixed;
+}
+
+/* Brands list */
+table.brands-list td {
+    text-align: center;
+    font-family: "New Century Schoolbook"; 
+    font-size: 1.5em;
+    font-variant: small-caps;
+    line-height: 125%;
+    width: 150px;
+    border: 10px solid transparent;
+}
+
+table.brands-list {
+	table-layout: fixed;
+}

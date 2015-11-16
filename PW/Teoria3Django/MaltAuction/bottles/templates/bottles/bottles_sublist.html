@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block Contents %}
+	{% if bottles %}
+		<h2>{{ title }}</h2>
+		<h3>{{ subtitle }}</h3>
+		<table class="bottles-list">
+	  		<tr>	    		
+				{% for bottle in bottles %}
+					<td>
+						<img style="width:75px;" src='{{ MEDIA_URL }}{{ bottle.picture }}' alt=""/><br>
+						<a href="{% url 'bottles:bottle' bottle.id %}" alt="">{{ bottle.name }}</a><br>
+						{{ bottle.strength }} %
+					</td>
+					{% if forloop.counter|divisibleby:"5" %}
+						</tr><tr>
+					{% endif %}
+				{% endfor %}
+			</tr>
+		</table>
+	{% else %}
+		<p>No bottles in the database</p>
+	{% endif %}
+{% endblock %}

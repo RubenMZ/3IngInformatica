@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block Header %}
+<h2>Welcome to Malt Auction</h2>
+{% endblock %}
+
+{% block Contents %}
+	{% if object_list %}
+		<ul>
+		{% for item in object_list %}
+			<li><a href="{% url 'bottles:bottle' item.bottle.id %}" alt="">{{ item.bottle.name }}</a></li>
+			<li>Current bid: {{ item.price }}</li>
+			<li>Reserve: {{ item.reserve }}</li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p>No item for auction in the database</p>
+	{% endif %}
+{% endblock %}

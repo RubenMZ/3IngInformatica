@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block Contents %}	
+	<h2>{{ bottle.name }}</h2>
+	<h3>Brand: {{ bottle.brand.name }}</h3>
+	<h3>Distillery: {{ bottle.brand.distillery.name }}</h3>
+	<img style="width: 100px; float: left; margin-right: 10px" src='{{ MEDIA_URL }}{{ bottle.picture }}' alt=""/><br>		
+	{% if bottle.age %}
+		<p>{{ bottle.age }} year(s) old</p>
+	{% endif %}
+	{% if bottle.vintage %}
+		<p>Vintage: {{ bottle.vintage }}</p>
+	{% endif %}
+	{% if bottle.bottled %}
+		<p>Bottled: {{ bottle.bottled }}</p>
+	{% endif %}
+	{% if bottle.distilleryBottling %}
+	{% else %}
+		<p>Bottled by: {{ bottle.independentBottler }}</p>
+	{% endif %}
+	<p>{{ bottle.strength }} abv</p>
+	{% if bottle.comment %}
+		<p>{{ bottle.comment }}</p>
+	{% endif %}
+	{% if bottle.cask %}
+		<p>Cask: {{ bottle.cask }}</p>
+	{% endif %}
+	{% if bottle.bottles %}
+		<p>Bottles: {{ bottle.bottles }}</p>
+	{% endif %}
+	<div style ="clear: left; float: left; margin-top: 10px">
+	<a class="btn btn-small btn-default" href="{% url 'bottles:bottle_delete' bottle.id %}" role="button"><span class="glyphicon glyphicon-remove"></span> Delete</a>
+	<a class="btn btn-small btn-default" href="{% url 'bottles:bottle_edit' bottle.id %}" role="button"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+	</div>
+{% endblock %}

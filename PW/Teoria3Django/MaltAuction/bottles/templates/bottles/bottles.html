@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block Contents %}
+	<div class="btn-toolbar" role="toolbar" aria-label="letters">
+		<div class="btn-group" role="group" aria-label="new">
+			<a class="btn btn-mini btn-default" href="{% url 'bottles:bottle_new' %}" role="button">New bottle</a>
+		</div>
+		<div class="btn-group" role="group" aria-label="all">
+			<a class="btn btn-mini btn-default" href="{% url 'bottles:bottles_list' %}" role="button">All</a>
+		</div>
+		<div class="btn-group" role="group" aria-label="letters">
+			{% for letter in letters %}
+				<a class="btn btn-mini btn-default" href="{% url 'bottles:bottles_list_alpha' letter %}" role="button">{{ letter }}</a>			
+			{% endfor %} 
+		</div>
+	</div>
+	{% if bottles %}
+		<table class="bottles-list">
+	  		<tr>	    		
+				{% for bottle in bottles %}
+					<td>
+						<img style="width:100px;" src='{{ MEDIA_URL }}{{ bottle.picture }}' alt=""/><br>
+						<a href="{% url 'bottles:bottle' bottle.id %}" alt="">{{ bottle.name }}</a><br>
+						{{ bottle.strength }} %
+					</td>
+					{% if forloop.counter|divisibleby:"5" %}
+						</tr><tr>
+					{% endif %}
+				{% endfor %}
+			</tr>
+		</table>
+	{% else %}
+		<p>No bottles in the database</p>
+	{% endif %}
+{% endblock %}
+
+{% block Aside %}
+<form class="form-inline" role="search" action="{% url 'bottles:bottle_search' %}" method="get">
+	<div class="form-group">
+		<input type="text" class="form-control" placeholder="Bottle..." name="query">
+	</div>
+	<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"> Search</button>
+</form>
+{% endblock %}
