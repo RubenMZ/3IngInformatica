@@ -82,7 +82,7 @@
     for (i = 0; i < n; ++i)
     {
         bola=rand()%90+1;
-        if(partidas[i].comenzada==1){
+        if(partidas[i].comenzada==1 && partidas[i].estado!=3){
 	        if (compruebaBola(partidas[i].bolas, partidas[i].numBolas, bola)==0)
 	        {
 	            partidas[i].bolas[partidas[i].numBolas]=bola;
@@ -261,7 +261,12 @@
 					mandarCarton(&partidas[i], usuarios, numUsuarios);
 					partidas[i].comenzada=1;
 				}else{
-					partidas[i].estado=partidas[i].bandera;
+					if(partidas[i].bandera==3){
+						partidas[i].comenzada=0;
+						printf("Partida %d finalizada\n", i);
+					}else{
+						partidas[i].estado=partidas[i].bandera;
+					}
 				}
 				partidas[i].bandera=-1;
 			}

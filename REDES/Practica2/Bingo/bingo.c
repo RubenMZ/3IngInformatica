@@ -1,5 +1,6 @@
 #include "bingo.h"
 
+
 	int ** generaCarton(){
 		int **carton;
 		int num=0, aux=0, fila=0, i,j;
@@ -254,6 +255,17 @@
 		int i,j;
 		for (i = 0; i < numPartidas; ++i)
 		{
+
+			if((partidas[i].numUsuarios==0 || partidas[i].numBolas==90 || partidas[i].estado==3)&& partidas[i].comenzada==1){
+				partidas[i].comenzada=0;
+				for (j = 0; j < partidas[i].numUsuarios; ++j)
+				{
+					send(partidas[i].usuarios[j], "\E[32m+Ok. Partida finalizada\e[0m", strlen("\E[32m+Ok. Partida finalizada\e[0m"), 0);
+					
+				}
+
+			}
+
 			if (partidas[i].bandera!=-1)
 			{
 				if (partidas[i].bandera==0)
@@ -261,17 +273,12 @@
 					mandarCarton(&partidas[i], usuarios, numUsuarios);
 					partidas[i].comenzada=1;
 				}else{
+					if(partidas[i].bandera==3)
+						partidas[i].comenzada=0;
+					
 					partidas[i].estado=partidas[i].bandera;
 				}
 				partidas[i].bandera=-1;
-			}
-
-			if(partidas[i].numUsuarios==0 || partidas[i].numBolas==90 || partidas[i].estado==3){
-				partidas[i].comenzada=0;
-				for (j = 0; j < partidas[i].numUsuarios; ++j)
-				{
-					send(j, "\E[32m+Ok. Partida finalizada\e[0m", strlen("\E[32m+Ok. Partida finalizada\e[0m"), 0);
-				}
 			}
 
 			if(partidas[i].numUsuarios==1 && partidas[i].comenzada==1 && partidas[i].estado!=3){

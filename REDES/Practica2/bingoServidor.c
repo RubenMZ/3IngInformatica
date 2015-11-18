@@ -407,7 +407,7 @@ void main ( )
                                                                     send(pAux->usuarios[iterador], buffer, strlen(buffer),0);
                                                                 }
                                                             }
-                                                        pAux->comenzada=0;
+                                                        
                                                     }else{
                                                         if (comprobarBingo(usuarios[posAux],3, *pAux)==0)
                                                         {
@@ -449,11 +449,13 @@ void main ( )
                 }//for(i=0; i<FD_SETSIZE; i++)
             }//(salida > 0)
             if(timeout.tv_sec==0){
-                timeout.tv_sec = 5;
+                timeout.tv_sec = 3;
                 timeout.tv_usec = 0;
                 if(numPartidas>0){
-		    actualizarPartidas(numPartidas, partidas, numUsuariosConectados, usuarios);
+		            actualizarPartidas(numPartidas, partidas, numUsuariosConectados, usuarios);
+                    printf("hola\n");
                     mandarBola(partidas, numPartidas);
+                    printf("adios\n");
                 }
             }
             

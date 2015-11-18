@@ -23,7 +23,7 @@ registro.o: registro.c registro.h
 	gcc -c registro.c
 
 bingo.o: bingo.c bingo.h
-	gcc -c bingo.c
+	gcc -c bingo.c 
 
 clean:
 	rm *.o
