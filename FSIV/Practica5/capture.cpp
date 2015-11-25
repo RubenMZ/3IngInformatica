@@ -1,6 +1,5 @@
 /*!
-Práctica 2
-José Enrique Ortega Ortega
+g++ capture.cpp -o capture `pkg-config opencv --cflags --libs`
 */
 
 #include <ctype.h>
@@ -8,10 +7,10 @@ José Enrique Ortega Ortega
 #include <unistd.h>
 #include <iostream>
 #include <exception>
-#include "capture.h"
+#include "getStats.hpp"
 #include <cmath>
-#include<vector>
-#include<cstdio>
+#include <vector>
+#include <cstdio>
 
 //Includes para OpenCV, Descomentar según los módulo utilizados.
 #include <opencv2/core/core.hpp>
