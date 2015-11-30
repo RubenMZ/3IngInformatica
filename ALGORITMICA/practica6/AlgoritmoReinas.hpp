@@ -5,25 +5,51 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
+#include "Tablero.hpp"
 
 using namespace std;
 
 class AlgoritmoReinas{
 
 	private:
-		int * posiciones_;
+		vector<int> posiciones_;
+		int contador_;
+		Tablero tab_;
+		int pos_;
 
 	public:
 
-		inline int * getPosiciones(){return posiciones_;};
+		AlgoritmoReinas(){
+			contador_=0;
+			//posiciones_=NULL;
+			srand(time(NULL));
+			pos_=0;
+		};
+
+
+
+		inline vector <int> getPosiciones(){return posiciones_;};
 		inline int getPosicion(const int &i){return posiciones_[i];};
-		inline void setPosiciones(int * v){posiciones_=v;};
-		inline void setPosicion(const int &i, const int &n){posiciones_[i]=n;};
+		inline int getContador(){return contador_;};
+		inline Tablero getTableros(){return tab_;};
 
-		void hacerAlgoritmo(const int &n);
-		bool Lugar(const int &k, int * x);
-		void muestraSolucion(int * x, const int &n);
+		inline void setPosiciones(const vector<int> &v){posiciones_=v;};
+		inline void setPosicion(const int &i, const int &n){
+			if(i<pos_){
+				posiciones_[i]=n;
+			}else{
+				pos_++;
+				posiciones_.push_back(n);
+			}
+		};
+		inline void setContador(const int &x){contador_=x;};
+		inline void setTableros(const Tablero &x){tab_=x;};
 
+		bool hacerAlgoritmo(const int &n);
+		bool Lugar(const int &k, const vector<int> &x);
+		//void muestraSolucion(int * x, const int &n);
+		bool hacerLasVegas(const int &n);
 
 };
 
