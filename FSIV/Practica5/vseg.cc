@@ -113,56 +113,59 @@ int main (int argc, char* const* argv)
     cout << "-t\t" << params.umbral << endl;
     cout << "-v\t" << '\"' << params.videoIn << '\"' << endl;
     cout << "-o\t" << '\"' << params.videoOut << '\"' << endl;
-    
-
-VideoCapture video1(params.videoIn);
-if(!video1.isOpened())
-	return -1;
-
-VideoCapture video2(params.videoIn);
-if(!video1.isOpened())
-	return -1;
+ 
+ Mat video,frameVid,frameVidSig,diferencia, frameOut, frameOut2;
+ VideoCapture video1, video2;
 
 
-Mat video,frameVid,frameVidSig,differ,frameOut, frameOut2;
+
+if(params.flagvideoIn==true){
+	video1.open(params.videoIn);
+	if(!video1.isOpened())
+		return -1;
+}else{
+	cout<<"Introduce nombre: -v <video>"<<endl;
+	exit(EXIT_FAILURE);
+}
 
 int ex = static_cast<int>(video1.get(CV_CAP_PROP_FOURCC)); //Get Codec Type- Int form
 cv::Size S = cv::Size((int)video1.get(CV_CAP_PROP_FRAME_WIDTH), (int)video1.get(CV_CAP_PROP_FRAME_HEIGHT));
 
 VideoWriter videoSalida;
 
-videoSalida.open(params.videoOut, ex, 30, S, true);
+if(params.flagvideoOut==true)
+	videoSalida.open(params.videoOut, ex, 30, S, true);
+else
+	videoSalida.open("salida.avi", ex, 30, S, true);
 
 //Declaro umbral
 int umbral=params.umbral;
 int pos=0;
 
-namedWindow("Video1",1);
+namedWindow("Video",1);
 namedWindow("Salida",1);
 namedWindow("SalidaByN",1);
 
 
 
-createTrackbar("Umbral","Video1", &umbral, 255, 0);
+createTrackbar("Umbral","Video", &umbral, 255, 0);
 
 video1 >> frameVidSig;
 
-cout<<"hola";
 for(;;)
 {
-	video2 >> frameVid;
+	frameVid = frameVidSig.clone();
 	video1 >> frameVidSig;
 	if(!frameVidSig.empty())
 	{
-		absdiff(frameVidSig,frameVid,differ);
-		cvtColor(differ,differ,CV_BGR2GRAY);
+		absdiff(frameVidSig,frameVid,diferencia);
+		cvtColor(diferencia,diferencia,CV_BGR2GRAY);
 		frameOut=frameVidSig.clone();
-		//cvtColor(frameVid,frameOut,CV_BGR2GRAY);
 		cvtColor(frameVid,frameOut2, CV_BGR2GRAY);
 		
-		for(int i=0;i<differ.rows;i++)
-			for(int j=0;j<differ.cols;j++){
-				if(differ.at<uchar>(i,j)<=umbral)
+		for(int i=0;i<diferencia.rows;i++)
+			for(int j=0;j<diferencia.cols;j++){
+				if(abs(diferencia.at<uchar>(i,j))<=umbral)
 				{
 					for(int k = 0; k < frameOut.channels(); k++){
                 		frameOut.at<Vec3b>(i, j)[k] = 0;
@@ -173,47 +176,41 @@ for(;;)
 				}
 			}
 			
-			imshow("Video1",frameVid);
+			imshow("Video",frameVid);
 			imshow("Salida",frameOut);
 			imshow("SalidaByN", frameOut2);
 			
-			int teclado=waitKey(30);
-			//cout<<teclado<<endl;
-			if(teclado==30 || teclado==1048603)
+			int c=waitKey(30);
+
+			if(c==30 || c==1048603)
 				return -1;
 			else 
-			if(teclado==1179680 || teclado == 32 || teclado == 1048608)
-			{
-				char nombre[50];
-				sprintf(nombre,"sal_%d.png",pos);
-				
-				for(int i=0;i<differ.rows;i++)
-					for(int j=0;j<differ.cols;j++)
-						if(differ.at<uchar>(i,j)==0)
-						{
-							frameVidSig.at<Vec3b>(i,j)[0]=255;
-							frameVidSig.at<Vec3b>(i,j)[1]=255;
-							frameVidSig.at<Vec3b>(i,j)[2]=255;
-						}
-					imwrite(nombre,frameVidSig);
-					pos++;
-			}
+				if(c==1179680 || c == 32 || c == 1048608)
+				{
+					char captura[50];
+					Mat cap = frameOut.clone();
+					sprintf(captura,"sal_%d.png",pos);
+					
+					for(int i=0;i<diferencia.rows;i++)
+						for(int j=0;j<diferencia.cols;j++)
+							if(diferencia.at<uchar>(i,j)<=umbral)
+							{
+								for(int k = 0; k < cap.channels(); k++)
+									cap.at<Vec3b>(i,j)[k]=255;
+							}
+						imwrite(captura,cap);
+						pos++;
+				}
 
 			videoSalida << frameOut;
 	}
 	else
 	{
 		video1.release();
-		video2.release();
 		waitKey(20);
 		return -1;
 	}
 }
-
-cout<<"adios";
-
-
-
 
 }	
   catch (std::exception& e)
