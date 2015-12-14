@@ -1,0 +1,17 @@
+
+para visualizar un contorno con un fichero .txt de puntos con gnuplot
+
+gnuplot 
+plot 'fichero.txt' w l, 'fichero_lowe.txt' w lp
+
+
+
+Contorno, M, ISE
+
+apple-1 24 999.459
+apple-2 24 1318.3
+bat-1 73 3275.13
+bat-2 62 2264.14
+spring-1 79 2090.34
+spring-2 77 2192.39
+
