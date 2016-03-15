@@ -28,11 +28,11 @@ numero		{digito}+(\.{digito}+)?(E[+\-]?{digito}+)?
 {palabra}       {if(strcmp(palabra,yytext)==0){
                     count++;
                   }
-.         {;}
+                  }
+.|{espacio}|{linea}         {;}
 
-^#            {return 0;}
 
-%%digito
+%%
 
 
 /***** Zona de funciones auxiliares *****/

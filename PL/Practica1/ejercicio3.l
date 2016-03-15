@@ -36,7 +36,7 @@ numero		{digito}+(\.{digito}+)?(E[+\-]?{digito}+)?
 
 ^#            {return 0;}
 
-%%digito
+%%
 
 
 /***** Zona de funciones auxiliares *****/

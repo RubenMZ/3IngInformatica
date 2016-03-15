@@ -1,0 +1,7 @@
+ruben prueba.txt 12/1/2008 21:10
+antonio prueba2.txt 1/12/2001 1:32
+ruben prueba3.txt 12/12/2015 11:41
+ruben a.out 3/4/2012 14:21
+antonio salida.html 21/2/2111 11.41
+ruben prueba3.txt 12/1/2008 11:41
+antonio prueba5.txt 12/1/2008 11:42

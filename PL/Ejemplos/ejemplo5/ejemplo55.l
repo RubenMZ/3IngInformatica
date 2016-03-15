@@ -42,6 +42,7 @@ else	     {fprintf(yyout,"\n Palabra reservada: %s --> token %d\n", yytext,ELSE)
 ^#            {fprintf(yyout,"\n Fin del programa \n"); return 0;}
 
 .            { ECHO; /* Se muestra por pantalla, pero no se indica nada */ }
+
 %%
 
 
