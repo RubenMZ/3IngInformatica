@@ -39,6 +39,7 @@ file    ({word}\.{word})
 date    ({digito}{1,2}\/{digito}{1,2}\/{digito}{4})
 time    {digito}+\:{digito}{digito}
 
+
 /***** Zona de las reglas *****/
 %%
 
@@ -81,7 +82,7 @@ time    {digito}+\:{digito}{digito}
                 usuario=argv[2];
                 opcion=1;
                 yylex();
-                printf("Hay %d registros de impresion para el usuario %s\n",count,usuario ); 
+                printf("\E[32mHay %d registros de impresion para el usuario <%s>\n\e[0m",count,usuario ); 
                 break;
 
   case 4:       yyin=fopen(argv[1],"r");
@@ -89,7 +90,7 @@ time    {digito}+\:{digito}{digito}
                 fecha=argv[3];
                 opcion=2;
                 yylex(); 
-                printf("Hay %d registros de impresion para el usuario %s en el dia %s\n",count,usuario, fecha); 
+                printf("\E[32mHay %d registros de impresion para el usuario <%s> en el dia %s\n\e[0m",count,usuario, fecha); 
                 break;
 
    default:     printf("<in.txt><usuario>[fecha]\n");

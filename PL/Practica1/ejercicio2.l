@@ -63,7 +63,7 @@ void main(int argc, char *argv[])
             n2=atoi(argv[4]);
             break;
 
-   default: printf("Argumentos mal <fich entrada><fich salida><n1><n2>\n");
+   default: printf("\E[31mArgumentos mal <fich entrada><fich salida><n1><n2>\e[0m\n");
             exit(-1);
   }
   yylex();

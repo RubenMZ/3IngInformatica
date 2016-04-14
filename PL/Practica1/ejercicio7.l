@@ -55,44 +55,72 @@ fin_para 	[fF][iI][nN]_[pP][aA][rR][aA]
  
 cadena          \'(.)*\'
 
+
+error_Id      ({letra}({caracter}*|__+)*{caracter}*_*)|({numero}({caracter}*|_*|__+)*{caracter}*)
+error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
+
 %x ESTADO_COMENTARIO
+%x ESTADO_CADENA
 /***** Zona de las reglas *****/
 %%
 
-{inicio}        {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,INICIO);}
-{fin}           {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,FIN);}
-{__mod}         {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,__MOD);}
-{__o}           {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,__O);}
-{__y}           {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,__Y);}
-{__no}          {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,__NO);}
-{leer}          {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,LEER);}
-{escribir}      {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,ESCRIBIR);}
-{si}            {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,SI);}
-{entonces}      {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,ENTONCES);}
-{si_no}         {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,SI_NO);}
-{fin_si}        {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,FIN_SI);}
-{mientras}      {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,MIENTRAS);}
-{hacer}         {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,HACER);}
-{fin_mientras}  {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,FIN_MIENTRAS);}
-{repetir}       {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,REPETIR);}
-{hasta_que}     {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,HASTA_QUE);}
-{para}          {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,PARA);}
-{desde}         {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,DESDE);}
-{hasta}         {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,HASTA);}
-{paso}          {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,PASO);}
-{fin_para}      {printf("PALABRA RESERVADA <%s> con token num = %d\n",yytext,FIN_PARA);}
+{inicio}        {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,INICIO);}
+{fin}           {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,FIN);}
+{leer}          {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,LEER);}
+{escribir}      {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,ESCRIBIR);}
+{si}            {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,SI);}
+{entonces}      {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,ENTONCES);}
+{si_no}         {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,SI_NO);}
+{fin_si}        {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,FIN_SI);}
+{mientras}      {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,MIENTRAS);}
+{hacer}         {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,HACER);}
+{fin_mientras}  {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,FIN_MIENTRAS);}
+{repetir}       {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,REPETIR);}
+{hasta_que}     {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,HASTA_QUE);}
+{para}          {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,PARA);}
+{desde}         {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,DESDE);}
+{hasta}         {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,HASTA);}
+{paso}          {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,PASO);}
+{fin_para}      {printf("\E[32mPALABRA RESERVADA <%s> con token num = %d\n\e[0m",yytext,FIN_PARA);}
 
 {identificador} {printf(" => IDENTIFICADOR <%s> con token num = %d\n",yytext, ID);}
 
-{numero}        {printf(" $ NUMERO $ <%s> con token num = %d\n",yytext, NUM);}
+{numero}        {printf("\E[35m $ NUMERO $ <%s> con token num = %d\n\e[0m",yytext, NUM);}
 
-.|{espacio}|{linea}     {;}
+
+
+":="                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext,ASIGNACION);}
+"+"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, SUMA);}
+"-"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, RESTA);}
+"*"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, PRODUCTO);}
+"/"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, DIVISION);}
+{__mod}                 {printf("\E[34m PALABRA RESERVADA Y OPERADOR <%s> con token num = %d\n\e[0m", yytext, __MOD);}
+"**"                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, POTENCIA);}
+"||"                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, CONCATENACION);}
+"<"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, MENOR_QUE);}
+"<="                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, MENOR_IGUAL_QUE);}
+">"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, MAYOR_QUE);}
+">="                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, MAYOR_IGUAL_QUE);}
+"=="                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, IGUAL);}
+"<>"                    {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, DISTINTO);}
+{__o}                   {printf("\E[34m PALABRA RESERVADA Y OPERADOR <%s> con token num = %d\n\e[0m", yytext, __O);}
+{__y}                   {printf("\E[34m PALABRA RESERVADA Y OPERADOR <%s> con token num = %d\n\e[0m", yytext, __Y);}
+{__no}                  {printf("\E[34m PALABRA RESERVADA Y OPERADOR <%s> con token num = %d\n\e[0m", yytext, __NO);}
+";"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, FIN_SENTENCIA);}
+")"                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, PARENTESISDER);}
+"("                     {printf("\E[34m OPERADOR <%s> con token num = %d\n\e[0m", yytext, PARENTESISIZQ);}
+
+{error_Id}                {printf("\E[31mERROR. Identificador incorrecto <%s>\n\e[0m",yytext);}
+
+{error_Num}               {printf("\E[31mERROR. Numero incorrecto <%s>\n\e[0m",yytext);}
+
+"#".*               {printf("\E[33mCOMENTARIO # de una linea con token %d : \n\e[0m%s\n", COMENTARIO_LINEA, yytext);}
 
 
 "(*"              {
                   /* Se activa el reconocimiento de un comentario */
                   BEGIN ESTADO_COMENTARIO;
-                  printf("* COMENTARIO * con token num = %d :\n", COMENTARIO);
+                  printf("\E[33m* COMENTARIO * con token num = %d :\n\e[0m", COMENTARIO);
                   ECHO;
 
                   }
@@ -110,9 +138,27 @@ cadena          \'(.)*\'
 
 <ESTADO_COMENTARIO>[.\n]        {ECHO;}
 
-"#".*               {printf("# COMENTARIO de una linea con token %d : \n%s\n", COMENTARIO_LINEA, yytext);}
 
-{cadena}             {printf("# CADENA con token %d : \n%s\n", CADENA, yytext);}
+
+"'"              {
+                  BEGIN ESTADO_CADENA;
+                  printf("\E[33m //CADENA con token %d : \n\e[0m", CADENA);
+                  ECHO;
+                  }
+
+<ESTADO_CADENA>"\\\'"(.)  {ECHO; 
+                                }
+
+<ESTADO_CADENA>"'"         { /* Fin del comentario: se vuelve al estado por defecto */
+                                printf("%s\n", yytext);
+                                BEGIN 0; 
+                                }      
+
+<ESTADO_CADENA>[.\n]        {ECHO;}
+
+{espacio}|{linea}     {;}
+
+.               {printf("\E[31mERROR. Caracter incorrecto <%s>\n\e[0m", yytext);}
 
 %%
 

@@ -49,12 +49,12 @@ void main(int argc, char *argv[])
   {
    case 2:      yyin=fopen(argv[1],"r");
                 yylex(); 
-                printf("Palabras: %d\n",palabra);
-                printf("Caracteres: %d\n",caracter);
-                printf("Lineas: %d\n",lineas);
+                printf("\E[32mPalabras: %d\n\e[0m",palabra);
+                printf("\E[32mCaracteres: %d\n\e[0m",caracter);
+                printf("\E[32mLineas: %d\n\e[0m",lineas);
                 break;
 
-   default:     printf("Argumentos mal\n");
+   default:     printf("\E[31mArgumentos mal<in.txt>\n\e[0m");
                 break;
   }
   

@@ -47,10 +47,10 @@ void main(int argc, char *argv[])
                 yyin=fopen(argv[1],"r");
                 palabra=argv[2];
                 yylex(); 
-                printf("Apariciones de la palabra %s -> %d\n",palabra, count);
+                printf("\E[32mApariciones de la palabra %s -> %d\n\e[0m",palabra, count);
                 break;
 
-   default:     printf("Argumentos mal\n");
+   default:     printf("\E[31mArgumentos mal <in.txt><palabra>\n\e[0m");
                 break;
   }
   

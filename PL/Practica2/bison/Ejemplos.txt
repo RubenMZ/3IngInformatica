@@ -1,0 +1,105 @@
+ Ejemplo 1
+ 
+ Interpreta expresiones aritméticas: suma, resta, multiplicación y división
+ Permite expresiones entre paréntesis y el signo "-" unario
+ No permite el signo "+" unario
+ Las expresiones deben terminar con un salto de línea
+ 
+  El programa finaliza pulsando Control + D
+
+************************************************************************************
+ Ejemplo 2
+
+ Se ha ampliado el ejemplo 1 
+ Se permite el uso de 
+  - punto coma ";" como delimitador de expresiones, además del salto de línea
+  - signo + unario
+  - operador del resto de la división entera: %
+  - operador potencia de un número: ^ (asociativo por la derecha)
+  
+  El programa termina su ejecución cuando se teclea # al principio de la línea 
+  o pulsando Control + D
+
+************************************************************************************
+ Ejemplo 3:
+
+  Se ha ampliado el ejemplo 2 para permitir asignar valores a variables simples
+  Las variables podrán ser letras minúsculas del alfabeto latino
+  Por ejemplo:
+    a = 2;
+    b = 3 * a;
+
+ Se ha incluido un mecanismo para recuperarse de un error, 
+ es decir, si hay un error sintáctico, el intérprete lo comunica pero no termina la ejecución
+ 
+ También se controla la división por cero 
+
+************************************************************************************
+ Ejemplo 4:
+
+  Se ha modificado el ejemplo 3 para usar el operador de asignación de Pascal
+   := 
+
+  Por ejemplo
+   a := 3;
+
+************************************************************************************
+ Ejemplo 5
+  
+   Se ha ampliado el ejemplo 4 
+   
+   Permite que una variable pueda ser un identificador que empiece por una letra y que pueda ir seguida de letras o dígitos.
+
+   Los identificadores se almacenan en una tabla de símbolos (lista simplemente encadenada)
+
+   Hay constantes predefinidas
+   	                    "PI",    3.14159265358979323846
+	                    "E",     2.71828182845904523536
+	                    "GAMMA", 0.57721566490153286060
+	                    "DEG",  57.29577951308232087680
+	                    "PHI",   1.61803398874989484820
+   Pero permite cambiar el valor de una constante
+   PI := 3.14
+   PI := 0.0
+   
+   También permite funciones predefinidas con un argumento:
+   	sin, cos, atan, log, Log10,  exp, sqrt, int,  abs
+   	
+   	
+
+************************************************************************************
+ Ejemplo 6
+ 
+ Ha modificado el ejemplo 5 para evitar que se modifique el valor de una constante predefinida
+
+También permite una función predefinida con dos argumentos:
+ atan2(x,y)
+ 
+ y con cero argumentos
+ azar()
+ 	                      
+ Además, las funciones predefinidas se ha puesto en castellano:
+ 	 seno, coseno, atan, log, log10, exp, raiz, entero, abs
+
+************************************************************************************
+ Ejemplo 7
+ 
+ Realiza lo mismo que el ejemplo 5 pero genera un código intermedio 
+ que posteriormente es ejecutado
+
+************************************************************************************
+  Ejemplo 8
+  
+   Se ha ampliado el ejemplo 7 para permitir funciones predefinidas con cero, uno y dos argumentos
+
+************************************************************************************
+ Ejemplo 9
+ 
+  Se ha ampliado el ejemplo 8 para permitir 
+  - operadores relacionales y lógicos
+  - sentencia condicional: if
+  - sentencia iterativa: while
+  - ejecutar las sentencias contenidas en un fichero indicado en la lnea de comandos
+    Por ejemplo:
+       > ./ejemplo9.exe factorial.txt
+

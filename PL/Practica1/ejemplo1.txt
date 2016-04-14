@@ -1,0 +1,9 @@
+#Esto es un ejemplo sin errores
+
+cadena := 'Hello World';
+
+si (prueba < 9.8)
+entonces
+	x := y+ j;
+si_no
+	leer (fichero);

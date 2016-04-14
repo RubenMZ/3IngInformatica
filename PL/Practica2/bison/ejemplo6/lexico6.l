@@ -1,0 +1,67 @@
+/*
+
+ Permite ejecutar un comando del shell
+ Por ejemplo
+  $ls
+  (al principio de la línea)
+   
+  muestra el contenido del directorio actual
+*/
+
+%{
+#include "macros.h"
+#include "ejemplo6.h"
+#include "ejemplo6.tab.h"
+extern char *progname;
+extern int lineno;
+%}
+/* definiciones regulares */
+numero        [0-9]
+letra         [a-zA-Z]
+identificador {letra}({letra}|{numero})*
+
+%%
+[ \t] { ; } /* saltar los espacios y los tabuladores */
+
+{numero}+\.?|{numero}*\.{numero}+ { sscanf(yytext,"%lf",&yylval.val); 
+				    return NUMBER;}
+
+{identificador} { Symbol *s;
+                   if ((s=lookup(yytext)) == 0)
+                               s = install (yytext, INDEFINIDA, 0.0);
+                    yylval.sym = s;
+                    return s->tipo == INDEFINIDA ? VAR : s->tipo;}
+
+^\$[^\n]*  { /* Ejecucion de un comando del shell */
+
+         BORRAR;
+         LUGAR(10,10);
+         if (strcmp(yytext,"$") != 0)
+            {
+             printf("\n Salida provisional al sistema operativo\n\n");
+             printf("\n comando ---> %s\n\n",yytext);
+             system(yytext+1);
+             putchar('\n');
+             }
+           else 
+            {
+             printf(" Si desea ejecutar un comando del sistema operativo ");
+             printf(" teclee: \n\t\t $comando ");
+            }
+
+         LUGAR(24,1);
+         printf(">>>>>>>> Pulse ENTER para volver al programa %s ",progname);
+         /* Espera que se pulse ENTER */
+         while(getchar()!='\n')  ;
+
+         BORRAR;
+         LUGAR(2,1);
+         printf("Continue la ejecucion del programa --> %s \n\n",progname);
+         return FIN;
+         }
+
+:=      {return ASIGNACION;}
+#       { printf("\n>>>>>>> Fin del programa <<<<<<<\n"); return 0;}
+;       {return FIN ;} 
+\n      {lineno++; return FIN;} 
+.       {return yytext[0];}
