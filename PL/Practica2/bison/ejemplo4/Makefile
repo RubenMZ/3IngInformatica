@@ -1,8 +1,11 @@
-FUENTE = ejemplo4
-LEXICO = lexico4
+VERSION= 4
+FUENTE = ejemplo$(VERSION)
+LEXICO = lexico$(VERSION)
+
 
 CC = gcc
-YFLAGS = -d 
+CFLAGS = -c -g
+YFLAGS = -d        # Generar el fichero $(FUENTE).tab.h 
 LFLAGS = -lfl -lm  # fl: biblioteca de flex; m: biblioteca matemática
 
 OBJS= $(FUENTE).tab.o lex.yy.o 
@@ -11,13 +14,13 @@ $(FUENTE).exe: $(OBJS)
 	$(CC) $(OBJS) $(LFLAGS) -o $(FUENTE).exe 
 
 lex.yy.o:  lex.yy.c $(FUENTE).tab.h 
-	$(CC) -c lex.yy.c 
+	$(CC) $(CFLAGS) lex.yy.c 
 
 lex.yy.c: $(LEXICO).l $(FUENTE).tab.h 
 	flex $(LEXICO).l
 
 $(FUENTE).tab.o: $(FUENTE).tab.c  $(FUENTE).tab.h 
-	$(CC) -c $(FUENTE).tab.c
+	$(CC) $(CFLAGS) $(FUENTE).tab.c
 
 $(FUENTE).tab.c $(FUENTE).tab.h:  $(FUENTE).y
 	bison $(YFLAGS) $(FUENTE).y

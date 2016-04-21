@@ -16,13 +16,13 @@ Inst *progp;       /* Siguiente lugar libre para la generacion de codigo */
 
 Inst *pc; /* Contador de programa durante la ejecucion */
 
-initcode() /* inicializacion para la generacion de codigo */
+void initcode() /* inicializacion para la generacion de codigo */
 {
  stackp = stack;
  progp = prog;
 }
 
-push(Datum d) /* meter d en la pila */
+void push(Datum d) /* meter d en la pila */
 {
  
 /* Comprobar que hay espacio en la pila para el nuevo valor o variable */
@@ -48,7 +48,7 @@ Datum pop() /* sacar y devolver de la pila el elemento de la cima */
  return(*stackp);   /* Devolver variable o numero */
 }
 
-pop2() /* sacar y  NO devolver el elemento de la cima de la pila */
+void pop2() /* sacar y  NO devolver el elemento de la cima de la pila */
 {
  
 /* Comprobar que no se intenta leer fuera de la pila */ 
@@ -75,7 +75,7 @@ Inst *code(Inst f) /* Instalar una instruccion u operando */
 }
 
 
-execute(Inst *p)  /* Ejecucion con la maquina */
+void execute(Inst *p)  /* Ejecucion con la maquina */
 {
  
 /* El contador de programa pc se inicializa con la primera instruccion a */ 
@@ -88,7 +88,7 @@ execute(Inst *p)  /* Ejecucion con la maquina */
 /****************************************************************************/
 /****************************************************************************/
 
-assign() /* asignar el valor superior al siguiente valor */
+void assign() /* asignar el valor superior al siguiente valor */
 {
  Datum d1,d2;
  d1=pop();    /* Obtener variable */
@@ -102,7 +102,7 @@ assign() /* asignar el valor superior al siguiente valor */
   push(d2);               /* Apilar variable */
 }
 
-constpush()  /* meter una constante en la pila */
+void constpush()  /* meter una constante en la pila */
 {
  Datum d;
  
@@ -110,7 +110,7 @@ constpush()  /* meter una constante en la pila */
  push(d);
 }
 
-dividir() /* dividir los dos valores superiores de la pila */
+void dividir() /* dividir los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -126,7 +126,7 @@ dividir() /* dividir los dos valores superiores de la pila */
  push(d1);                    /* Apilar el resultado */
 }
 
-escribir() /* sacar de la pila el valor superior y escribirlo */
+void escribir() /* sacar de la pila el valor superior y escribirlo */
 {
  Datum d;
  
@@ -135,7 +135,7 @@ escribir() /* sacar de la pila el valor superior y escribirlo */
  printf("\t ---> %.8g\n",d.val);
 }
 
-eval() /* evaluar una variable en la pila */
+void eval() /* evaluar una variable en la pila */
 {
  Datum d;
  
@@ -149,7 +149,7 @@ eval() /* evaluar una variable en la pila */
  push(d);             /* Apilar valor */
 }
 
-funcion0() /* evaluar una funcion predefinida sin parametros */
+void funcion0() /* evaluar una funcion predefinida sin parametros */
 {
  Datum d;
  
@@ -157,7 +157,7 @@ funcion0() /* evaluar una funcion predefinida sin parametros */
  push(d);
 }
 
-funcion1() /* evaluar una funcion predefinida con un parametro */
+void funcion1() /* evaluar una funcion predefinida con un parametro */
 {
  Datum d;
  
@@ -167,7 +167,7 @@ funcion1() /* evaluar una funcion predefinida con un parametro */
  push(d);
 }
 
-funcion2() /* evaluar una funcion predefinida con dos parametros */
+void funcion2() /* evaluar una funcion predefinida con dos parametros */
 {
  Datum d1,d2;
  
@@ -180,7 +180,7 @@ funcion2() /* evaluar una funcion predefinida con dos parametros */
 
 /* resto de la division entera del segundo valor de la pila */
 /* por el valor de la cima */
-modulo() 
+void modulo() 
 {
  Datum d1,d2;
  
@@ -196,7 +196,7 @@ modulo()
  push(d1);                               /* Apilar el resultado */
 }
 
-multiplicar() /* multiplicar los dos valores superiores de la pila */
+void multiplicar() /* multiplicar los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -206,7 +206,7 @@ multiplicar() /* multiplicar los dos valores superiores de la pila */
  push(d1);                   /* Apilar el resultado       */
 }
 
-negativo() /* negacion del valor superior de la pila */
+void negativo() /* negacion del valor superior de la pila */
 {
  Datum d1;
  
@@ -216,7 +216,7 @@ negativo() /* negacion del valor superior de la pila */
 }
 
 /* Esta funcion se puede omitir   */
-positivo() /* tomar el valor positivo del elemento superior de la pila */
+void positivo() /* tomar el valor positivo del elemento superior de la pila */
 {
  Datum d1;
  
@@ -225,7 +225,7 @@ positivo() /* tomar el valor positivo del elemento superior de la pila */
  push(d1);              /* Apilar resultado */
 }
 
-potencia()  /* exponenciacion de los valores superiores de la pila */
+void potencia()  /* exponenciacion de los valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -246,7 +246,7 @@ potencia()  /* exponenciacion de los valores superiores de la pila */
 
 }
 
-restar()   /* restar los dos valores superiores de la pila */
+void restar()   /* restar los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -256,7 +256,7 @@ restar()   /* restar los dos valores superiores de la pila */
  push(d1);                   /* Apilar el resultado       */
 }
 
-sumar()   /* sumar los dos valores superiores de la pila */
+void sumar()   /* sumar los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -266,7 +266,7 @@ sumar()   /* sumar los dos valores superiores de la pila */
  push(d1);                   /* Apilar el resultado       */
 }
 
-varpush()  /* meter una variable en la pila */
+void varpush()  /* meter una variable en la pila */
 {
  Datum d;
 
@@ -276,7 +276,7 @@ varpush()  /* meter una variable en la pila */
 /****************************************************************************/
 /****************************************************************************/
 
-leervariable() /* Leer una variable numerica por teclado */
+void leervariable() /* Leer una variable numerica por teclado */
 {
  Symbol *variable;
  char c;
@@ -299,7 +299,7 @@ leervariable() /* Leer una variable numerica por teclado */
 }           
 
 
-mayor_que()
+void mayor_que()
 {
  Datum d1,d2;
  
@@ -315,7 +315,7 @@ mayor_que()
 }
 
 
-menor_que()
+void menor_que()
 {
  Datum d1,d2;
  
@@ -331,7 +331,7 @@ menor_que()
 }
 
 
-igual()
+void igual()
 {
  Datum d1,d2;
  
@@ -346,7 +346,7 @@ igual()
  push(d1);    /* Apilar resultado */
 }
 
-mayor_igual()
+void mayor_igual()
 {
  Datum d1,d2;
  
@@ -362,7 +362,7 @@ mayor_igual()
 }
 
 
-menor_igual()
+void menor_igual()
 {
  Datum d1,d2;
  
@@ -377,7 +377,7 @@ menor_igual()
  push(d1);     /* Apilar resultado */
 }
 
-distinto()
+void distinto()
 {
  Datum d1,d2;
  
@@ -393,7 +393,7 @@ distinto()
 }
 
 
-y_logico()
+void y_logico()
 {
  Datum d1,d2;
  
@@ -409,7 +409,7 @@ y_logico()
 }
 
 
-o_logico()
+void o_logico()
 {
  Datum d1,d2;
  
@@ -425,7 +425,7 @@ o_logico()
 }
 
 
-negacion()
+void negacion()
 {
  Datum d1;
  
@@ -440,7 +440,7 @@ negacion()
 }
 
 
-whilecode()
+void whilecode()
 {
  Datum d;
  Inst *savepc = pc;    /* Puntero auxiliar para guardar pc */
@@ -462,7 +462,7 @@ whilecode()
  pc= *((Inst **)(savepc+1));  
 }
 
-ifcode()
+void ifcode()
 {
  Datum d;
  Inst *savepc = pc;   /* Puntero auxiliar para guardar pc */
@@ -491,3 +491,4 @@ ifcode()
  
  pc= *((Inst **)(savepc+2));
 }
+

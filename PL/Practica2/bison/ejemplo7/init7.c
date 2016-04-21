@@ -47,7 +47,7 @@ static struct {
 /** Parametros: Ninguno.                                               **/
 /************************************************************************/
 
-init()
+void init()
 {
  int i;
  Symbol *s;

@@ -2,6 +2,8 @@
 #include <math.h>
 #include <errno.h>
 
+#include "ejemplo5.h"
+
 /*  Referencia a la variable global que indica los codigos 
    de los errores generados por las funciones matematicas */
 extern int errno;

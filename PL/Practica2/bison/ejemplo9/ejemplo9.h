@@ -1,13 +1,29 @@
-typedef struct Symbol
-         { /* entrada en la tabla de simbolos */
-             char *nombre;
-	     short tipo;  /* NUMBER,VAR,FUNCION,INDEFINIDA,CONSTANTE*/  
-	     union {
-		    double val;        /* VAR, NUMBER, INDEFINIDA, CONSTANTE */
-		    double (*ptr)();   /* FUNCION */
-                   } u;
-             struct Symbol * siguiente;
-         } Symbol;
+#ifndef EJEMPLO9_H
+#define EJEMPLO9_H
+
+ /* ejemplo9.h */
+
+
+int yylex();
+
+void yyerror(char *s);
+
+void warning(char *s, char *t);
+
+void execerror(char *s,char *t);
+
+void init();
+
+typedef struct Symbol 
+            { /* elementos de la tabla de simbolos */
+	        char *nombre;
+	        short tipo; /* NUMBER,VAR,FUNCION,INDEFINIDA,CONSTANTE */ 
+	        union {
+		       double val;      /* VAR, NUMBER, INDEFINIDA, CONSTANTE */
+		       double (*ptr)(); /* FUNCION  */
+		      } u;
+                 struct Symbol *siguiente;
+	     } Symbol;
 
 Symbol *install(), *lookup();
 
@@ -16,16 +32,59 @@ typedef union Datum { /* tipo de la pila del interprete */
                      Symbol *sym;
                     } Datum;
 
+void push(Datum d);
 extern Datum pop();
-extern pop2();
+extern void pop2();
 
-typedef int (*Inst)(); /* instruccion maquina */
+typedef void (*Inst)(); /* instruccion maquina */
 #define STOP (Inst) 0
 
-extern Inst prog[], *progp, *code();
+extern Inst prog[];
 
-extern  assign(), constpush(), dividir(), escribir(), eval(), funcion0(),
-        funcion1(),funcion2(), modulo(), multiplicar(), negativo(), positivo(),
-        potencia(), restar(), sumar(), varpush(), ifcode(), whilecode(),
-        mayor_que(), menor_que(), mayor_igual(),menor_igual(), igual(), 
-       distinto(), y_logico(), o_logico(), negacion(), leervariable();
+/* NOVEDAD */
+extern Inst* progp;
+
+void initcode();
+ 
+Inst *code(Inst f);
+
+void execute(Inst *p);
+
+/**************************/
+extern void assign();
+extern void constpush();
+void dividir();
+void escribir();
+void eval();
+
+void funcion();
+void funcion0();
+void funcion1();
+void funcion2();
+
+
+void modulo();
+void multiplicar();
+void negativo();
+void positivo();
+void potencia(); 
+void restar();
+void sumar();
+void varpush();
+
+void ifcode();
+void whilecode();
+
+void mayor_que();
+void menor_que();
+void mayor_igual();
+void menor_igual();
+void igual(); 
+void distinto();
+void y_logico();
+void o_logico();
+void negacion();
+
+void leervariable();
+
+#endif

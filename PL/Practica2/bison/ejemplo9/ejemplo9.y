@@ -45,7 +45,7 @@ list :    /* nada: epsilon produccion */
         | list error ';'   {yyerrok;} 
         ;
 
-stmt :    /* nada> epsilon produccion */  {$$=progp;}
+stmt :    /* nada: epsilon produccion */  {$$=progp;}
         | asgn          {code(pop2);}
 	| PRINT expr    {code(escribir); $$ = $2;}
         | READ '(' VAR ')'    {code2(leervariable,(Inst)$3);}
@@ -128,13 +128,15 @@ expr :    NUMBER     		{$$=code2(constpush,(Inst)$1);}
 jmp_buf begin;
 char *progname;
 int lineno = 1;
-/* Dispositivo de entrada est‡ndar de yylex() */
+/* Dispositivo de entrada estándar de yylex() */
 extern FILE * yyin;
 
-main(int argc, char *argv[])
+void fpecatch();
+
+int main(int argc, char *argv[])
 {
 
- void fpecatch();
+
 
  /* Si se invoca el intérprete con un fichero de entrada */
  /* entonces se establece como dispositivo de entrada para yylex() */
@@ -159,19 +161,19 @@ main(int argc, char *argv[])
 
 }
 
-yyerror(char *s)
+void yyerror(char *s)
 {
  warning(s,(char *) 0);
 }
 
-warning(char *s, char *t)
+void warning(char *s, char *t)
 {
  fprintf(stderr," ** %s : %s", progname,s);
  if (t) fprintf(stderr," ---> %s ",t);
  fprintf(stderr,"  (linea %d)\n",lineno);
 }
 
-execerror(s,t) /* recuperacion de errores durante la ejecucion */
+void execerror(s,t) /* recuperacion de errores durante la ejecucion */
 char *s,*t;
 {
  warning(s,t);

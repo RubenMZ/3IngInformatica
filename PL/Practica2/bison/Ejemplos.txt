@@ -99,7 +99,7 @@ También permite una función predefinida con dos argumentos:
   - operadores relacionales y lógicos
   - sentencia condicional: if
   - sentencia iterativa: while
-  - ejecutar las sentencias contenidas en un fichero indicado en la lnea de comandos
+  - ejecutar las sentencias contenidas en un fichero indicado en la línea de comandos
     Por ejemplo:
        > ./ejemplo9.exe factorial.txt
 

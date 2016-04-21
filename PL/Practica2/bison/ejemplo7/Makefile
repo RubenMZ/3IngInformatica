@@ -1,31 +1,32 @@
-FUENTE = ejemplo7
-LEXICO = lexico7
-
+VERSION= 7
+FUENTE = ejemplo$(VERSION)
+LEXICO = lexico$(VERSION)
 
 CC = gcc
-YFLAGS = -d -v
-LFLAGS = -lm -lfl 
-OBJS= $(FUENTE).tab.o lex.yy.o  init7.o   math7.o   symbol7.o  code7.o
+CFLAGS = -c -g
+YFLAGS = -d         # Generar el fichero $(FUENTE).tab.h 
+LFLAGS = -lm -lfl   # fl: biblioteca de flex; m: biblioteca matemáticalfl 
+OBJS= $(FUENTE).tab.o lex.yy.o  init$(VERSION).o   math$(VERSION).o   symbol$(VERSION).o  code$(VERSION).o
 
-$(FUENTE)3.exe: $(OBJS) 
+$(FUENTE).exe: $(OBJS) 
 	$(CC) $(OBJS) $(LFLAGS) -o $(FUENTE).exe
 
-code7.o:  code7.c $(FUENTE).h
-	$(CC) -c code7.c
+code$(VERSION).o:  code$(VERSION).c $(FUENTE).h
+	$(CC) $(CFLAGS) code$(VERSION).c
 
-init7.o:  init7.c $(FUENTE).h $(FUENTE).tab.h
-	$(CC) -c init7.c
+init$(VERSION).o:  init$(VERSION).c $(FUENTE).h $(FUENTE).tab.h
+	$(CC) $(CFLAGS) init$(VERSION).c
 
-symbol7.o:  symbol7.c $(FUENTE).h $(FUENTE).tab.h
-	$(CC) -c symbol7.c
+symbol$(VERSION).o:  symbol$(VERSION).c $(FUENTE).h $(FUENTE).tab.h
+	$(CC) $(CFLAGS) symbol$(VERSION).c
 
-math7.o:  math7.c $(FUENTE).h
-	$(CC) -c math7.c
+math$(VERSION).o:  math$(VERSION).c $(FUENTE).h
+	$(CC) $(CFLAGS) math$(VERSION).c
 
-lex.yy.o:  lex.yy.c $(FUENTE).tab.h $(FUENTE).h
-	$(CC) -c lex.yy.c
+lex.yy.o:  lex.yy.c $(FUENTE).tab.h $(FUENTE).h macros.h
+	$(CC) $(CFLAGS) lex.yy.c
 
-lex.yy.c: $(LEXICO).l $(FUENTE).tab.h $(FUENTE).h
+lex.yy.c: $(LEXICO).l $(FUENTE).tab.h $(FUENTE).h macros.h
 	flex $(LEXICO).l
 
 $(FUENTE).tab.o:  $(FUENTE).tab.c $(FUENTE).tab.h $(FUENTE).h

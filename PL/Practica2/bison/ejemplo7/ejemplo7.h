@@ -1,3 +1,19 @@
+#ifndef EJEMPLO7_H
+#define EJEMPLO7_H
+
+ /* ejemplo7.h */
+
+
+int yylex();
+
+void yyerror(char *s);
+
+void warning(char *s, char *t);
+
+void execerror(char *s,char *t);
+
+void init();
+
 typedef struct Symbol 
             { /* elementos de la tabla de simbolos */
 	        char *nombre;
@@ -16,13 +32,36 @@ typedef union Datum { /* tipo de la pila del interprete */
                      Symbol *sym;
                     } Datum;
 
-extern Datum pop();
-extern pop2();
 
-typedef int (*Inst)(); /* instruccion maquina */
+void push(Datum d);
+extern Datum pop();
+extern void pop2();
+
+typedef void (*Inst)(); /* instruccion maquina */
 #define STOP (Inst) 0
 
 extern Inst prog[];
-extern  assign(), constpush(), dividir(), escribir(), eval(), funcion(),
-        modulo(), multiplicar(), negativo(), positivo(), potencia(), restar(),
-        sumar(), varpush();
+
+void initcode();
+ 
+Inst *code(Inst f);
+
+void execute(Inst *p);
+
+/**************************/
+extern void assign();
+extern void constpush();
+void dividir();
+void escribir();
+void eval();
+void funcion();
+void modulo();
+void multiplicar();
+void negativo();
+void positivo();
+void potencia(); 
+void restar();
+void sumar();
+void varpush();
+
+#endif

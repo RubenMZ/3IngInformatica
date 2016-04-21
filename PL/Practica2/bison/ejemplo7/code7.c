@@ -17,13 +17,13 @@ Inst *progp;       /* Siguiente lugar libre para la generacion de codigo */
 
 Inst *pc; /* Contador de programa durante la ejecucion */
 
-initcode() /* inicializacion para la generacion de codigo */
+void initcode() /* inicializacion para la generacion de codigo */
 {
  stackp = stack;
  progp = prog;
 }
 
-push(Datum d) /* meter d en la pila */
+void push(Datum d) /* meter d en la pila */
 {
  
 /* Comprobar que hay espacio en la pila para el nuevo valor o variable */
@@ -48,7 +48,7 @@ Datum pop() /* sacar y devolver de la pila el elemento de la cima */
  return(*stackp);   /* Devolver variable o numero */
 }
 
-pop2() /* sacar y  NO devolver de la pila el elemento de la cima */
+void pop2() /* sacar y  NO devolver de la pila el elemento de la cima */
 {
  
 /* Comprobar que no se intenta leer fuera de la pila */ 
@@ -74,7 +74,7 @@ Inst *code(Inst f) /* Instalar una instruccion u operando */
  return (oprogp);
 }
 
-execute(Inst *p)  /* ejecucion con la maquina */
+void execute(Inst *p)  /* ejecucion con la maquina */
 {
  
 /* El contador de programa pc se inicializa a la primera instruccion a */ 
@@ -88,7 +88,7 @@ execute(Inst *p)  /* ejecucion con la maquina */
 /****************************************************************************/
 /****************************************************************************/
 
-assign() /* asignar el valor superior al siguiente valor */
+void assign() /* asignar el valor superior al siguiente valor */
 {
  Datum d1,d2;
  d1=pop();    /* Obtener variable */
@@ -102,7 +102,7 @@ assign() /* asignar el valor superior al siguiente valor */
   push(d2);               /* Apilar variable */
 }
 
-constpush()  /* meter una constante en la pila */
+void constpush()  /* meter una constante en la pila */
 {
  Datum d;
  
@@ -110,7 +110,7 @@ constpush()  /* meter una constante en la pila */
  push(d);
 }
 
-dividir() /* dividir los dos valores superiores de la pila */
+void dividir() /* dividir los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -126,7 +126,7 @@ dividir() /* dividir los dos valores superiores de la pila */
  push(d1);                    /* Apilar el resultado */
 }
 
-escribir() /* sacar de la pila el valor superior y escribirlo */
+void escribir() /* sacar de la pila el valor superior y escribirlo */
 {
  Datum d;
  
@@ -135,7 +135,7 @@ escribir() /* sacar de la pila el valor superior y escribirlo */
  printf("\t ---> %.8g\n",d.val);
 }
 
-eval() /* evaluar una variable en la pila */
+void eval() /* evaluar una variable en la pila */
 {
  Datum d;
  
@@ -149,7 +149,7 @@ eval() /* evaluar una variable en la pila */
  push(d);             /* Apilar valor */
 }
 
-funcion() /* evaluar una funcion predefinida en la cima de la pila */
+void funcion() /* evaluar una funcion predefinida en la cima de la pila */
 {
  Datum d;
  
@@ -161,7 +161,7 @@ funcion() /* evaluar una funcion predefinida en la cima de la pila */
 
 /* resto de la division entera del segundo valor de la pila */
 /* por el valor de la cima */
-modulo() 
+void modulo() 
 {
  Datum d1,d2;
  
@@ -177,7 +177,7 @@ modulo()
  push(d1);                               /* Apilar el resultado */
 }
 
-multiplicar() /* multiplicar los dos valores superiores de la pila */
+void multiplicar() /* multiplicar los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -187,7 +187,7 @@ multiplicar() /* multiplicar los dos valores superiores de la pila */
  push(d1);                   /* Apilar el resultado       */
 }
 
-negativo() /* negacion del valor superior de la pila */
+void negativo() /* negacion del valor superior de la pila */
 {
  Datum d1;
  
@@ -197,7 +197,7 @@ negativo() /* negacion del valor superior de la pila */
 }
 
 /* Esta funcion se puede omitir   */
-positivo() /* tomar el valor positivo del elemento superior de la pila */
+void positivo() /* tomar el valor positivo del elemento superior de la pila */
 {
  Datum d1;
  
@@ -206,7 +206,7 @@ positivo() /* tomar el valor positivo del elemento superior de la pila */
  push(d1);              /* Apilar resultado */
 }
 
-potencia()  /* exponenciacion de los valores superiores de la pila */
+void potencia()  /* exponenciacion de los valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -228,7 +228,7 @@ potencia()  /* exponenciacion de los valores superiores de la pila */
 }
 
 
-restar()   /* restar los dos valores superiores de la pila */
+void restar()   /* restar los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -238,7 +238,7 @@ restar()   /* restar los dos valores superiores de la pila */
  push(d1);                   /* Apilar el resultado       */
 }
 
-sumar()   /* sumar los dos valores superiores de la pila */
+void sumar()   /* sumar los dos valores superiores de la pila */
 {
  Datum d1,d2;
  
@@ -248,7 +248,7 @@ sumar()   /* sumar los dos valores superiores de la pila */
  push(d1);                   /* Apilar el resultado       */
 }
 
-varpush()  /* meter una variable en la pila */
+void varpush()  /* meter una variable en la pila */
 {
  Datum d;
 

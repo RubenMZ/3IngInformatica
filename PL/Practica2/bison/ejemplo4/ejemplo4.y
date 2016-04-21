@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "ejemplo4.h"  
+
   double mem[26]; /* memoria para la variables `a',..., `z' */
 %}
 
@@ -64,9 +66,10 @@ jmp_buf begin;
 char *progname;
 int lineno = 1;
 
-main(int argc, char *argv[])
-{
  void fpecatch();
+
+int main(int argc, char *argv[])
+{
 
  progname=argv[0];
 
@@ -76,22 +79,25 @@ main(int argc, char *argv[])
 /* Establece cual va ser la funcion para tratar los errores de punto flotante */
  signal(SIGFPE,fpecatch); 
 
+/* Llamada al analizador sintáctico */
  yyparse();
+
+ return 0;
 }
 
-yyerror(char *s)
+void yyerror(char *s)
 {
  warning(s,(char *) 0);
 }
 
-warning(char *s, char *t)
+void warning(char *s, char *t)
 {
  fprintf(stderr,"%s: %s", progname,s);
  if (t) fprintf(stderr,"%s",t);
  fprintf(stderr," en la linea %d \n",lineno);
 }
 
-execerror(char *s,char *t) /* recuperacion de errores durante la ejecucion */
+void execerror(char *s,char *t) /* recuperacion de errores durante la ejecucion */
 {
  warning(s,t); /* da el mensaje de error */
  longjmp(begin,0); /* vuelve a un estado viable */

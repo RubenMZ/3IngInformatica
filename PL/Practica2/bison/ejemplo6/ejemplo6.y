@@ -82,36 +82,42 @@ jmp_buf begin;
 char *progname;
 int lineno = 1;
 
-main(int argc, char *argv[])
-{
- void fpecatch();
+void fpecatch();
 
+
+int main(int argc, char *argv[])
+{
+ /* Nombre del programa */
  progname=argv[0];
 
- init(); /* Inicializacion de la tabla de simbolos */
+ /* Inicializacion de la tabla de simbolos */
+ init(); 
 
-/* Establece un estado viable para continuar despues de un error*/
+ /* Establece un estado viable para continuar despues de un error*/
  setjmp(begin);
 
-/* Establece cual va ser la funcion para tratar los errores de punto flotante */
+ /* Establece cual va ser la funcion para tratar los errores de punto flotante */
  signal(SIGFPE,fpecatch);
 
+ /* Llamada al analizador sintáctico */
  yyparse();
+
+ return 0;
 }
 
-yyerror(char *s)
+void yyerror(char *s)
 {
  warning(s,(char *) 0);
 }
 
-warning(char *s, char *t)
+void warning(char *s, char *t)
 {
  fprintf(stderr," ** %s : %s", progname,s);
  if (t) fprintf(stderr," ---> %s ",t);
  fprintf(stderr,"  (linea %d)\n",lineno);
 }
 
-execerror(char *s,char *t) /* recuperacion de errores durante la ejecucion */
+void execerror(char *s,char *t) /* recuperacion de errores durante la ejecucion */
 {
  warning(s,t);
   longjmp(begin,0);

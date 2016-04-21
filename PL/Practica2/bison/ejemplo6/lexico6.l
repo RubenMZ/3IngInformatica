@@ -32,36 +32,17 @@ identificador {letra}({letra}|{numero})*
                     yylval.sym = s;
                     return s->tipo == INDEFINIDA ? VAR : s->tipo;}
 
-^\$[^\n]*  { /* Ejecucion de un comando del shell */
-
-         BORRAR;
-         LUGAR(10,10);
-         if (strcmp(yytext,"$") != 0)
-            {
-             printf("\n Salida provisional al sistema operativo\n\n");
-             printf("\n comando ---> %s\n\n",yytext);
-             system(yytext+1);
-             putchar('\n');
-             }
-           else 
-            {
-             printf(" Si desea ejecutar un comando del sistema operativo ");
-             printf(" teclee: \n\t\t $comando ");
-            }
-
-         LUGAR(24,1);
-         printf(">>>>>>>> Pulse ENTER para volver al programa %s ",progname);
-         /* Espera que se pulse ENTER */
-         while(getchar()!='\n')  ;
-
-         BORRAR;
-         LUGAR(2,1);
-         printf("Continue la ejecucion del programa --> %s \n\n",progname);
-         return FIN;
-         }
-
 :=      {return ASIGNACION;}
-#       { printf("\n>>>>>>> Fin del programa <<<<<<<\n"); return 0;}
+^#       { 
+ 	  BORRAR; 
+	  LUGAR(10,10);
+	  INTENSIDAD;
+	  printf(">>>>>>> Fin del programa <<<<<<<\n");
+	  APAGA;
+	  LUGAR(24,1);
+
+  	  return 0;
+	}
 ;       {return FIN ;} 
 \n      {lineno++; return FIN;} 
 .       {return yytext[0];}

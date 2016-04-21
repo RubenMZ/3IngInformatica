@@ -55,7 +55,7 @@ static struct {    /* Nombres predefinidos de funciones */
 /** Parametros: Ninguno.                                               **/
 /************************************************************************/
 
-init()
+void init()
 {
  int i;
  Symbol *s;

@@ -49,7 +49,7 @@ static struct {
 /** Tipo de resultado: entero "int" (tipo por defecto)                 **/
 /** Parametros: Ninguno.                                               **/
 /************************************************************************/
-init()
+void init()
 {
  int i;
  Symbol *s;

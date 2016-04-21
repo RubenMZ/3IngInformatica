@@ -71,10 +71,11 @@ jmp_buf begin;
 char *progname;
 int lineno = 1;
 
-main(int argc, char *argv[])
-{
- void fpecatch();
+void fpecatch();
 
+int main(int argc, char *argv[])
+{
+ /* Nombre del programa */
  progname=argv[0];
 
  /* Inicializacion de la tabla de simbolos */
@@ -87,23 +88,25 @@ main(int argc, char *argv[])
  signal(SIGFPE,fpecatch);
 
 /* initcode inicializa el vector de instrucciones y la pila del interprete */
- for(initcode(); yyparse(); initcode()) execute(prog);
+ for(initcode(); yyparse(); initcode()) 
+	execute(prog);
+
  return 0;
 }
   
-yyerror(char *s)
+void yyerror(char *s)
 {
  warning(s,(char *) 0);
 }
 
-warning(char *s, char *t)
+void warning(char *s, char *t)
 {
  fprintf(stderr," ** %s : %s", progname,s);
  if (t) fprintf(stderr," ---> %s ",t);
  fprintf(stderr,"  (linea %d)\n",lineno);
 }
 
-execerror(s,t) /* recuperacion de errores durante la ejecucion */
+void execerror(s,t) /* recuperacion de errores durante la ejecucion */
 char *s,*t;
 {
  warning(s,t);
