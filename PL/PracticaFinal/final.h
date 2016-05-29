@@ -1,5 +1,5 @@
-#ifndef EJEMPLO9_H
-#define EJEMPLO9_H
+#ifndef FINAL_H
+#define FINAL_H
 
  /* ejemplo9.h */
 
@@ -53,7 +53,7 @@ void execute(Inst *p);
 /**************************/
 extern void assign();
 extern void constpush();
-void dividir();
+
 void escribir();
 void eval();
 
@@ -62,7 +62,8 @@ void funcion0();
 void funcion1();
 void funcion2();
 
-
+/*%left SUMA RESTA 
+ %left PROD DIV DIV_INT MOD POT*/
 void modulo();
 void multiplicar();
 void negativo();
@@ -71,19 +72,25 @@ void potencia();
 void restar();
 void sumar();
 void varpush();
+void dividir();
+void dividir_int();
 
-void ifcode();
-void whilecode();
-
+/*MAYOR_QUE MENOR_QUE MENOR_IGUAL MAYOR_IGUAL DISTINTO IGUAL*/
 void mayor_que();
 void menor_que();
 void mayor_igual();
 void menor_igual();
 void igual(); 
 void distinto();
+
 void y_logico();
 void o_logico();
 void negacion();
+
+void concatenacion();
+
+void ifcode();
+void whilecode();
 
 void leervariable();
 

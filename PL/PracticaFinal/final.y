@@ -16,17 +16,18 @@
        Inst *inst;     /* instruccion de maquina */
 }
 /* Definiciones regulares */
-%token <sym> NUMBER VAR CONSTANTE FUNCION0_PREDEFINIDA FUNCION1_PREDEFINIDA FUNCION2_PREDEFINIDA INDEFINIDA PRINT WHILE IF ELSE READ TOKEN_BORRAR TOKEN_LUGAR
-%type <inst> stmt asgn expr stmtlist cond while if end 
+%token <sym> NUMBER VAR CONSTANTE FUNCION0_PREDEFINIDA FUNCION1_PREDEFINIDA FUNCION2_PREDEFINIDA INDEFINIDA ESCRIBIR ESCRIBIR_CADENA MIENTRAS SI ENTONCES SI_NO FIN_SI LEER LEER_CADENA TOKEN_BORRAR TOKEN_LUGAR INICIO FIN HACER FIN_MIENTRAS REPETIR HASTA_QUE PARA DESDE HASTA PASO FIN_PARA
+%type <inst> stmt asgn expr stmtlist cond mientras si end 
 
 %right ASIGNACION
 
 %left O_LOGICO
 %left Y_LOGICO
-%left NO_LOGICO
 %left MAYOR_QUE MENOR_QUE MENOR_IGUAL MAYOR_IGUAL DISTINTO IGUAL
 %left SUMA RESTA 
-%left PROD DIV DIV_INT MOD POT
+%left PROD DIV DIV_INT MOD 
+%left UNARIO NO_LOGICO
+%left POT
 %left CONCAT
 
 
@@ -35,31 +36,32 @@
 %%
 
 list :    /* nada: epsilon produccion */ 
-        | list stmt  ';' {code(STOP); return 1;}
-        | list error ';'   {yyerrok;} 
+        | list stmt  {code(STOP); return 1;}
+        | list error    {yyerrok;} 
         ;
 
 stmt :    /* nada: epsilon produccion */  {$$=progp;}
         | asgn          {code(pop2);}
-        | PRINT expr    {code(escribir); $$ = $2;}
-        | READ '(' VAR ')'    {code2(leervariable,(Inst)$3);}
-        | while cond stmt end  
+        | ESCRIBIR '(' expr ')'    {code(escribir); $$ = $3;}
+        | LEER '(' VAR ')'    {code2(leervariable,(Inst)$3);}
+        | ESCRIBIR_CADENA '(' '\'' expr '\'' ')'    {code(escribir); $$ = $4;}
+        | LEER_CADENA '(' '\'' expr '\'' ')'    {code2(leervariable,(Inst)$4);}
+        | mientras cond stmtlist end  
                   {
                    ($1)[1]=(Inst)$3; /* cuerpo del bucle */
                    ($1)[2]=(Inst)$4; /* siguiente instruccion al bucle */
                   }
-        | if cond stmt end /* proposicion if sin parte else */
+        | si cond ENTONCES stmtlist FIN_SI end /* proposicion si sin parte si_no */
                   {
-                   ($1)[1]=(Inst)$3; /* cuerpo del if */
-                   ($1)[3]=(Inst)$4; /* siguiente instruccion al if */
+                   ($1)[1]=(Inst)$4; /* cuerpo del si */
+                   ($1)[3]=(Inst)$6; /* siguiente instruccion al si */
                   }
-        | if cond stmt end ELSE stmt end /* proposicion if con parte else */
+        | si cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI end /* proposicion si con parte si_no */
                   {
-                   ($1)[1]=(Inst)$3; /* cuerpo del if */
-                   ($1)[2]=(Inst)$6; /* cuerpo del else */
-                   ($1)[3]=(Inst)$7; /* siguiente instruccion al if-else */
+                   ($1)[1]=(Inst)$4; /* cuerpo del si */
+                   ($1)[2]=(Inst)$7; /* cuerpo del si_no */
+                   ($1)[3]=(Inst)$9; /* siguiente instruccion al si-si_no */
                   }
-        | '{' stmtlist '}'  {$$ = $2;}
         ;
 
 
@@ -72,10 +74,10 @@ asgn :    VAR ASIGNACION expr { $$=$3;
 cond :    '(' expr ')' {code(STOP); $$ =$2;}
         ;
 
-while:    WHILE      {$$= code3(whilecode,STOP,STOP);}
+mientras:    MIENTRAS      {$$= code3(whilecode,STOP,STOP);}
         ;
 
-if:       IF         {$$= code(ifcode); code3(STOP,STOP,STOP);}
+si:       SI         {$$= code(ifcode); code3(STOP,STOP,STOP);}
         ;
 
 end :    /* nada: produccion epsilon */  {code(STOP); $$ = progp;}
@@ -94,20 +96,28 @@ expr :    NUMBER        {$$=code2(constpush,(Inst)$1);}
         | FUNCION2_PREDEFINIDA '(' expr ',' expr ')'
                                             {$$=$3;code2(funcion2,(Inst)$1->u.ptr);}
         | '(' expr ')'    {$$ = $2;}
-        | expr '+' expr   {code(sumar);}
-        | expr '-' expr   {code(restar);}
-        | expr '*' expr   {code(multiplicar);}
-        | expr '/' expr   {code(dividir);}
-        | expr '%' expr   {code(modulo);}
-        | expr '^' expr   {code(potencia);}
+        /*%left SUMA RESTA 
+          %left PROD DIV DIV_INT MOD POT*/
+        |'-' expr %prec UNARIO  {$$=$2; code(negativo);}
+        |'+' expr %prec UNARIO  {$$=$2; code(positivo);}
+        | expr SUMA expr   {code(sumar);}
+        | expr RESTA expr   {code(restar);}
+        | expr PROD expr   {code(multiplicar);}
+        | expr DIV expr   {code(dividir);}
+        | expr DIV_INT expr   {code(dividir_int);}
+        | expr MOD expr   {code(modulo);}
+        | expr POT expr   {code(potencia);}
+        /*MAYOR_QUE MENOR_QUE MENOR_IGUAL MAYOR_IGUAL DISTINTO IGUAL*/
         | expr MAYOR_QUE expr   {code(mayor_que);}
         | expr MAYOR_IGUAL expr {code(mayor_igual);}
         | expr MENOR_QUE expr   {code(menor_que);}
         | expr MENOR_IGUAL expr {code(menor_igual);}
         | expr IGUAL expr   {code(igual);}
-        | expr DISTINTO expr  {code(distinto);}
+        | expr DISTINTO expr   {code(distinto);}
+        | NO_LOGICO expr  {code(negacion);}
         | expr Y_LOGICO expr  {code(y_logico);}
         | expr O_LOGICO expr  {code(o_logico);}
+        | expr CONCAT expr {code(concatenacion);}
         ;
 
 %%

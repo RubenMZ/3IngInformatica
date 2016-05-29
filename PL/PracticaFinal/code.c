@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include  <math.h>
+#include <string.h>
 
 #include "final.h"
 #include "final.tab.h"
@@ -122,9 +123,26 @@ void dividir() /* dividir los dos valores superiores de la pila */
  if (d2.val == 0.0)
      execerror (" Division por cero ", (char *) 0);
  
- d1.val = d1.val / d2.val;    /* Dividir             */
+ d1.val = (d1.val / d2.val)*1.0;    /* Dividir             */
  push(d1);                    /* Apilar el resultado */
 }
+
+void dividir_int(){
+ Datum d1,d2;
+ 
+ d2=pop();      /* Obtener el primer numero  */
+ d1=pop();      /* Obtener el segundo numero */
+ 
+/* Comprobar si hay division por 0 */ 
+ 
+ if (d2.val == 0.0)
+     execerror (" Division por cero ", (char *) 0);
+ 
+ d1.val = (d1.val / d2.val)*1;    /* Dividir             */
+ push(d1);                    /* Apilar el resultado */
+
+}
+
 
 void escribir() /* sacar de la pila el valor superior y escribirlo */
 {
@@ -437,6 +455,16 @@ void negacion()
    d1.val=0;
  
  push(d1);   /* Apilar resultado */
+}
+
+
+void concatenacion(){
+ Datum d1,d2;
+ 
+ d2=pop();                   /* Obtener el primer numero  */
+ d1=pop();                   /* Obtener el segundo numero */
+ strcat(d1.val, d2.val);   /* Concatenar                     */
+ push(d1); 
 }
 
 
