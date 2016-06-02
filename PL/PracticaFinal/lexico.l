@@ -2,8 +2,12 @@
 #include "macros.h"
 #include "final.h"
 #include "final.tab.h"
+#include <string.h>
+
 extern char *progname;
 extern int lineno;
+
+int numComentarioLinea=0;
 %}
 /* definiciones regulares */
 espacio		[ \t]
@@ -20,11 +24,11 @@ identificador   {letra}({caracter})*(_{caracter})*({caracter})*
 
 inicio		(?i:inicio)
 fin 		(?i:fin)
-__mod 		(?i:__mod)
-__div     (?i:__div)
-__o 		(?i:__o)
-__y 		(?i:__y)
-__no 		(?i:__no)
+_mod 		(?i:_mod)
+_div     	(?i:_div)
+_o 			(?i:_o)
+_y 			(?i:_y)
+_no 		(?i:_no)
 leer 		(?i:leer)
 leer_cadena   (?i:leer_cadena)
 escribir 	(?i:escribir)
@@ -43,15 +47,18 @@ desde 		(?i:desde)
 hasta 		(?i:hasta)
 paso 		(?i:paso)
 fin_para 	(?i:fin_para)
-__borrar  (?i:__borrar)
-__lugar   (?i:__lugar)
+_borrar  	(?i:_borrar)
+_lugar   	(?i:_lugar)
 
 cadena          \'(.)*\'
 
-reservada (inicio|fin|__mod|__div|__o|__y|__no|leer|leer_cadena|escribir|escribir_cadena|si|entonces|si_no|fin_si|mientras|hacer|fin_mientras|repetir|hasta_que|para|desde|hasta|paso|fin_para|__borrar|__lugar) 
+reservada (inicio|fin|_mod|_div|_o|_y|_no|leer|leer_cadena|escribir|escribir_cadena|si|entonces|si_no|fin_si|mientras|hacer|fin_mientras|repetir|hasta_que|para|desde|hasta|paso|fin_para|_borrar|_lugar) 
 
 error_Id      ({letra}({caracter}*|__+)*{caracter}*_*)|({numero}({caracter}*|_*|__+)*{caracter}*)
 error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
+
+
+%x ESTADO_COMENTARIO
 
 %%
 
@@ -61,12 +68,31 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 {numero}			{double d;  
                                    sscanf(yytext,"%lf",&d);
                                  /* Instala el numero en la tabla de simbolos */
-				   yylval.sym=install("",NUMBER,d); 
+					   yylval.sym=install("",NUMBER,d); 
 				   return NUMBER;}
+
+{cadena}	{char *c;
+			c=(char*)malloc(strlen(yytext)+1);
+			int  i = 0;
+			int  j = 0;
+			   strcpy(c, yytext);
+			   while (c[i] != '\0')
+			  {
+			    if ('\'' != c[i])
+			    {
+			      c[j] = c[i];
+				  j++;
+			    }
+			    i++;
+			  }
+			  c[j]='\0';
+				yylval.sym=install2("", CADENA, c);
+			return CADENA;
+			}
 
 {identificador} { Symbol *s;
 					int i=0;
-					for(i=0; i<strlen(yytext); i++){
+					for(i=0; yytext[i]; i++){
 						yytext[i]=tolower(yytext[i]);
 					}
                    if ((s=lookup(yytext)) == 0)
@@ -79,10 +105,10 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 "-"                     {return RESTA;}
 "*"                     {return PROD;}
 "/"                     {return DIV;}
-{__borrar}				{return TOKEN_BORRAR;}
-{__lugar}				{return TOKEN_LUGAR;}
-{__div}                 {return DIV_INT;}
-{__mod}					{return MOD;}
+{_borrar}				{return TOKEN_BORRAR;}
+{_lugar}				{return TOKEN_LUGAR;}
+{_div}                 {return DIV_INT;}
+{_mod}					{return MOD;}
 "**"                    {return POT;}
 "||"                    {return CONCAT;}
 "<"                     {return MENOR_QUE;}
@@ -91,12 +117,30 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 ">="                    {return MAYOR_IGUAL;}
 "=="                    {return IGUAL;}
 "<>"                    {return DISTINTO;}
-{__o}                   {return O_LOGICO;}
-{__y}                   {return Y_LOGICO;}
-{__no}                  {return NO_LOGICO;}
+{_o}                   {return O_LOGICO;}
+{_y}                   {return Y_LOGICO;}
+{_no}                  {return NO_LOGICO;}
+
+"@".*               {numComentarioLinea++;
+						printf("\E[33mCOMENTARIO num: %d \n\e[0m%s\n", numComentarioLinea, yytext);}
+
+"#"              {
+                  /* Se activa el reconocimiento de un comentario */
+                  BEGIN ESTADO_COMENTARIO;
+                  numComentarioLinea++;
+                  printf("\E[33mCOMENTARIO num = %d :\n\e[0m", numComentarioLinea);
+                  ECHO;
+                  }
+
+<ESTADO_COMENTARIO>"#"         { /* Fin del comentario: se vuelve al estado por defecto */
+                                printf("%s\n", yytext);
+                                BEGIN 0; 
+                                }      
+
+<ESTADO_COMENTARIO>[.\n]        {ECHO;}
 
 
-^#       { 
+^&       { 
  	  BORRAR; 
 	  LUGAR(10,10);
 	  INTENSIDAD;

@@ -123,7 +123,7 @@ void dividir() /* dividir los dos valores superiores de la pila */
  if (d2.val == 0.0)
      execerror (" Division por cero ", (char *) 0);
  
- d1.val = (d1.val / d2.val)*1.0;    /* Dividir             */
+ d1.val = (d1.val / d2.val);    /* Dividir             */
  push(d1);                    /* Apilar el resultado */
 }
 
@@ -138,7 +138,7 @@ void dividir_int(){
  if (d2.val == 0.0)
      execerror (" Division por cero ", (char *) 0);
  
- d1.val = (d1.val / d2.val)*1;    /* Dividir             */
+ d1.val = (int)(d1.val / d2.val);    /* Dividir             */
  push(d1);                    /* Apilar el resultado */
 
 }
@@ -147,11 +147,22 @@ void dividir_int(){
 void escribir() /* sacar de la pila el valor superior y escribirlo */
 {
  Datum d;
- 
+
  d=pop();  /* Obtener numero */
- 
- printf("\t ---> %.8g\n",d.val);
+
+   printf("\t ---> %.8g\n",d.val);
+
 }
+
+void escribircadena(){
+ Datum d;
+
+ d=pop();
+
+   printf("\t ---> %s\n",d.chain);
+
+}
+
 
 void eval() /* evaluar una variable en la pila */
 {
@@ -162,8 +173,10 @@ void eval() /* evaluar una variable en la pila */
 /* Si la variable no esta definida */ 
  if (d.sym->tipo == INDEFINIDA) 
      execerror (" Variable no definida ", d.sym->nombre);
- 
- d.val=d.sym->u.val;  /* Sustituir variable por valor */
+ if(d.sym->tipo == CADENA)
+  strcpy(d.chain,d.sym->u.chain);
+ else  
+   d.val=d.sym->u.val;  /* Sustituir variable por valor */
  push(d);             /* Apilar valor */
 }
 
@@ -302,7 +315,7 @@ void leervariable() /* Leer una variable numerica por teclado */
  variable = (Symbol *)(*pc); 
 
  /* Se comprueba si el identificador es una variable */ 
-  if ((variable->tipo == INDEFINIDA) || (variable->tipo == VAR))
+  if ((variable->tipo == INDEFINIDA) || (variable->tipo == VAR) || variable->tipo==CADENA)
     { 
     printf("Valor--> ");
     while((c=getchar())=='\n') ;
@@ -316,6 +329,25 @@ void leervariable() /* Leer una variable numerica por teclado */
      execerror("No es una variable",variable->nombre);
 }           
 
+void leercadena() /* Leer una variable numerica por teclado */
+{
+ Symbol *variable;
+ char c;
+
+ variable = (Symbol *)(*pc); 
+
+ /* Se comprueba si el identificador es una variable */ 
+  if ((variable->tipo == INDEFINIDA) || (variable->tipo == CADENA) || variable->tipo == VAR) 
+    { 
+    printf("Valor--> ");
+    fgets(variable->u.chain, 1000, stdin);
+    variable->u.chain[strlen(variable->u.chain)-1]='\0';
+    variable->tipo=CADENA;
+    pc++;
+   }
+ else
+     execerror("No es una cadena",variable->nombre);
+}   
 
 void mayor_que()
 {
@@ -463,7 +495,7 @@ void concatenacion(){
  
  d2=pop();                   /* Obtener el primer numero  */
  d1=pop();                   /* Obtener el segundo numero */
- strcat(d1.val, d2.val);   /* Concatenar                     */
+ strcat(d1.chain, d2.chain);   /* Concatenar                     */
  push(d1); 
 }
 
@@ -520,3 +552,11 @@ void ifcode()
  pc= *((Inst **)(savepc+2));
 }
 
+void lugar(){
+ Datum d1,d2;
+ 
+ d2=pop();  /* Obtener parametro para la funcion */
+ d1=pop();  /* Obtener parametro para la funcion */
+
+ LUGAR((int)d1.val, (int)d2.val);
+}

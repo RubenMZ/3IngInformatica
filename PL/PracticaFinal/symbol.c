@@ -54,10 +54,28 @@ Symbol *install(char *s, int t, double d)
  strcpy(sp->nombre,s);
  sp->tipo=t;
  sp->u.val=d;
+ strcpy(sp->u.chain, "");
  sp->siguiente=symlist;
  symlist=sp;
  return sp;
 }
+
+Symbol *install2(char *s, int t, char *c)
+{
+ Symbol *sp;
+ char *emalloc();
+
+ sp=(Symbol *) emalloc(sizeof(Symbol));
+ sp->nombre=emalloc(strlen(s)+1); /* +1 para el caracter nulo '\0' */
+ strcpy(sp->nombre,s);
+ sp->tipo=t;
+ sp->u.val=0.0;
+ strcpy(sp->u.chain, c);
+ sp->siguiente=symlist;
+ symlist=sp;
+ return sp;
+}
+
 
 /************************************************************************/
 /** Nombre: emalloc                                                    **/

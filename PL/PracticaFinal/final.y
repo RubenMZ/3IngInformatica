@@ -16,7 +16,7 @@
        Inst *inst;     /* instruccion de maquina */
 }
 /* Definiciones regulares */
-%token <sym> NUMBER VAR CONSTANTE FUNCION0_PREDEFINIDA FUNCION1_PREDEFINIDA FUNCION2_PREDEFINIDA INDEFINIDA ESCRIBIR ESCRIBIR_CADENA MIENTRAS SI ENTONCES SI_NO FIN_SI LEER LEER_CADENA TOKEN_BORRAR TOKEN_LUGAR INICIO FIN HACER FIN_MIENTRAS REPETIR HASTA_QUE PARA DESDE HASTA PASO FIN_PARA
+%token <sym> NUMBER VAR CONSTANTE CADENA FUNCION0_PREDEFINIDA FUNCION1_PREDEFINIDA FUNCION2_PREDEFINIDA INDEFINIDA ESCRIBIR ESCRIBIR_CADENA MIENTRAS SI ENTONCES SI_NO FIN_SI LEER LEER_CADENA TOKEN_BORRAR TOKEN_LUGAR INICIO FIN HACER FIN_MIENTRAS REPETIR HASTA_QUE PARA DESDE HASTA PASO FIN_PARA
 %type <inst> stmt asgn expr stmtlist cond mientras si end 
 
 %right ASIGNACION
@@ -36,31 +36,33 @@
 %%
 
 list :    /* nada: epsilon produccion */ 
-        | list stmt  {code(STOP); return 1;}
-        | list error    {yyerrok;} 
+        | list stmt ';'  {code(STOP); return 1;}
+        | list error ';'  {yyerrok;} 
         ;
 
 stmt :    /* nada: epsilon produccion */  {$$=progp;}
         | asgn          {code(pop2);}
+        | TOKEN_BORRAR        {BORRAR;}
+        | TOKEN_LUGAR '(' expr ',' expr ')' {$$=$3;code(lugar);}
         | ESCRIBIR '(' expr ')'    {code(escribir); $$ = $3;}
         | LEER '(' VAR ')'    {code2(leervariable,(Inst)$3);}
-        | ESCRIBIR_CADENA '(' '\'' expr '\'' ')'    {code(escribir); $$ = $4;}
-        | LEER_CADENA '(' '\'' expr '\'' ')'    {code2(leervariable,(Inst)$4);}
-        | mientras cond stmtlist end  
+        | ESCRIBIR_CADENA '(' expr ')'   {code(escribircadena); $$ = $3;}
+        | LEER_CADENA '('  VAR  ')'    {code2(leercadena,(Inst)$3);}
+        | mientras cond HACER stmtlist FIN_MIENTRAS end 
                   {
-                   ($1)[1]=(Inst)$3; /* cuerpo del bucle */
-                   ($1)[2]=(Inst)$4; /* siguiente instruccion al bucle */
+                   ($1)[1]=(Inst)$4; /* cuerpo del bucle */
+                   ($1)[2]=(Inst)$6; /* siguiente instruccion al bucle */
                   }
         | si cond ENTONCES stmtlist FIN_SI end /* proposicion si sin parte si_no */
                   {
                    ($1)[1]=(Inst)$4; /* cuerpo del si */
                    ($1)[3]=(Inst)$6; /* siguiente instruccion al si */
                   }
-        | si cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI end /* proposicion si con parte si_no */
+        | si cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI end/* proposicion si con parte si_no */
                   {
                    ($1)[1]=(Inst)$4; /* cuerpo del si */
                    ($1)[2]=(Inst)$7; /* cuerpo del si_no */
-                   ($1)[3]=(Inst)$9; /* siguiente instruccion al si-si_no */
+                   ($1)[3]=(Inst)$8; /* siguiente instruccion al si-si_no */
                   }
         ;
 
@@ -88,7 +90,8 @@ stmtlist:  /* nada: prodcuccion epsilon */ {$$=progp;}
         ;
 
 expr :    NUMBER        {$$=code2(constpush,(Inst)$1);}
-        | VAR           {$$=code3(varpush,(Inst)$1,eval);} 
+        | CADENA           {$$=code3(varpush,(Inst)$1,eval);}
+        | VAR           {$$=code3(varpush,(Inst)$1,eval);}
         | CONSTANTE       {$$=code3(varpush,(Inst)$1,eval);}
         | asgn
         | FUNCION0_PREDEFINIDA '(' ')'      {code2(funcion0,(Inst)$1->u.ptr);}
@@ -98,8 +101,6 @@ expr :    NUMBER        {$$=code2(constpush,(Inst)$1);}
         | '(' expr ')'    {$$ = $2;}
         /*%left SUMA RESTA 
           %left PROD DIV DIV_INT MOD POT*/
-        |'-' expr %prec UNARIO  {$$=$2; code(negativo);}
-        |'+' expr %prec UNARIO  {$$=$2; code(positivo);}
         | expr SUMA expr   {code(sumar);}
         | expr RESTA expr   {code(restar);}
         | expr PROD expr   {code(multiplicar);}
@@ -107,6 +108,8 @@ expr :    NUMBER        {$$=code2(constpush,(Inst)$1);}
         | expr DIV_INT expr   {code(dividir_int);}
         | expr MOD expr   {code(modulo);}
         | expr POT expr   {code(potencia);}
+        |'-' expr %prec UNARIO  {$$=$2; code(negativo);}
+        |'+' expr %prec UNARIO  {$$=$2; code(positivo);}
         /*MAYOR_QUE MENOR_QUE MENOR_IGUAL MAYOR_IGUAL DISTINTO IGUAL*/
         | expr MAYOR_QUE expr   {code(mayor_que);}
         | expr MAYOR_IGUAL expr {code(mayor_igual);}

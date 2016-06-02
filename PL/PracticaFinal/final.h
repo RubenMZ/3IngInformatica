@@ -21,15 +21,17 @@ typedef struct Symbol
 	        union {
 		       double val;      /* VAR, NUMBER, INDEFINIDA, CONSTANTE */
 		       double (*ptr)(); /* FUNCION  */
+	        	char chain[1000];
 		      } u;
                  struct Symbol *siguiente;
 	     } Symbol;
 
-Symbol *install(), *lookup();
+Symbol *install(), *install2(), *lookup();
 
 typedef union Datum { /* tipo de la pila del interprete */ 
                      double val;
                      Symbol *sym;
+                     char chain[1000];
                     } Datum;
 
 void push(Datum d);
@@ -55,6 +57,7 @@ extern void assign();
 extern void constpush();
 
 void escribir();
+void escribircadena();
 void eval();
 
 void funcion();
@@ -92,6 +95,9 @@ void concatenacion();
 void ifcode();
 void whilecode();
 
+void lugar();
+
 void leervariable();
+void leercadena();
 
 #endif
