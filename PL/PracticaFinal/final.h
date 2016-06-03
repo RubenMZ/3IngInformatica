@@ -18,6 +18,7 @@ typedef struct Symbol
             { /* elementos de la tabla de simbolos */
 	        char *nombre;
 	        short tipo; /* NUMBER,VAR,FUNCION,INDEFINIDA,CONSTANTE */ 
+	        short subtipo;
 	        union {
 		       double val;      /* VAR, NUMBER, INDEFINIDA, CONSTANTE */
 		       double (*ptr)(); /* FUNCION  */

@@ -84,24 +84,24 @@ void init()
  Symbol *s;
 
  for (i=0; constantes[i].nombre; i++)
-       install(constantes[i].nombre,CONSTANTE,constantes[i].cval);
+       install(constantes[i].nombre,CONSTANTE, CONSTANTE, constantes[i].cval);
 
  for (i=0; keywords[i].nombre; i++)
-       install(keywords[i].nombre,keywords[i].kval,0.0);
+       install(keywords[i].nombre,keywords[i].kval, keywords[i].kval,0.0);
 
  for (i=0; funciones0[i].nombre; i++)
      {
-      s=install(funciones0[i].nombre,FUNCION0_PREDEFINIDA,0.0);
+      s=install(funciones0[i].nombre,FUNCION0_PREDEFINIDA, FUNCION0_PREDEFINIDA,0.0);
       s->u.ptr=funciones0[i].func;
      }
  for (i=0; funciones1[i].nombre; i++)
      {
-      s=install(funciones1[i].nombre,FUNCION1_PREDEFINIDA,0.0);
+      s=install(funciones1[i].nombre,FUNCION1_PREDEFINIDA, FUNCION1_PREDEFINIDA,0.0);
       s->u.ptr=funciones1[i].func;
      }
  for (i=0; funciones2[i].nombre; i++)
      {
-      s=install(funciones2[i].nombre,FUNCION2_PREDEFINIDA,0.0);
+      s=install(funciones2[i].nombre,FUNCION2_PREDEFINIDA, FUNCION2_PREDEFINIDA ,0.0);
       s->u.ptr=funciones2[i].func;
      }
 }

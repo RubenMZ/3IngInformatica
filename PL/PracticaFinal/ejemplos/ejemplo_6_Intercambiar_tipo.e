@@ -29,6 +29,7 @@ escribir(dato);
 escribir_cadena('Introduce una cadena de caracteres --> ');
 leer_cadena(dato);
 
+
 escribir_cadena('La cadena introducida es -> ');
 escribir_cadena(dato);
 

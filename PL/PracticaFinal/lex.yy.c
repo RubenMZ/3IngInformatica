@@ -825,7 +825,7 @@ YY_RULE_SETUP
 {double d;  
                                    sscanf(yytext,"%lf",&d);
                                  /* Instala el numero en la tabla de simbolos */
-					   yylval.sym=install("",NUMBER,d); 
+					   yylval.sym=install("",NUMBER, NUMBER,d); 
 				   return NUMBER;}
 	YY_BREAK
 case 3:
@@ -846,7 +846,7 @@ YY_RULE_SETUP
 			    i++;
 			  }
 			  c[j]='\0';
-				yylval.sym=install2("", CADENA, c);
+				yylval.sym=install2("", CADENA, CADENA, c);
 			return CADENA;
 			}
 	YY_BREAK
@@ -859,7 +859,7 @@ YY_RULE_SETUP
 						yytext[i]=tolower(yytext[i]);
 					}
                    if ((s=lookup(yytext)) == 0)
-                               s = install (yytext, INDEFINIDA, 0.0);
+                               s = install (yytext, INDEFINIDA, INDEFINIDA, 0.0);
                     yylval.sym = s;
                     return s->tipo == INDEFINIDA ? VAR : s->tipo;}
 	YY_BREAK
@@ -967,36 +967,38 @@ case 25:
 YY_RULE_SETUP
 #line 124 "lexico.l"
 {numComentarioLinea++;
-						printf("\E[33mCOMENTARIO num: %d \n\e[0m%s\n", numComentarioLinea, yytext);}
+						printf("\E[33mCOMENTARIO num: %d \n\e[0m", numComentarioLinea);
+							/*printf("%s\n", yytext);*/
+					}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 127 "lexico.l"
+#line 129 "lexico.l"
 {
                   /* Se activa el reconocimiento de un comentario */
                   BEGIN ESTADO_COMENTARIO;
                   numComentarioLinea++;
                   printf("\E[33mCOMENTARIO num = %d :\n\e[0m", numComentarioLinea);
-                  ECHO;
+                  /*ECHO;*/
                   }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 135 "lexico.l"
+#line 137 "lexico.l"
 { /* Fin del comentario: se vuelve al estado por defecto */
-                                printf("%s\n", yytext);
+                                /*printf("%s\n", yytext);*/
                                 BEGIN 0; 
                                 }      
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 140 "lexico.l"
-{ECHO;}
+#line 142 "lexico.l"
+{/*ECHO;*/;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 143 "lexico.l"
+#line 145 "lexico.l"
 { 
  	  BORRAR; 
 	  LUGAR(10,10);
@@ -1011,20 +1013,20 @@ YY_RULE_SETUP
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 153 "lexico.l"
+#line 155 "lexico.l"
 {lineno++; } /* no se devuelve nada, continúa el analisis léxico */
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 154 "lexico.l"
+#line 156 "lexico.l"
 {return yytext[0];}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 155 "lexico.l"
+#line 157 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 1028 "lex.yy.c"
+#line 1030 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ESTADO_COMENTARIO):
 	yyterminate();
@@ -2026,4 +2028,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 155 "lexico.l"
+#line 157 "lexico.l"

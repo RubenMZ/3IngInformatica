@@ -98,6 +98,12 @@ void assign() /* asignar el valor superior al siguiente valor */
  if (d1.sym->tipo != VAR && d1.sym->tipo != INDEFINIDA)
    execerror(" asignacion a un elemento que no es una variable ", 
 	     d1.sym->nombre);
+  if(d1.sym->subtipo == CADENA) 
+  {
+      strcpy(d1.sym->u.chain, d1.chain);
+      d1.sym->subtipo=NUMBER;
+  }
+
   d1.sym->u.val=d2.val;   /* Asignar valor   */
   d1.sym->tipo=VAR;
   push(d2);               /* Apilar variable */
@@ -173,10 +179,12 @@ void eval() /* evaluar una variable en la pila */
 /* Si la variable no esta definida */ 
  if (d.sym->tipo == INDEFINIDA) 
      execerror (" Variable no definida ", d.sym->nombre);
- if(d.sym->tipo == CADENA)
+
+ if(d.sym->subtipo == CADENA){
   strcpy(d.chain,d.sym->u.chain);
- else  
+ }else{  
    d.val=d.sym->u.val;  /* Sustituir variable por valor */
+ }
  push(d);             /* Apilar valor */
 }
 
@@ -315,13 +323,14 @@ void leervariable() /* Leer una variable numerica por teclado */
  variable = (Symbol *)(*pc); 
 
  /* Se comprueba si el identificador es una variable */ 
-  if ((variable->tipo == INDEFINIDA) || (variable->tipo == VAR) || variable->tipo==CADENA)
+  if ((variable->tipo == INDEFINIDA) || (variable->tipo == VAR))
     { 
     printf("Valor--> ");
     while((c=getchar())=='\n') ;
     ungetc(c,stdin);
     scanf("%lf",&variable->u.val);
     variable->tipo=VAR;
+    variable->subtipo=NUMBER;
     pc++;
 
    }
@@ -337,12 +346,13 @@ void leercadena() /* Leer una variable numerica por teclado */
  variable = (Symbol *)(*pc); 
 
  /* Se comprueba si el identificador es una variable */ 
-  if ((variable->tipo == INDEFINIDA) || (variable->tipo == CADENA) || variable->tipo == VAR) 
+  if ((variable->tipo == INDEFINIDA) || variable->tipo == VAR) 
     { 
     printf("Valor--> ");
     fgets(variable->u.chain, 1000, stdin);
     variable->u.chain[strlen(variable->u.chain)-1]='\0';
-    variable->tipo=CADENA;
+    variable->tipo=VAR;
+    variable->subtipo=CADENA;
     pc++;
    }
  else

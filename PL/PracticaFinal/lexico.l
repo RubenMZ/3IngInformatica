@@ -68,7 +68,7 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 {numero}			{double d;  
                                    sscanf(yytext,"%lf",&d);
                                  /* Instala el numero en la tabla de simbolos */
-					   yylval.sym=install("",NUMBER,d); 
+					   yylval.sym=install("",NUMBER, NUMBER,d); 
 				   return NUMBER;}
 
 {cadena}	{char *c;
@@ -86,7 +86,7 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 			    i++;
 			  }
 			  c[j]='\0';
-				yylval.sym=install2("", CADENA, c);
+				yylval.sym=install2("", CADENA, CADENA, c);
 			return CADENA;
 			}
 
@@ -96,7 +96,7 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 						yytext[i]=tolower(yytext[i]);
 					}
                    if ((s=lookup(yytext)) == 0)
-                               s = install (yytext, INDEFINIDA, 0.0);
+                               s = install (yytext, INDEFINIDA, INDEFINIDA, 0.0);
                     yylval.sym = s;
                     return s->tipo == INDEFINIDA ? VAR : s->tipo;}
 
@@ -122,22 +122,24 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 {_no}                  {return NO_LOGICO;}
 
 "@".*               {numComentarioLinea++;
-						printf("\E[33mCOMENTARIO num: %d \n\e[0m%s\n", numComentarioLinea, yytext);}
+						printf("\E[33mCOMENTARIO num: %d \n\e[0m", numComentarioLinea);
+							/*printf("%s\n", yytext);*/
+					}
 
 "#"              {
                   /* Se activa el reconocimiento de un comentario */
                   BEGIN ESTADO_COMENTARIO;
                   numComentarioLinea++;
                   printf("\E[33mCOMENTARIO num = %d :\n\e[0m", numComentarioLinea);
-                  ECHO;
+                  /*ECHO;*/
                   }
 
 <ESTADO_COMENTARIO>"#"         { /* Fin del comentario: se vuelve al estado por defecto */
-                                printf("%s\n", yytext);
+                                /*printf("%s\n", yytext);*/
                                 BEGIN 0; 
                                 }      
 
-<ESTADO_COMENTARIO>[.\n]        {ECHO;}
+<ESTADO_COMENTARIO>[.\n]        {/*ECHO;*/;}
 
 
 ^&       { 
