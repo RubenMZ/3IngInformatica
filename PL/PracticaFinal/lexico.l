@@ -59,11 +59,12 @@ error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
 
 
 %x ESTADO_COMENTARIO
+%x ESTADO_COMENTARIO_LINEA
 
 %%
 
 
-espacio { ; } /* saltar los espacios y los tabuladores */
+{espacio} { ; } /* saltar los espacios y los tabuladores */
 
 {numero}			{double d;  
                                    sscanf(yytext,"%lf",&d);
@@ -121,26 +122,14 @@ espacio { ; } /* saltar los espacios y los tabuladores */
 {_y}                   {return Y_LOGICO;}
 {_no}                  {return NO_LOGICO;}
 
-"@".*               {numComentarioLinea++;
-						printf("\E[33mCOMENTARIO num: %d \n\e[0m", numComentarioLinea);
-							/*printf("%s\n", yytext);*/
-					}
+"#"              {BEGIN ESTADO_COMENTARIO;}
+<ESTADO_COMENTARIO>"#"         {BEGIN 0; ;}      
+<ESTADO_COMENTARIO>.        {yymore();}
+<ESTADO_COMENTARIO>\n        {yymore();}
 
-"#"              {
-                  /* Se activa el reconocimiento de un comentario */
-                  BEGIN ESTADO_COMENTARIO;
-                  numComentarioLinea++;
-                  printf("\E[33mCOMENTARIO num = %d :\n\e[0m", numComentarioLinea);
-                  /*ECHO;*/
-                  }
-
-<ESTADO_COMENTARIO>"#"         { /* Fin del comentario: se vuelve al estado por defecto */
-                                /*printf("%s\n", yytext);*/
-                                BEGIN 0; 
-                                }      
-
-<ESTADO_COMENTARIO>[.\n]        {/*ECHO;*/;}
-
+"@"               {BEGIN ESTADO_COMENTARIO_LINEA;}
+<ESTADO_COMENTARIO_LINEA>\n 	{BEGIN 0;;}
+<ESTADO_COMENTARIO_LINEA>.		{yymore();}
 
 ^&       { 
  	  BORRAR; 

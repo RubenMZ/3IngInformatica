@@ -95,6 +95,7 @@ void concatenacion();
 
 void ifcode();
 void whilecode();
+void forcode();
 
 void lugar();
 

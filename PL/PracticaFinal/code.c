@@ -157,16 +157,14 @@ void escribir() /* sacar de la pila el valor superior y escribirlo */
  d=pop();  /* Obtener numero */
 
    printf("\t ---> %.8g\n",d.val);
-
 }
 
 void escribircadena(){
  Datum d;
-
+ 
  d=pop();
 
    printf("\t ---> %s\n",d.chain);
-
 }
 
 
@@ -560,6 +558,39 @@ void ifcode()
 /* la siguiente instruccion a ejecutar */ 
  
  pc= *((Inst **)(savepc+2));
+}
+
+void forcode()
+{
+ Datum paso, desde, hasta; 
+ Symbol* var;
+ Inst *savepc = pc;    /* Puntero auxiliar para guardar pc */
+
+  /* Contiene la variable del bucle */
+  var = *((Symbol **)(savepc+5));
+  var->tipo=VAR;
+  var->subtipo=NUMBER;
+
+  /* expresión DESDE */
+  execute(*((Inst **)(savepc))); 
+  desde=pop();
+  /* expresión HASTA */
+  execute(*((Inst **)(savepc+1)));  
+  hasta=pop();
+  /* expresión PASO */
+  execute(*((Inst **)(savepc+2)));  
+  paso=pop();
+
+ 
+ for(var->u.val=desde.val; var->u.val<=hasta.val; (var->u.val)=(var->u.val+paso.val))   /* Mientras se cumpla la condicion */
+    {
+     execute(*((Inst **)(savepc+3)));   /* Ejecutar codigo */
+    }
+ 
+/* Asignar a pc la posicion del vector de instrucciones que contiene */  
+/* la siguiente instruccion a ejecutar */ 
+ 
+ pc= *((Inst **)(savepc+4));  
 }
 
 void lugar(){

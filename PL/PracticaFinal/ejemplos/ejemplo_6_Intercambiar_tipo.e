@@ -26,6 +26,9 @@ leer(dato);
 escribir_cadena('El número introducido es -> ');
 escribir(dato);
 
+escribir_cadena('Pulsa una tecla para continuar');
+leer_cadena(pausa);
+
 escribir_cadena('Introduce una cadena de caracteres --> ');
 leer_cadena(dato);
 
