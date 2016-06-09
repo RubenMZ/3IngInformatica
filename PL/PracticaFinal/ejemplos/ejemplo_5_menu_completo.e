@@ -18,6 +18,7 @@
 @ Bienvenida
 
 _borrar;
+_borrar;
 
 _lugar(10,10);
 
@@ -25,6 +26,7 @@ escribir_cadena('Introduce tu nombre --> ');
 
 leer_cadena(nombre);
 
+_borrar;
 _borrar;
 _lugar(10,10);
 
@@ -44,6 +46,7 @@ repetir
  @ Opciones disponibles
 
  _borrar;
+ _borrar;
 
  _lugar(10,10);
  escribir_cadena(' Factorial de un número --> 1 ');
@@ -59,6 +62,7 @@ repetir
 
  leer(opcion);
 
+ _borrar;
  _borrar;
 
  si (opcion  = 0)        @ Fin del programa
@@ -157,6 +161,7 @@ hasta (opcion = 0);
 
 @ Despedida final
 
+_borrar;
 _borrar;
 _lugar(10,10);
 escribir_cadena('El programa ha concluido');

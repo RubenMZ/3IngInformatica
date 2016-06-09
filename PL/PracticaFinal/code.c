@@ -593,6 +593,25 @@ void forcode()
  pc= *((Inst **)(savepc+4));  
 }
 
+void dowhilecode()
+{
+ Datum d;
+ Inst *savepc = pc;    /* Puntero auxiliar para guardar pc */
+
+    /*Hacer...*/
+    do{
+     execute(savepc+2);   /* Ejecutar codigo */
+     execute(*(Inst **)savepc);               /* Ejecutar condicion */
+     d=pop();              /* Obtener el resultado de la condicion */
+    }while(d.val);/*Mientras se cumpla*/
+ 
+/* Asignar a pc la posicion del vector de instrucciones que contiene */  
+/* la siguiente instruccion a ejecutar */ 
+ 
+ pc= *((Inst **)(savepc+1));  
+}
+
+
 void lugar(){
  Datum d1,d2;
  

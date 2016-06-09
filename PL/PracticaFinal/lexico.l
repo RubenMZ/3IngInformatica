@@ -74,19 +74,29 @@ error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
 
 {cadena}	{char *c;
 			c=(char*)malloc(strlen(yytext)+1);
-			int  i = 0;
+			int  i = 1;
 			int  j = 0;
 			   strcpy(c, yytext);
 			   while (c[i] != '\0')
 			  {
-			    if ('\'' != c[i])
+			    if ( ('\\' != c[i]) )
 			    {
-			      c[j] = c[i];
-				  j++;
+			      c[j] = c[i];	  
+			    }else{
+			    	i++;
+			    	if('t' != c[i] && 'n' != c[i]){
+			    		c[j]=c[i];
+			    	}else{
+			    		if('n' == c[i])
+			    			c[j]='\n';
+			    		else
+			    			c[j]='\t';
+			    	}	
 			    }
+			    j++;
 			    i++;
 			  }
-			  c[j]='\0';
+			  c[j-1]='\0';
 				yylval.sym=install2("", CADENA, CADENA, c);
 			return CADENA;
 			}
@@ -116,7 +126,7 @@ error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
 "<="                    {return MENOR_IGUAL;}
 ">"                     {return MAYOR_QUE;}
 ">="                    {return MAYOR_IGUAL;}
-"=="                    {return IGUAL;}
+"="                    {return IGUAL;}
 "<>"                    {return DISTINTO;}
 {_o}                   {return O_LOGICO;}
 {_y}                   {return Y_LOGICO;}

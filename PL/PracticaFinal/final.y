@@ -17,7 +17,7 @@
 }
 /* Definiciones regulares */
 %token <sym> NUMBER VAR CONSTANTE CADENA FUNCION0_PREDEFINIDA FUNCION1_PREDEFINIDA FUNCION2_PREDEFINIDA INDEFINIDA ESCRIBIR ESCRIBIR_CADENA MIENTRAS SI ENTONCES SI_NO FIN_SI LEER LEER_CADENA TOKEN_BORRAR TOKEN_LUGAR INICIO FIN HACER FIN_MIENTRAS REPETIR HASTA_QUE PARA DESDE HASTA PASO FIN_PARA
-%type <inst> stmt asgn expr stmtlist cond mientras si para variable end 
+%type <inst> stmt asgn expr stmtlist cond mientras si para variable repetir end 
 
 %right ASIGNACION
 
@@ -71,8 +71,12 @@ stmt :    /* nada: epsilon produccion */  {$$=progp;}
                   ($1)[3]=(Inst)$10; /* expresion paso */ 
                   ($1)[4]=(Inst)$13; /* cuerpo del bucle */ 
                   ($1)[5]=(Inst)$15; /* siguiente instruccion al para */ }
+        | repetir stmtlist HASTA cond end
+              {
+                  ($1)[1]=(Inst)$4; /* condicion */
+                  ($1)[2]=(Inst)$5; /* siguiente instruccion al si */
+              }
         ;
-
 
 asgn :    VAR ASIGNACION expr { $$=$3; 
                                 code3(varpush,(Inst)$1,assign);}
@@ -91,6 +95,8 @@ si:       SI         {$$= code(ifcode); code3(STOP,STOP,STOP);}
 
 para:     PARA  {$$= code3(forcode, STOP, STOP); code3(STOP, STOP, STOP);}
         ;
+
+repetir:  REPETIR   {$$= code3(dowhilecode,STOP,STOP);}
 
 end :    /* nada: produccion epsilon */  {code(STOP); $$ = progp;}
         ;
