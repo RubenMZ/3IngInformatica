@@ -1,5 +1,5 @@
 VERSION= 
-FUENTE = final
+FUENTE = ipe
 LEXICO = lexico
 
 CC = gcc

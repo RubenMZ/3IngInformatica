@@ -1,43 +1,3 @@
-#
-  Asignatura:    Procesadores de Lenguajes
-
-  Titulación:    Ingeniería Informática
-  Especialidad:  Computación
-  Curso:         Tercero
-  Cuatrimestre:  Segundo
-
-  Departamento:  Informática y Análisis Numérico
-  Centro:        Escuela Politécnica Superior de Córdoba
-  Universidad de Córdoba
- 
-  Curso académico: 2015 - 2016
-
-  Fichero de ejemplo nº 4 para el intérprete de pseudocódigo en español: ipe.exe
-#
-
-@ Bienvenida
-
-_borrar;
-
-_lugar(10,10);
-
-escribir_cadena('Introduce tu nombre --> ');
-
-leer_cadena(nombre);
-
-_borrar;
-_lugar(10,10);
-
-escribir_cadena(' Bienvenido/a << ');
-
-escribir_cadena(nombre);
-
-escribir_cadena(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
-
-_lugar(40,10);
-escribir_cadena('Pulsa una tecla para continuar');
-leer_cadena(pausa);
-
 repetir 
 
  @ Opciones disponibles
@@ -75,6 +35,7 @@ repetir
            entonces
                       	_lugar(10,10);
               			escribir_cadena('Ha elegido la opción de Factorial de un número  ');
+              			escribir_cadena('paso1');
 
         	si_no  
                  		   @ Máximo común divisor
@@ -91,15 +52,10 @@ repetir
         	fin_si;  
  fin_si;  
 
+ escribir_cadena('paso1');
+
  _lugar(40,10); 
  escribir_cadena('\n Pulse una tecla para continuar --> ');
  leer_cadena(pausa);
  
  hasta (opcion = 0); 
-
-
-@ Despedida final
-
-_borrar;
-_lugar(10,10);
-escribir_cadena('El programa ha concluido');

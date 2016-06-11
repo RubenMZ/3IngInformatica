@@ -520,8 +520,8 @@ char *yytext;
 #line 1 "lexico.l"
 #line 2 "lexico.l"
 #include "macros.h"
-#include "final.h"
-#include "final.tab.h"
+#include "ipe.h"
+#include "ipe.tab.h"
 #include <string.h>
 
 extern char *progname;

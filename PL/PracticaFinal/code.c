@@ -2,8 +2,8 @@
 #include  <math.h>
 #include <string.h>
 
-#include "final.h"
-#include "final.tab.h"
+#include "ipe.h"
+#include "ipe.tab.h"
 
 #include "macros.h"
 
@@ -339,7 +339,8 @@ void leervariable() /* Leer una variable numerica por teclado */
 void leercadena() /* Leer una variable numerica por teclado */
 {
  Symbol *variable;
- char c;
+ char c[1000];
+ int i=0, j=0;
 
  variable = (Symbol *)(*pc); 
 
@@ -347,8 +348,29 @@ void leercadena() /* Leer una variable numerica por teclado */
   if ((variable->tipo == INDEFINIDA) || variable->tipo == VAR) 
     { 
     printf("Valor--> ");
-    fgets(variable->u.chain, 1000, stdin);
-    variable->u.chain[strlen(variable->u.chain)-1]='\0';
+    fgets(c, 1000, stdin);
+    c[strlen(c)-1]='\0';
+     while (c[i] != '\0')
+        {
+          if ( ('\\' != c[i]) )
+          {
+            c[j] = c[i];    
+          }else{
+            i++;
+            if('t' != c[i] && 'n' != c[i]){
+              c[j]=c[i];
+            }else{
+              if('n' == c[i])
+                c[j]='\n';
+              else
+                c[j]='\t';
+            } 
+          }
+          j++;
+          i++;
+        }
+        c[j-1]='\0';
+    strcpy(variable->u.chain, c);
     variable->tipo=VAR;
     variable->subtipo=CADENA;
     pc++;
@@ -503,7 +525,11 @@ void concatenacion(){
  
  d2=pop();                   /* Obtener el primer numero  */
  d1=pop();                   /* Obtener el segundo numero */
- strcat(d1.chain, d2.chain);   /* Concatenar                     */
+ if(d1.chain != "" && d2.chain != "")
+   strcat(d1.chain, d2.chain);   /* Concatenar*/
+ else
+  execerror("No es una cadena", d1.chain);
+
  push(d1); 
 }
 
@@ -603,7 +629,7 @@ void dowhilecode()
      execute(savepc+2);   /* Ejecutar codigo */
      execute(*(Inst **)savepc);               /* Ejecutar condicion */
      d=pop();              /* Obtener el resultado de la condicion */
-    }while(d.val);/*Mientras se cumpla*/
+    }while(!d.val);/*Mientras se cumpla*/
  
 /* Asignar a pc la posicion del vector de instrucciones que contiene */  
 /* la siguiente instruccion a ejecutar */ 
@@ -619,4 +645,8 @@ void lugar(){
  d1=pop();  /* Obtener parametro para la funcion */
 
  LUGAR((int)d1.val, (int)d2.val);
+}
+
+void borrar(){
+  BORRAR;
 }

@@ -99,6 +99,7 @@ void forcode();
 void dowhilecode();
 
 void lugar();
+void borrar();
 
 void leervariable();
 void leercadena();

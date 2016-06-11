@@ -1,9 +1,0 @@
-factorial:=1;
-
-para i 
-desde 2 
-hasta 5 
-paso 1 
-hacer 
-factorial:=factorial*i; 
-fin_para;

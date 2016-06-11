@@ -1,0 +1,2664 @@
+Terminales no usados en gramática
+
+   INDEFINIDA
+   INICIO
+   FIN
+   HASTA_QUE
+
+
+Gramática
+
+    0 $accept: list $end
+
+    1 list: %empty
+    2     | list stmt ';'
+    3     | list error ';'
+
+    4 stmt: %empty
+    5     | asgn
+    6     | TOKEN_BORRAR
+    7     | TOKEN_LUGAR '(' expr ',' expr ')'
+    8     | ESCRIBIR '(' expr ')'
+    9     | LEER '(' VAR ')'
+   10     | ESCRIBIR_CADENA '(' expr ')'
+   11     | LEER_CADENA '(' VAR ')'
+   12     | mientras cond HACER stmtlist FIN_MIENTRAS end
+   13     | si cond ENTONCES stmtlist FIN_SI end
+   14     | si cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI end
+   15     | para variable DESDE expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end
+   16     | repetir stmtlist HASTA cond end
+
+   17 asgn: VAR ASIGNACION expr
+   18     | CONSTANTE ASIGNACION expr
+
+   19 cond: '(' expr ')'
+
+   20 mientras: MIENTRAS
+
+   21 si: SI
+
+   22 para: PARA
+
+   23 repetir: REPETIR
+
+   24 end: %empty
+
+   25 stmtlist: %empty
+   26         | stmtlist stmt ';'
+
+   27 variable: VAR
+
+   28 expr: NUMBER
+   29     | CADENA
+   30     | VAR
+   31     | CONSTANTE
+   32     | asgn
+   33     | FUNCION0_PREDEFINIDA '(' ')'
+   34     | FUNCION1_PREDEFINIDA '(' expr ')'
+   35     | FUNCION2_PREDEFINIDA '(' expr ',' expr ')'
+   36     | '(' expr ')'
+   37     | expr SUMA expr
+   38     | expr RESTA expr
+   39     | expr PROD expr
+   40     | expr DIV expr
+   41     | expr DIV_INT expr
+   42     | expr MOD expr
+   43     | expr POT expr
+   44     | '-' expr
+   45     | '+' expr
+   46     | expr MAYOR_QUE expr
+   47     | expr MAYOR_IGUAL expr
+   48     | expr MENOR_QUE expr
+   49     | expr MENOR_IGUAL expr
+   50     | expr IGUAL expr
+   51     | expr DISTINTO expr
+   52     | NO_LOGICO expr
+   53     | expr Y_LOGICO expr
+   54     | expr O_LOGICO expr
+   55     | expr CONCAT expr
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+'(' (40) 7 8 9 10 11 19 33 34 35 36
+')' (41) 7 8 9 10 11 19 33 34 35 36
+'+' (43) 45
+',' (44) 7 35
+'-' (45) 44
+';' (59) 2 3 26
+error (256) 3
+NUMBER (258) 28
+VAR (259) 9 11 17 27 30
+CONSTANTE (260) 18 31
+CADENA (261) 29
+FUNCION0_PREDEFINIDA (262) 33
+FUNCION1_PREDEFINIDA (263) 34
+FUNCION2_PREDEFINIDA (264) 35
+INDEFINIDA (265)
+ESCRIBIR (266) 8
+ESCRIBIR_CADENA (267) 10
+MIENTRAS (268) 20
+SI (269) 21
+ENTONCES (270) 13 14
+SI_NO (271) 14
+FIN_SI (272) 13 14
+LEER (273) 9
+LEER_CADENA (274) 11
+TOKEN_BORRAR (275) 6
+TOKEN_LUGAR (276) 7
+INICIO (277)
+FIN (278)
+HACER (279) 12 15
+FIN_MIENTRAS (280) 12
+REPETIR (281) 23
+HASTA_QUE (282)
+PARA (283) 22
+DESDE (284) 15
+HASTA (285) 15 16
+PASO (286) 15
+FIN_PARA (287) 15
+ASIGNACION (288) 17 18
+O_LOGICO (289) 54
+Y_LOGICO (290) 53
+MAYOR_QUE (291) 46
+MENOR_QUE (292) 48
+MENOR_IGUAL (293) 49
+MAYOR_IGUAL (294) 47
+DISTINTO (295) 51
+IGUAL (296) 50
+SUMA (297) 37
+RESTA (298) 38
+PROD (299) 39
+DIV (300) 40
+DIV_INT (301) 41
+MOD (302) 42
+UNARIO (303)
+NO_LOGICO (304) 52
+POT (305) 43
+CONCAT (306) 55
+
+
+No terminales con las reglas donde aparecen
+
+$accept (58)
+    en la izquierda: 0
+list (59)
+    en la izquierda: 1 2 3, en la derecha: 0 2 3
+stmt (60)
+    en la izquierda: 4 5 6 7 8 9 10 11 12 13 14 15 16, en la derecha:
+    2 26
+asgn (61)
+    en la izquierda: 17 18, en la derecha: 5 32
+cond (62)
+    en la izquierda: 19, en la derecha: 12 13 14 16
+mientras (63)
+    en la izquierda: 20, en la derecha: 12
+si (64)
+    en la izquierda: 21, en la derecha: 13 14
+para (65)
+    en la izquierda: 22, en la derecha: 15
+repetir (66)
+    en la izquierda: 23, en la derecha: 16
+end (67)
+    en la izquierda: 24, en la derecha: 12 13 14 15 16
+stmtlist (68)
+    en la izquierda: 25 26, en la derecha: 12 13 14 15 16 26
+variable (69)
+    en la izquierda: 27, en la derecha: 15
+expr (70)
+    en la izquierda: 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43
+    44 45 46 47 48 49 50 51 52 53 54 55, en la derecha: 7 8 10 15 17
+    18 19 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52
+    53 54 55
+
+
+State 0
+
+    0 $accept: . list $end
+
+    $default  reduce usando la regla 1 (list)
+
+    list  ir al estado 1
+
+
+State 1
+
+    0 $accept: list . $end
+    2 list: list . stmt ';'
+    3     | list . error ';'
+
+    $end             desplazar e ir al estado 2
+    error            desplazar e ir al estado 3
+    VAR              desplazar e ir al estado 4
+    CONSTANTE        desplazar e ir al estado 5
+    ESCRIBIR         desplazar e ir al estado 6
+    ESCRIBIR_CADENA  desplazar e ir al estado 7
+    MIENTRAS         desplazar e ir al estado 8
+    SI               desplazar e ir al estado 9
+    LEER             desplazar e ir al estado 10
+    LEER_CADENA      desplazar e ir al estado 11
+    TOKEN_BORRAR     desplazar e ir al estado 12
+    TOKEN_LUGAR      desplazar e ir al estado 13
+    REPETIR          desplazar e ir al estado 14
+    PARA             desplazar e ir al estado 15
+
+    ';'  reduce usando la regla 4 (stmt)
+
+    stmt      ir al estado 16
+    asgn      ir al estado 17
+    mientras  ir al estado 18
+    si        ir al estado 19
+    para      ir al estado 20
+    repetir   ir al estado 21
+
+
+State 2
+
+    0 $accept: list $end .
+
+    $default  aceptar
+
+
+State 3
+
+    3 list: list error . ';'
+
+    ';'  desplazar e ir al estado 22
+
+
+State 4
+
+   17 asgn: VAR . ASIGNACION expr
+
+    ASIGNACION  desplazar e ir al estado 23
+
+
+State 5
+
+   18 asgn: CONSTANTE . ASIGNACION expr
+
+    ASIGNACION  desplazar e ir al estado 24
+
+
+State 6
+
+    8 stmt: ESCRIBIR . '(' expr ')'
+
+    '('  desplazar e ir al estado 25
+
+
+State 7
+
+   10 stmt: ESCRIBIR_CADENA . '(' expr ')'
+
+    '('  desplazar e ir al estado 26
+
+
+State 8
+
+   20 mientras: MIENTRAS .
+
+    $default  reduce usando la regla 20 (mientras)
+
+
+State 9
+
+   21 si: SI .
+
+    $default  reduce usando la regla 21 (si)
+
+
+State 10
+
+    9 stmt: LEER . '(' VAR ')'
+
+    '('  desplazar e ir al estado 27
+
+
+State 11
+
+   11 stmt: LEER_CADENA . '(' VAR ')'
+
+    '('  desplazar e ir al estado 28
+
+
+State 12
+
+    6 stmt: TOKEN_BORRAR .
+
+    $default  reduce usando la regla 6 (stmt)
+
+
+State 13
+
+    7 stmt: TOKEN_LUGAR . '(' expr ',' expr ')'
+
+    '('  desplazar e ir al estado 29
+
+
+State 14
+
+   23 repetir: REPETIR .
+
+    $default  reduce usando la regla 23 (repetir)
+
+
+State 15
+
+   22 para: PARA .
+
+    $default  reduce usando la regla 22 (para)
+
+
+State 16
+
+    2 list: list stmt . ';'
+
+    ';'  desplazar e ir al estado 30
+
+
+State 17
+
+    5 stmt: asgn .
+
+    $default  reduce usando la regla 5 (stmt)
+
+
+State 18
+
+   12 stmt: mientras . cond HACER stmtlist FIN_MIENTRAS end
+
+    '('  desplazar e ir al estado 31
+
+    cond  ir al estado 32
+
+
+State 19
+
+   13 stmt: si . cond ENTONCES stmtlist FIN_SI end
+   14     | si . cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI end
+
+    '('  desplazar e ir al estado 31
+
+    cond  ir al estado 33
+
+
+State 20
+
+   15 stmt: para . variable DESDE expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end
+
+    VAR  desplazar e ir al estado 34
+
+    variable  ir al estado 35
+
+
+State 21
+
+   16 stmt: repetir . stmtlist HASTA cond end
+
+    $default  reduce usando la regla 25 (stmtlist)
+
+    stmtlist  ir al estado 36
+
+
+State 22
+
+    3 list: list error ';' .
+
+    $default  reduce usando la regla 3 (list)
+
+
+State 23
+
+   17 asgn: VAR ASIGNACION . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 49
+
+
+State 24
+
+   18 asgn: CONSTANTE ASIGNACION . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 50
+
+
+State 25
+
+    8 stmt: ESCRIBIR '(' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 51
+
+
+State 26
+
+   10 stmt: ESCRIBIR_CADENA '(' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 52
+
+
+State 27
+
+    9 stmt: LEER '(' . VAR ')'
+
+    VAR  desplazar e ir al estado 53
+
+
+State 28
+
+   11 stmt: LEER_CADENA '(' . VAR ')'
+
+    VAR  desplazar e ir al estado 54
+
+
+State 29
+
+    7 stmt: TOKEN_LUGAR '(' . expr ',' expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 55
+
+
+State 30
+
+    2 list: list stmt ';' .
+
+    $default  reduce usando la regla 2 (list)
+
+
+State 31
+
+   19 cond: '(' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 56
+
+
+State 32
+
+   12 stmt: mientras cond . HACER stmtlist FIN_MIENTRAS end
+
+    HACER  desplazar e ir al estado 57
+
+
+State 33
+
+   13 stmt: si cond . ENTONCES stmtlist FIN_SI end
+   14     | si cond . ENTONCES stmtlist end SI_NO stmtlist FIN_SI end
+
+    ENTONCES  desplazar e ir al estado 58
+
+
+State 34
+
+   27 variable: VAR .
+
+    $default  reduce usando la regla 27 (variable)
+
+
+State 35
+
+   15 stmt: para variable . DESDE expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end
+
+    DESDE  desplazar e ir al estado 59
+
+
+State 36
+
+   16 stmt: repetir stmtlist . HASTA cond end
+   26 stmtlist: stmtlist . stmt ';'
+
+    VAR              desplazar e ir al estado 4
+    CONSTANTE        desplazar e ir al estado 5
+    ESCRIBIR         desplazar e ir al estado 6
+    ESCRIBIR_CADENA  desplazar e ir al estado 7
+    MIENTRAS         desplazar e ir al estado 8
+    SI               desplazar e ir al estado 9
+    LEER             desplazar e ir al estado 10
+    LEER_CADENA      desplazar e ir al estado 11
+    TOKEN_BORRAR     desplazar e ir al estado 12
+    TOKEN_LUGAR      desplazar e ir al estado 13
+    REPETIR          desplazar e ir al estado 14
+    PARA             desplazar e ir al estado 15
+    HASTA            desplazar e ir al estado 60
+
+    $default  reduce usando la regla 4 (stmt)
+
+    stmt      ir al estado 61
+    asgn      ir al estado 17
+    mientras  ir al estado 18
+    si        ir al estado 19
+    para      ir al estado 20
+    repetir   ir al estado 21
+
+
+State 37
+
+   28 expr: NUMBER .
+
+    $default  reduce usando la regla 28 (expr)
+
+
+State 38
+
+   17 asgn: VAR . ASIGNACION expr
+   30 expr: VAR .
+
+    ASIGNACION  desplazar e ir al estado 23
+
+    $default  reduce usando la regla 30 (expr)
+
+
+State 39
+
+   18 asgn: CONSTANTE . ASIGNACION expr
+   31 expr: CONSTANTE .
+
+    ASIGNACION  desplazar e ir al estado 24
+
+    $default  reduce usando la regla 31 (expr)
+
+
+State 40
+
+   29 expr: CADENA .
+
+    $default  reduce usando la regla 29 (expr)
+
+
+State 41
+
+   33 expr: FUNCION0_PREDEFINIDA . '(' ')'
+
+    '('  desplazar e ir al estado 62
+
+
+State 42
+
+   34 expr: FUNCION1_PREDEFINIDA . '(' expr ')'
+
+    '('  desplazar e ir al estado 63
+
+
+State 43
+
+   35 expr: FUNCION2_PREDEFINIDA . '(' expr ',' expr ')'
+
+    '('  desplazar e ir al estado 64
+
+
+State 44
+
+   52 expr: NO_LOGICO . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 65
+
+
+State 45
+
+   36 expr: '(' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 66
+
+
+State 46
+
+   44 expr: '-' . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 67
+
+
+State 47
+
+   45 expr: '+' . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 68
+
+
+State 48
+
+   32 expr: asgn .
+
+    $default  reduce usando la regla 32 (expr)
+
+
+State 49
+
+   17 asgn: VAR ASIGNACION expr .
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 17 (asgn)
+
+
+State 50
+
+   18 asgn: CONSTANTE ASIGNACION expr .
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 18 (asgn)
+
+
+State 51
+
+    8 stmt: ESCRIBIR '(' expr . ')'
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 85
+
+
+State 52
+
+   10 stmt: ESCRIBIR_CADENA '(' expr . ')'
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 86
+
+
+State 53
+
+    9 stmt: LEER '(' VAR . ')'
+
+    ')'  desplazar e ir al estado 87
+
+
+State 54
+
+   11 stmt: LEER_CADENA '(' VAR . ')'
+
+    ')'  desplazar e ir al estado 88
+
+
+State 55
+
+    7 stmt: TOKEN_LUGAR '(' expr . ',' expr ')'
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ','          desplazar e ir al estado 89
+
+
+State 56
+
+   19 cond: '(' expr . ')'
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 90
+
+
+State 57
+
+   12 stmt: mientras cond HACER . stmtlist FIN_MIENTRAS end
+
+    $default  reduce usando la regla 25 (stmtlist)
+
+    stmtlist  ir al estado 91
+
+
+State 58
+
+   13 stmt: si cond ENTONCES . stmtlist FIN_SI end
+   14     | si cond ENTONCES . stmtlist end SI_NO stmtlist FIN_SI end
+
+    $default  reduce usando la regla 25 (stmtlist)
+
+    stmtlist  ir al estado 92
+
+
+State 59
+
+   15 stmt: para variable DESDE . expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 93
+
+
+State 60
+
+   16 stmt: repetir stmtlist HASTA . cond end
+
+    '('  desplazar e ir al estado 31
+
+    cond  ir al estado 94
+
+
+State 61
+
+   26 stmtlist: stmtlist stmt . ';'
+
+    ';'  desplazar e ir al estado 95
+
+
+State 62
+
+   33 expr: FUNCION0_PREDEFINIDA '(' . ')'
+
+    ')'  desplazar e ir al estado 96
+
+
+State 63
+
+   34 expr: FUNCION1_PREDEFINIDA '(' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 97
+
+
+State 64
+
+   35 expr: FUNCION2_PREDEFINIDA '(' . expr ',' expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 98
+
+
+State 65
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   52     | NO_LOGICO expr .
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 52 (expr)
+
+
+State 66
+
+   36 expr: '(' expr . ')'
+   37     | expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 99
+
+
+State 67
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   44     | '-' expr .
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 44 (expr)
+
+
+State 68
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   45     | '+' expr .
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 45 (expr)
+
+
+State 69
+
+   54 expr: expr O_LOGICO . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 100
+
+
+State 70
+
+   53 expr: expr Y_LOGICO . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 101
+
+
+State 71
+
+   46 expr: expr MAYOR_QUE . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 102
+
+
+State 72
+
+   48 expr: expr MENOR_QUE . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 103
+
+
+State 73
+
+   49 expr: expr MENOR_IGUAL . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 104
+
+
+State 74
+
+   47 expr: expr MAYOR_IGUAL . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 105
+
+
+State 75
+
+   51 expr: expr DISTINTO . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 106
+
+
+State 76
+
+   50 expr: expr IGUAL . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 107
+
+
+State 77
+
+   37 expr: expr SUMA . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 108
+
+
+State 78
+
+   38 expr: expr RESTA . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 109
+
+
+State 79
+
+   39 expr: expr PROD . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 110
+
+
+State 80
+
+   40 expr: expr DIV . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 111
+
+
+State 81
+
+   41 expr: expr DIV_INT . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 112
+
+
+State 82
+
+   42 expr: expr MOD . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 113
+
+
+State 83
+
+   43 expr: expr POT . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 114
+
+
+State 84
+
+   55 expr: expr CONCAT . expr
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 115
+
+
+State 85
+
+    8 stmt: ESCRIBIR '(' expr ')' .
+
+    $default  reduce usando la regla 8 (stmt)
+
+
+State 86
+
+   10 stmt: ESCRIBIR_CADENA '(' expr ')' .
+
+    $default  reduce usando la regla 10 (stmt)
+
+
+State 87
+
+    9 stmt: LEER '(' VAR ')' .
+
+    $default  reduce usando la regla 9 (stmt)
+
+
+State 88
+
+   11 stmt: LEER_CADENA '(' VAR ')' .
+
+    $default  reduce usando la regla 11 (stmt)
+
+
+State 89
+
+    7 stmt: TOKEN_LUGAR '(' expr ',' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 116
+
+
+State 90
+
+   19 cond: '(' expr ')' .
+
+    $default  reduce usando la regla 19 (cond)
+
+
+State 91
+
+   12 stmt: mientras cond HACER stmtlist . FIN_MIENTRAS end
+   26 stmtlist: stmtlist . stmt ';'
+
+    VAR              desplazar e ir al estado 4
+    CONSTANTE        desplazar e ir al estado 5
+    ESCRIBIR         desplazar e ir al estado 6
+    ESCRIBIR_CADENA  desplazar e ir al estado 7
+    MIENTRAS         desplazar e ir al estado 8
+    SI               desplazar e ir al estado 9
+    LEER             desplazar e ir al estado 10
+    LEER_CADENA      desplazar e ir al estado 11
+    TOKEN_BORRAR     desplazar e ir al estado 12
+    TOKEN_LUGAR      desplazar e ir al estado 13
+    FIN_MIENTRAS     desplazar e ir al estado 117
+    REPETIR          desplazar e ir al estado 14
+    PARA             desplazar e ir al estado 15
+
+    $default  reduce usando la regla 4 (stmt)
+
+    stmt      ir al estado 61
+    asgn      ir al estado 17
+    mientras  ir al estado 18
+    si        ir al estado 19
+    para      ir al estado 20
+    repetir   ir al estado 21
+
+
+State 92
+
+   13 stmt: si cond ENTONCES stmtlist . FIN_SI end
+   14     | si cond ENTONCES stmtlist . end SI_NO stmtlist FIN_SI end
+   26 stmtlist: stmtlist . stmt ';'
+
+    VAR              desplazar e ir al estado 4
+    CONSTANTE        desplazar e ir al estado 5
+    ESCRIBIR         desplazar e ir al estado 6
+    ESCRIBIR_CADENA  desplazar e ir al estado 7
+    MIENTRAS         desplazar e ir al estado 8
+    SI               desplazar e ir al estado 9
+    FIN_SI           desplazar e ir al estado 118
+    LEER             desplazar e ir al estado 10
+    LEER_CADENA      desplazar e ir al estado 11
+    TOKEN_BORRAR     desplazar e ir al estado 12
+    TOKEN_LUGAR      desplazar e ir al estado 13
+    REPETIR          desplazar e ir al estado 14
+    PARA             desplazar e ir al estado 15
+
+    SI_NO     reduce usando la regla 24 (end)
+    $default  reduce usando la regla 4 (stmt)
+
+    stmt      ir al estado 61
+    asgn      ir al estado 17
+    mientras  ir al estado 18
+    si        ir al estado 19
+    para      ir al estado 20
+    repetir   ir al estado 21
+    end       ir al estado 119
+
+
+State 93
+
+   15 stmt: para variable DESDE expr . end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 120
+
+
+State 94
+
+   16 stmt: repetir stmtlist HASTA cond . end
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 121
+
+
+State 95
+
+   26 stmtlist: stmtlist stmt ';' .
+
+    $default  reduce usando la regla 26 (stmtlist)
+
+
+State 96
+
+   33 expr: FUNCION0_PREDEFINIDA '(' ')' .
+
+    $default  reduce usando la regla 33 (expr)
+
+
+State 97
+
+   34 expr: FUNCION1_PREDEFINIDA '(' expr . ')'
+   37     | expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 122
+
+
+State 98
+
+   35 expr: FUNCION2_PREDEFINIDA '(' expr . ',' expr ')'
+   37     | expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ','          desplazar e ir al estado 123
+
+
+State 99
+
+   36 expr: '(' expr ')' .
+
+    $default  reduce usando la regla 36 (expr)
+
+
+State 100
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   54     | expr O_LOGICO expr .
+   55     | expr . CONCAT expr
+
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 54 (expr)
+
+
+State 101
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   53     | expr Y_LOGICO expr .
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 53 (expr)
+
+
+State 102
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   46     | expr MAYOR_QUE expr .
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    SUMA     desplazar e ir al estado 77
+    RESTA    desplazar e ir al estado 78
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 46 (expr)
+
+
+State 103
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   48     | expr MENOR_QUE expr .
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    SUMA     desplazar e ir al estado 77
+    RESTA    desplazar e ir al estado 78
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 48 (expr)
+
+
+State 104
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   49     | expr MENOR_IGUAL expr .
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    SUMA     desplazar e ir al estado 77
+    RESTA    desplazar e ir al estado 78
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 49 (expr)
+
+
+State 105
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   47     | expr MAYOR_IGUAL expr .
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    SUMA     desplazar e ir al estado 77
+    RESTA    desplazar e ir al estado 78
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 47 (expr)
+
+
+State 106
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   51     | expr DISTINTO expr .
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    SUMA     desplazar e ir al estado 77
+    RESTA    desplazar e ir al estado 78
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 51 (expr)
+
+
+State 107
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   50     | expr IGUAL expr .
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    SUMA     desplazar e ir al estado 77
+    RESTA    desplazar e ir al estado 78
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 50 (expr)
+
+
+State 108
+
+   37 expr: expr . SUMA expr
+   37     | expr SUMA expr .
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 37 (expr)
+
+
+State 109
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   38     | expr RESTA expr .
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    PROD     desplazar e ir al estado 79
+    DIV      desplazar e ir al estado 80
+    DIV_INT  desplazar e ir al estado 81
+    MOD      desplazar e ir al estado 82
+    POT      desplazar e ir al estado 83
+    CONCAT   desplazar e ir al estado 84
+
+    $default  reduce usando la regla 38 (expr)
+
+
+State 110
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   39     | expr PROD expr .
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 39 (expr)
+
+
+State 111
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   40     | expr DIV expr .
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 40 (expr)
+
+
+State 112
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   41     | expr DIV_INT expr .
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 41 (expr)
+
+
+State 113
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   42     | expr MOD expr .
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    POT     desplazar e ir al estado 83
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 42 (expr)
+
+
+State 114
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   43     | expr POT expr .
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    CONCAT  desplazar e ir al estado 84
+
+    $default  reduce usando la regla 43 (expr)
+
+
+State 115
+
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+   55     | expr CONCAT expr .
+
+    $default  reduce usando la regla 55 (expr)
+
+
+State 116
+
+    7 stmt: TOKEN_LUGAR '(' expr ',' expr . ')'
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 124
+
+
+State 117
+
+   12 stmt: mientras cond HACER stmtlist FIN_MIENTRAS . end
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 125
+
+
+State 118
+
+   13 stmt: si cond ENTONCES stmtlist FIN_SI . end
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 126
+
+
+State 119
+
+   14 stmt: si cond ENTONCES stmtlist end . SI_NO stmtlist FIN_SI end
+
+    SI_NO  desplazar e ir al estado 127
+
+
+State 120
+
+   15 stmt: para variable DESDE expr end . HASTA expr end PASO expr end HACER stmtlist FIN_PARA end
+
+    HASTA  desplazar e ir al estado 128
+
+
+State 121
+
+   16 stmt: repetir stmtlist HASTA cond end .
+
+    $default  reduce usando la regla 16 (stmt)
+
+
+State 122
+
+   34 expr: FUNCION1_PREDEFINIDA '(' expr ')' .
+
+    $default  reduce usando la regla 34 (expr)
+
+
+State 123
+
+   35 expr: FUNCION2_PREDEFINIDA '(' expr ',' . expr ')'
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 129
+
+
+State 124
+
+    7 stmt: TOKEN_LUGAR '(' expr ',' expr ')' .
+
+    $default  reduce usando la regla 7 (stmt)
+
+
+State 125
+
+   12 stmt: mientras cond HACER stmtlist FIN_MIENTRAS end .
+
+    $default  reduce usando la regla 12 (stmt)
+
+
+State 126
+
+   13 stmt: si cond ENTONCES stmtlist FIN_SI end .
+
+    $default  reduce usando la regla 13 (stmt)
+
+
+State 127
+
+   14 stmt: si cond ENTONCES stmtlist end SI_NO . stmtlist FIN_SI end
+
+    $default  reduce usando la regla 25 (stmtlist)
+
+    stmtlist  ir al estado 130
+
+
+State 128
+
+   15 stmt: para variable DESDE expr end HASTA . expr end PASO expr end HACER stmtlist FIN_PARA end
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 131
+
+
+State 129
+
+   35 expr: FUNCION2_PREDEFINIDA '(' expr ',' expr . ')'
+   37     | expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+    ')'          desplazar e ir al estado 132
+
+
+State 130
+
+   14 stmt: si cond ENTONCES stmtlist end SI_NO stmtlist . FIN_SI end
+   26 stmtlist: stmtlist . stmt ';'
+
+    VAR              desplazar e ir al estado 4
+    CONSTANTE        desplazar e ir al estado 5
+    ESCRIBIR         desplazar e ir al estado 6
+    ESCRIBIR_CADENA  desplazar e ir al estado 7
+    MIENTRAS         desplazar e ir al estado 8
+    SI               desplazar e ir al estado 9
+    FIN_SI           desplazar e ir al estado 133
+    LEER             desplazar e ir al estado 10
+    LEER_CADENA      desplazar e ir al estado 11
+    TOKEN_BORRAR     desplazar e ir al estado 12
+    TOKEN_LUGAR      desplazar e ir al estado 13
+    REPETIR          desplazar e ir al estado 14
+    PARA             desplazar e ir al estado 15
+
+    $default  reduce usando la regla 4 (stmt)
+
+    stmt      ir al estado 61
+    asgn      ir al estado 17
+    mientras  ir al estado 18
+    si        ir al estado 19
+    para      ir al estado 20
+    repetir   ir al estado 21
+
+
+State 131
+
+   15 stmt: para variable DESDE expr end HASTA expr . end PASO expr end HACER stmtlist FIN_PARA end
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 134
+
+
+State 132
+
+   35 expr: FUNCION2_PREDEFINIDA '(' expr ',' expr ')' .
+
+    $default  reduce usando la regla 35 (expr)
+
+
+State 133
+
+   14 stmt: si cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI . end
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 135
+
+
+State 134
+
+   15 stmt: para variable DESDE expr end HASTA expr end . PASO expr end HACER stmtlist FIN_PARA end
+
+    PASO  desplazar e ir al estado 136
+
+
+State 135
+
+   14 stmt: si cond ENTONCES stmtlist end SI_NO stmtlist FIN_SI end .
+
+    $default  reduce usando la regla 14 (stmt)
+
+
+State 136
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO . expr end HACER stmtlist FIN_PARA end
+
+    NUMBER                desplazar e ir al estado 37
+    VAR                   desplazar e ir al estado 38
+    CONSTANTE             desplazar e ir al estado 39
+    CADENA                desplazar e ir al estado 40
+    FUNCION0_PREDEFINIDA  desplazar e ir al estado 41
+    FUNCION1_PREDEFINIDA  desplazar e ir al estado 42
+    FUNCION2_PREDEFINIDA  desplazar e ir al estado 43
+    NO_LOGICO             desplazar e ir al estado 44
+    '('                   desplazar e ir al estado 45
+    '-'                   desplazar e ir al estado 46
+    '+'                   desplazar e ir al estado 47
+
+    asgn  ir al estado 48
+    expr  ir al estado 137
+
+
+State 137
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO expr . end HACER stmtlist FIN_PARA end
+   37 expr: expr . SUMA expr
+   38     | expr . RESTA expr
+   39     | expr . PROD expr
+   40     | expr . DIV expr
+   41     | expr . DIV_INT expr
+   42     | expr . MOD expr
+   43     | expr . POT expr
+   46     | expr . MAYOR_QUE expr
+   47     | expr . MAYOR_IGUAL expr
+   48     | expr . MENOR_QUE expr
+   49     | expr . MENOR_IGUAL expr
+   50     | expr . IGUAL expr
+   51     | expr . DISTINTO expr
+   53     | expr . Y_LOGICO expr
+   54     | expr . O_LOGICO expr
+   55     | expr . CONCAT expr
+
+    O_LOGICO     desplazar e ir al estado 69
+    Y_LOGICO     desplazar e ir al estado 70
+    MAYOR_QUE    desplazar e ir al estado 71
+    MENOR_QUE    desplazar e ir al estado 72
+    MENOR_IGUAL  desplazar e ir al estado 73
+    MAYOR_IGUAL  desplazar e ir al estado 74
+    DISTINTO     desplazar e ir al estado 75
+    IGUAL        desplazar e ir al estado 76
+    SUMA         desplazar e ir al estado 77
+    RESTA        desplazar e ir al estado 78
+    PROD         desplazar e ir al estado 79
+    DIV          desplazar e ir al estado 80
+    DIV_INT      desplazar e ir al estado 81
+    MOD          desplazar e ir al estado 82
+    POT          desplazar e ir al estado 83
+    CONCAT       desplazar e ir al estado 84
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 138
+
+
+State 138
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO expr end . HACER stmtlist FIN_PARA end
+
+    HACER  desplazar e ir al estado 139
+
+
+State 139
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO expr end HACER . stmtlist FIN_PARA end
+
+    $default  reduce usando la regla 25 (stmtlist)
+
+    stmtlist  ir al estado 140
+
+
+State 140
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO expr end HACER stmtlist . FIN_PARA end
+   26 stmtlist: stmtlist . stmt ';'
+
+    VAR              desplazar e ir al estado 4
+    CONSTANTE        desplazar e ir al estado 5
+    ESCRIBIR         desplazar e ir al estado 6
+    ESCRIBIR_CADENA  desplazar e ir al estado 7
+    MIENTRAS         desplazar e ir al estado 8
+    SI               desplazar e ir al estado 9
+    LEER             desplazar e ir al estado 10
+    LEER_CADENA      desplazar e ir al estado 11
+    TOKEN_BORRAR     desplazar e ir al estado 12
+    TOKEN_LUGAR      desplazar e ir al estado 13
+    REPETIR          desplazar e ir al estado 14
+    PARA             desplazar e ir al estado 15
+    FIN_PARA         desplazar e ir al estado 141
+
+    $default  reduce usando la regla 4 (stmt)
+
+    stmt      ir al estado 61
+    asgn      ir al estado 17
+    mientras  ir al estado 18
+    si        ir al estado 19
+    para      ir al estado 20
+    repetir   ir al estado 21
+
+
+State 141
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA . end
+
+    $default  reduce usando la regla 24 (end)
+
+    end  ir al estado 142
+
+
+State 142
+
+   15 stmt: para variable DESDE expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end .
+
+    $default  reduce usando la regla 15 (stmt)

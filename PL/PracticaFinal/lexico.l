@@ -1,7 +1,7 @@
 %{
 #include "macros.h"
-#include "final.h"
-#include "final.tab.h"
+#include "ipe.h"
+#include "ipe.tab.h"
 #include <string.h>
 
 extern char *progname;
@@ -66,18 +66,18 @@ error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
 
 {espacio} { ; } /* saltar los espacios y los tabuladores */
 
-{numero}			{double d;  
-                                   sscanf(yytext,"%lf",&d);
-                                 /* Instala el numero en la tabla de simbolos */
-					   yylval.sym=install("",NUMBER, NUMBER,d); 
-				   return NUMBER;}
+{numero}			{	double d;  
+                        sscanf(yytext,"%lf",&d);
+                        /* Instala el numero en la tabla de simbolos */
+					   	yylval.sym=install("",NUMBER, NUMBER,d); 
+				   		return NUMBER;}
 
 {cadena}	{char *c;
 			c=(char*)malloc(strlen(yytext)+1);
 			int  i = 1;
 			int  j = 0;
 			   strcpy(c, yytext);
-			   while (c[i] != '\0')
+			while (c[i] != '\0')
 			  {
 			    if ( ('\\' != c[i]) )
 			    {
@@ -95,9 +95,9 @@ error_Num   ({digito}+|(\.|\,)+)({digito}+|_*|(\.|\,)+)*{digito}*
 			    }
 			    j++;
 			    i++;
-			  }
-			  c[j-1]='\0';
-				yylval.sym=install2("", CADENA, CADENA, c);
+			 }
+			 c[j-1]='\0';
+			yylval.sym=install2("", CADENA, CADENA, c);
 			return CADENA;
 			}
 

@@ -9,13 +9,15 @@
   Departamento:  Informática y Análisis Numérico
   Centro:        Escuela Politécnica Superior de Córdoba
   Universidad de Córdoba
-
+ 
   Curso académico: 2015 - 2016
 
   Fichero de ejemplo nº 3 para el intérprete de pseudocódigo en español: ipe.exe
 #
-
+ 
 @ Máximo común divisor mediante el algoritmo de Euclides
+
+_borrar;
 
 _lugar(10,10);
 escribir_cadena(' Máximo común divisor de dos números ');
@@ -33,7 +35,7 @@ leer(b);
 
 @ Se ordenan los números
 si (a < b)
-	entonces
+	entonces 
 		auxiliar := a;
 		a := b;
 		b := auxiliar;
@@ -43,7 +45,7 @@ fin_si;
 A1 := a;
 B1 := b;
 
-@ Se aplica el método de Euclides
+@ Se aplica el método de Euclides	
 resto := a _mod b;
 
 mientras (resto <> 0) hacer
@@ -51,10 +53,10 @@ mientras (resto <> 0) hacer
 	b := resto;
 	resto := a _mod b;
 fin_mientras;
-
+         
 @ Se muestra el resultado
 
-_lugar(15,10);
+_lugar(15 , 10);
 
 escribir_cadena(' Máximo común divisor de ');
 escribir(A1);
@@ -64,4 +66,3 @@ escribir(B1);
 
 escribir_cadena(' es ---> ');
 escribir(b);
-escribir_cadena('\n');

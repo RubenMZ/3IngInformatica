@@ -1,0 +1,9 @@
+a:=4;
+b:=5;
+
+si(b<a)
+entonces
+	escribir_cadena('si');
+si_no
+	escribir_cadena('no');
+fin_si;

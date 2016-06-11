@@ -62,19 +62,19 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 2 "final.y" /* yacc.c:339  */
+#line 2 "ipe.y" /* yacc.c:339  */
 
 #include <stdio.h>
 #include <math.h>
 
-#include "final.h"
+#include "ipe.h"
 
 #include "macros.h"
 
 #define code2(c1,c2)         code(c1); code(c2)
 #define code3(c1,c2,c3)      code(c1); code(c2); code(c3)
 
-#line 78 "final.tab.c" /* yacc.c:339  */
+#line 78 "ipe.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -93,9 +93,9 @@
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "final.tab.h".  */
-#ifndef YY_YY_FINAL_TAB_H_INCLUDED
-# define YY_YY_FINAL_TAB_H_INCLUDED
+   by #include "ipe.tab.h".  */
+#ifndef YY_YY_IPE_TAB_H_INCLUDED
+# define YY_YY_IPE_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -166,12 +166,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 14 "final.y" /* yacc.c:355  */
+#line 14 "ipe.y" /* yacc.c:355  */
              
        Symbol *sym;    /* puntero a la tabla de simbolos */
        Inst *inst;     /* instruccion de maquina */
 
-#line 175 "final.tab.c" /* yacc.c:355  */
+#line 175 "ipe.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -182,11 +182,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_FINAL_TAB_H_INCLUDED  */
+#endif /* !YY_YY_IPE_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 190 "final.tab.c" /* yacc.c:358  */
+#line 190 "ipe.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -490,10 +490,10 @@ static const yytype_uint8 yyrline[] =
 {
        0,    38,    38,    39,    40,    43,    44,    45,    46,    47,
       48,    49,    50,    51,    56,    61,    67,    74,    81,    83,
-      87,    90,    93,    96,    99,   101,   104,   105,   108,   110,
-     111,   112,   113,   114,   115,   116,   117,   119,   122,   123,
-     124,   125,   126,   127,   128,   129,   130,   132,   133,   134,
-     135,   136,   137,   138,   139,   140,   141
+      87,    90,    93,    96,    99,   102,   105,   106,   109,   111,
+     112,   113,   114,   115,   116,   117,   118,   120,   123,   124,
+     125,   126,   127,   128,   129,   130,   131,   133,   134,   135,
+     136,   137,   138,   139,   140,   141,   142
 };
 #endif
 
@@ -1422,338 +1422,338 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 39 "final.y" /* yacc.c:1646  */
+#line 39 "ipe.y" /* yacc.c:1646  */
     {code(STOP); return 1;}
-#line 1428 "final.tab.c" /* yacc.c:1646  */
+#line 1428 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 40 "final.y" /* yacc.c:1646  */
+#line 40 "ipe.y" /* yacc.c:1646  */
     {yyerrok;}
-#line 1434 "final.tab.c" /* yacc.c:1646  */
+#line 1434 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 43 "final.y" /* yacc.c:1646  */
+#line 43 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=progp;}
-#line 1440 "final.tab.c" /* yacc.c:1646  */
+#line 1440 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 44 "final.y" /* yacc.c:1646  */
+#line 44 "ipe.y" /* yacc.c:1646  */
     {code(pop2);}
-#line 1446 "final.tab.c" /* yacc.c:1646  */
+#line 1446 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 45 "final.y" /* yacc.c:1646  */
-    {BORRAR;}
-#line 1452 "final.tab.c" /* yacc.c:1646  */
+#line 45 "ipe.y" /* yacc.c:1646  */
+    {code(borrar);}
+#line 1452 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 46 "final.y" /* yacc.c:1646  */
+#line 46 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=(yyvsp[-3].inst);code(lugar);}
-#line 1458 "final.tab.c" /* yacc.c:1646  */
+#line 1458 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 47 "final.y" /* yacc.c:1646  */
+#line 47 "ipe.y" /* yacc.c:1646  */
     {code(escribir); (yyval.inst) = (yyvsp[-1].inst);}
-#line 1464 "final.tab.c" /* yacc.c:1646  */
+#line 1464 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 48 "final.y" /* yacc.c:1646  */
+#line 48 "ipe.y" /* yacc.c:1646  */
     {code2(leervariable,(Inst)(yyvsp[-1].sym));}
-#line 1470 "final.tab.c" /* yacc.c:1646  */
+#line 1470 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 49 "final.y" /* yacc.c:1646  */
+#line 49 "ipe.y" /* yacc.c:1646  */
     {code(escribircadena); (yyval.inst) = (yyvsp[-1].inst);}
-#line 1476 "final.tab.c" /* yacc.c:1646  */
+#line 1476 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 50 "final.y" /* yacc.c:1646  */
+#line 50 "ipe.y" /* yacc.c:1646  */
     {code2(leercadena,(Inst)(yyvsp[-1].sym));}
-#line 1482 "final.tab.c" /* yacc.c:1646  */
+#line 1482 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 52 "final.y" /* yacc.c:1646  */
+#line 52 "ipe.y" /* yacc.c:1646  */
     {
                    ((yyvsp[-5].inst))[1]=(Inst)(yyvsp[-2].inst); /* cuerpo del bucle */
                    ((yyvsp[-5].inst))[2]=(Inst)(yyvsp[0].inst); /* siguiente instruccion al bucle */
                   }
-#line 1491 "final.tab.c" /* yacc.c:1646  */
+#line 1491 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 57 "final.y" /* yacc.c:1646  */
+#line 57 "ipe.y" /* yacc.c:1646  */
     {
                    ((yyvsp[-5].inst))[1]=(Inst)(yyvsp[-2].inst); /* cuerpo del si */
                    ((yyvsp[-5].inst))[3]=(Inst)(yyvsp[0].inst); /* siguiente instruccion al si */
                   }
-#line 1500 "final.tab.c" /* yacc.c:1646  */
+#line 1500 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 62 "final.y" /* yacc.c:1646  */
+#line 62 "ipe.y" /* yacc.c:1646  */
     {
                    ((yyvsp[-8].inst))[1]=(Inst)(yyvsp[-5].inst); /* cuerpo del si */
                    ((yyvsp[-8].inst))[2]=(Inst)(yyvsp[-2].inst); /* cuerpo del si_no */
-                   ((yyvsp[-8].inst))[3]=(Inst)(yyvsp[-1].sym); /* siguiente instruccion al si-si_no */
+                   ((yyvsp[-8].inst))[3]=(Inst)(yyvsp[0].inst); /* siguiente instruccion al si-si_no */
                   }
-#line 1510 "final.tab.c" /* yacc.c:1646  */
+#line 1510 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 68 "final.y" /* yacc.c:1646  */
+#line 68 "ipe.y" /* yacc.c:1646  */
     { 
                   ((yyvsp[-14].inst))[1]=(Inst)(yyvsp[-11].inst); /* expresion desde */ 
                   ((yyvsp[-14].inst))[2]=(Inst)(yyvsp[-8].inst); /* expresion hasta */ 
                   ((yyvsp[-14].inst))[3]=(Inst)(yyvsp[-5].inst); /* expresion paso */ 
                   ((yyvsp[-14].inst))[4]=(Inst)(yyvsp[-2].inst); /* cuerpo del bucle */ 
                   ((yyvsp[-14].inst))[5]=(Inst)(yyvsp[0].inst); /* siguiente instruccion al para */ }
-#line 1521 "final.tab.c" /* yacc.c:1646  */
+#line 1521 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 75 "final.y" /* yacc.c:1646  */
+#line 75 "ipe.y" /* yacc.c:1646  */
     {
                   ((yyvsp[-4].inst))[1]=(Inst)(yyvsp[-1].inst); /* condicion */
                   ((yyvsp[-4].inst))[2]=(Inst)(yyvsp[0].inst); /* siguiente instruccion al si */
               }
-#line 1530 "final.tab.c" /* yacc.c:1646  */
+#line 1530 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 81 "final.y" /* yacc.c:1646  */
+#line 81 "ipe.y" /* yacc.c:1646  */
     { (yyval.inst)=(yyvsp[0].inst); 
                                 code3(varpush,(Inst)(yyvsp[-2].sym),assign);}
-#line 1537 "final.tab.c" /* yacc.c:1646  */
+#line 1537 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 84 "final.y" /* yacc.c:1646  */
+#line 84 "ipe.y" /* yacc.c:1646  */
     {execerror(" NO se pueden asignar datos a constantes ",(yyvsp[-2].sym)->nombre);}
-#line 1543 "final.tab.c" /* yacc.c:1646  */
+#line 1543 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 87 "final.y" /* yacc.c:1646  */
+#line 87 "ipe.y" /* yacc.c:1646  */
     {code(STOP); (yyval.inst) =(yyvsp[-1].inst);}
-#line 1549 "final.tab.c" /* yacc.c:1646  */
+#line 1549 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 90 "final.y" /* yacc.c:1646  */
+#line 90 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)= code3(whilecode,STOP,STOP);}
-#line 1555 "final.tab.c" /* yacc.c:1646  */
+#line 1555 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 93 "final.y" /* yacc.c:1646  */
+#line 93 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)= code(ifcode); code3(STOP,STOP,STOP);}
-#line 1561 "final.tab.c" /* yacc.c:1646  */
+#line 1561 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 96 "final.y" /* yacc.c:1646  */
+#line 96 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)= code3(forcode, STOP, STOP); code3(STOP, STOP, STOP);}
-#line 1567 "final.tab.c" /* yacc.c:1646  */
+#line 1567 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 99 "final.y" /* yacc.c:1646  */
+#line 99 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)= code3(dowhilecode,STOP,STOP);}
-#line 1573 "final.tab.c" /* yacc.c:1646  */
+#line 1573 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 101 "final.y" /* yacc.c:1646  */
+#line 102 "ipe.y" /* yacc.c:1646  */
     {code(STOP); (yyval.inst) = progp;}
-#line 1579 "final.tab.c" /* yacc.c:1646  */
+#line 1579 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 104 "final.y" /* yacc.c:1646  */
+#line 105 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=progp;}
-#line 1585 "final.tab.c" /* yacc.c:1646  */
+#line 1585 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 108 "final.y" /* yacc.c:1646  */
+#line 109 "ipe.y" /* yacc.c:1646  */
     {code((Inst)(yyvsp[0].sym)); (yyval.inst) = progp;}
-#line 1591 "final.tab.c" /* yacc.c:1646  */
+#line 1591 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 110 "final.y" /* yacc.c:1646  */
+#line 111 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=code2(constpush,(Inst)(yyvsp[0].sym));}
-#line 1597 "final.tab.c" /* yacc.c:1646  */
+#line 1597 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 111 "final.y" /* yacc.c:1646  */
+#line 112 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=code3(varpush,(Inst)(yyvsp[0].sym),eval);}
-#line 1603 "final.tab.c" /* yacc.c:1646  */
+#line 1603 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 112 "final.y" /* yacc.c:1646  */
+#line 113 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=code3(varpush,(Inst)(yyvsp[0].sym),eval);}
-#line 1609 "final.tab.c" /* yacc.c:1646  */
+#line 1609 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 113 "final.y" /* yacc.c:1646  */
+#line 114 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=code3(varpush,(Inst)(yyvsp[0].sym),eval);}
-#line 1615 "final.tab.c" /* yacc.c:1646  */
+#line 1615 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 115 "final.y" /* yacc.c:1646  */
+#line 116 "ipe.y" /* yacc.c:1646  */
     {code2(funcion0,(Inst)(yyvsp[-2].sym)->u.ptr);}
-#line 1621 "final.tab.c" /* yacc.c:1646  */
+#line 1621 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 116 "final.y" /* yacc.c:1646  */
+#line 117 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=(yyvsp[-1].inst);code2(funcion1,(Inst)(yyvsp[-3].sym)->u.ptr);}
-#line 1627 "final.tab.c" /* yacc.c:1646  */
+#line 1627 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 118 "final.y" /* yacc.c:1646  */
+#line 119 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=(yyvsp[-3].inst);code2(funcion2,(Inst)(yyvsp[-5].sym)->u.ptr);}
-#line 1633 "final.tab.c" /* yacc.c:1646  */
+#line 1633 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 119 "final.y" /* yacc.c:1646  */
+#line 120 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst) = (yyvsp[-1].inst);}
-#line 1639 "final.tab.c" /* yacc.c:1646  */
+#line 1639 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 122 "final.y" /* yacc.c:1646  */
+#line 123 "ipe.y" /* yacc.c:1646  */
     {code(sumar);}
-#line 1645 "final.tab.c" /* yacc.c:1646  */
+#line 1645 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 123 "final.y" /* yacc.c:1646  */
+#line 124 "ipe.y" /* yacc.c:1646  */
     {code(restar);}
-#line 1651 "final.tab.c" /* yacc.c:1646  */
+#line 1651 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 124 "final.y" /* yacc.c:1646  */
+#line 125 "ipe.y" /* yacc.c:1646  */
     {code(multiplicar);}
-#line 1657 "final.tab.c" /* yacc.c:1646  */
+#line 1657 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 125 "final.y" /* yacc.c:1646  */
+#line 126 "ipe.y" /* yacc.c:1646  */
     {code(dividir);}
-#line 1663 "final.tab.c" /* yacc.c:1646  */
+#line 1663 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 126 "final.y" /* yacc.c:1646  */
+#line 127 "ipe.y" /* yacc.c:1646  */
     {code(dividir_int);}
-#line 1669 "final.tab.c" /* yacc.c:1646  */
+#line 1669 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 127 "final.y" /* yacc.c:1646  */
+#line 128 "ipe.y" /* yacc.c:1646  */
     {code(modulo);}
-#line 1675 "final.tab.c" /* yacc.c:1646  */
+#line 1675 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 128 "final.y" /* yacc.c:1646  */
+#line 129 "ipe.y" /* yacc.c:1646  */
     {code(potencia);}
-#line 1681 "final.tab.c" /* yacc.c:1646  */
+#line 1681 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 129 "final.y" /* yacc.c:1646  */
+#line 130 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=(yyvsp[0].inst); code(negativo);}
-#line 1687 "final.tab.c" /* yacc.c:1646  */
+#line 1687 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 130 "final.y" /* yacc.c:1646  */
+#line 131 "ipe.y" /* yacc.c:1646  */
     {(yyval.inst)=(yyvsp[0].inst); code(positivo);}
-#line 1693 "final.tab.c" /* yacc.c:1646  */
+#line 1693 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 132 "final.y" /* yacc.c:1646  */
+#line 133 "ipe.y" /* yacc.c:1646  */
     {code(mayor_que);}
-#line 1699 "final.tab.c" /* yacc.c:1646  */
+#line 1699 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 133 "final.y" /* yacc.c:1646  */
+#line 134 "ipe.y" /* yacc.c:1646  */
     {code(mayor_igual);}
-#line 1705 "final.tab.c" /* yacc.c:1646  */
+#line 1705 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 134 "final.y" /* yacc.c:1646  */
+#line 135 "ipe.y" /* yacc.c:1646  */
     {code(menor_que);}
-#line 1711 "final.tab.c" /* yacc.c:1646  */
+#line 1711 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 135 "final.y" /* yacc.c:1646  */
+#line 136 "ipe.y" /* yacc.c:1646  */
     {code(menor_igual);}
-#line 1717 "final.tab.c" /* yacc.c:1646  */
+#line 1717 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 136 "final.y" /* yacc.c:1646  */
+#line 137 "ipe.y" /* yacc.c:1646  */
     {code(igual);}
-#line 1723 "final.tab.c" /* yacc.c:1646  */
+#line 1723 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 137 "final.y" /* yacc.c:1646  */
+#line 138 "ipe.y" /* yacc.c:1646  */
     {code(distinto);}
-#line 1729 "final.tab.c" /* yacc.c:1646  */
+#line 1729 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 138 "final.y" /* yacc.c:1646  */
+#line 139 "ipe.y" /* yacc.c:1646  */
     {code(negacion);}
-#line 1735 "final.tab.c" /* yacc.c:1646  */
+#line 1735 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 139 "final.y" /* yacc.c:1646  */
+#line 140 "ipe.y" /* yacc.c:1646  */
     {code(y_logico);}
-#line 1741 "final.tab.c" /* yacc.c:1646  */
+#line 1741 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 140 "final.y" /* yacc.c:1646  */
+#line 141 "ipe.y" /* yacc.c:1646  */
     {code(o_logico);}
-#line 1747 "final.tab.c" /* yacc.c:1646  */
+#line 1747 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 141 "final.y" /* yacc.c:1646  */
+#line 142 "ipe.y" /* yacc.c:1646  */
     {code(concatenacion);}
-#line 1753 "final.tab.c" /* yacc.c:1646  */
+#line 1753 "ipe.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1757 "final.tab.c" /* yacc.c:1646  */
+#line 1757 "ipe.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1981,7 +1981,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 144 "final.y" /* yacc.c:1906  */
+#line 145 "ipe.y" /* yacc.c:1906  */
 
 
 #include <stdio.h>

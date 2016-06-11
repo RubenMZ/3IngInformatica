@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "final.h"
+#include "ipe.h"
 
 #include "macros.h"
 
@@ -42,7 +42,7 @@ list :    /* nada: epsilon produccion */
 
 stmt :    /* nada: epsilon produccion */  {$$=progp;}
         | asgn          {code(pop2);}
-        | TOKEN_BORRAR        {BORRAR;}
+        | TOKEN_BORRAR        {code(borrar);}
         | TOKEN_LUGAR '(' expr ',' expr ')' {$$=$3;code(lugar);}
         | ESCRIBIR '(' expr ')'    {code(escribir); $$ = $3;}
         | LEER '(' VAR ')'    {code2(leervariable,(Inst)$3);}
@@ -62,7 +62,7 @@ stmt :    /* nada: epsilon produccion */  {$$=progp;}
                   {
                    ($1)[1]=(Inst)$4; /* cuerpo del si */
                    ($1)[2]=(Inst)$7; /* cuerpo del si_no */
-                   ($1)[3]=(Inst)$8; /* siguiente instruccion al si-si_no */
+                   ($1)[3]=(Inst)$9; /* siguiente instruccion al si-si_no */
                   }
         | para variable DESDE expr end HASTA expr end PASO expr end HACER stmtlist FIN_PARA end 
               { 
@@ -97,7 +97,8 @@ para:     PARA  {$$= code3(forcode, STOP, STOP); code3(STOP, STOP, STOP);}
         ;
 
 repetir:  REPETIR   {$$= code3(dowhilecode,STOP,STOP);}
-
+        ;
+        
 end :    /* nada: produccion epsilon */  {code(STOP); $$ = progp;}
         ;
 
