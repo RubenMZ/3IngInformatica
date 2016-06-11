@@ -19,7 +19,7 @@ typedef struct Symbol
 	        char *nombre;
 	        short tipo; /* NUMBER,VAR,FUNCION,INDEFINIDA,CONSTANTE */ 
 	        short subtipo;
-	        union {
+	        struct {
 		       double val;      /* VAR, NUMBER, INDEFINIDA, CONSTANTE */
 		       double (*ptr)(); /* FUNCION  */
 	        	char chain[1000];
@@ -29,7 +29,9 @@ typedef struct Symbol
 
 Symbol *install(), *install2(), *lookup();
 
-typedef union Datum { /* tipo de la pila del interprete */ 
+typedef struct Datum { /* tipo de la pila del interprete */ 
+                     short tipo;
+                     short subtipo;
                      double val;
                      Symbol *sym;
                      char chain[1000];

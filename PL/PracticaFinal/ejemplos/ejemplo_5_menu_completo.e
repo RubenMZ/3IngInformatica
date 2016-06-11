@@ -152,9 +152,7 @@ repetir
  _lugar(40,10); 
  escribir_cadena('\n Pulse una tecla para continuar --> ');
  leer_cadena(pausa);
-  escribir_cadena('\n Pulse una tecla para continuar --> ');
- leer_cadena(pausa);
- 
+
 hasta (opcion =0);             
 
 @ Despedida final
