@@ -99,12 +99,9 @@ void assign() /* asignar el valor superior al siguiente valor */
    execerror(" asignacion a un elemento que no es una variable ", 
 	     d1.sym->nombre);
 
-  if(d1.sym->subtipo == CADENA) 
-  {
-      strcpy(d1.sym->u.chain, d1.chain);
-      d1.sym->subtipo=NUMBER;
-  }
 
+  strcpy(d1.sym->u.chain, d1.chain);
+  d1.sym->subtipo=d2.subtipo;
   d1.sym->u.val=d2.val;   /* Asignar valor   */
   d1.sym->tipo=VAR;
   push(d2);               /* Apilar variable */
@@ -436,7 +433,7 @@ if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
 
 }
 
- 
+  d1.subtipo=NUMBER;
  push(d1);  /* Apilar resultado */
 }
 
@@ -466,7 +463,7 @@ if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
   }
 
 }
-
+  d1.subtipo=NUMBER;
  push(d1);    /* Apilar el resultado */
 }
 
@@ -478,11 +475,28 @@ void igual()
  d2=pop();    /* Obtener el primer numero  */
  d1=pop();    /* Obtener el segundo numero */
  
- if (d1.val == d2.val)
+
+if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
+{
+    if (d1.val == d2.val)
    d1.val= 1;
  else
    d1.val=0;
+}else{
+  if (d1.subtipo == CADENA && d2.subtipo== CADENA)
+  {
+      if ( strcmp (d1.chain, d2.chain) == 0)
+          d1.val= 1;
+      else
+          d1.val=0;
+  }else{
+     execerror("No se pueden comparar, son de distinto tipo", NULL);
+  }
+
+}
+
  
+  d1.subtipo=NUMBER;
  push(d1);    /* Apilar resultado */
 }
 
@@ -493,11 +507,24 @@ void mayor_igual()
  d2=pop();    /* Obtener el primer numero  */
  d1=pop();    /* Obtener el segundo numero */
  
- if (d1.val >= d2.val)
+if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
+{
+    if (d1.val >= d2.val)
    d1.val= 1;
  else
    d1.val=0;
- 
+}else{
+  if (d1.subtipo == CADENA && d2.subtipo== CADENA)
+  {
+      if ( strcmp (d1.chain, d2.chain) >= 0)
+          d1.val= 1;
+      else
+          d1.val=0;
+  }else{
+     execerror("No se pueden comparar, son de distinto tipo", NULL);
+  }
+ }
+  d1.subtipo=NUMBER;
  push(d1);    /* Apilar resultado */
 }
 
@@ -508,12 +535,24 @@ void menor_igual()
  
  d2=pop();     /* Obtener el primer numero  */
  d1=pop();     /* Obtener el segundo numero */
- 
- if (d1.val <= d2.val)
+ if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
+{
+    if (d1.val <= d2.val)
    d1.val= 1;
  else
    d1.val=0;
- 
+}else{
+  if (d1.subtipo == CADENA && d2.subtipo== CADENA)
+  {
+      if ( strcmp (d1.chain, d2.chain) <= 0)
+          d1.val= 1;
+      else
+          d1.val=0;
+  }else{
+     execerror("No se pueden comparar, son de distinto tipo", NULL);
+  }
+ }
+  d1.subtipo=NUMBER;
  push(d1);     /* Apilar resultado */
 }
 
@@ -524,11 +563,25 @@ void distinto()
  d2=pop();    /* Obtener el primer numero  */
  d1=pop();    /* Obtener el segundo numero */
  
+
+  if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
+{
  if (d1.val != d2.val)
    d1.val= 1;
  else
    d1.val=0;
- 
+}else{
+  if (d1.subtipo == CADENA && d2.subtipo== CADENA)
+  {
+      if ( strcmp (d1.chain, d2.chain) != 0)
+          d1.val= 1;
+      else
+          d1.val=0;
+  }else{
+     execerror("No se pueden comparar, son de distinto tipo", NULL);
+  }
+ }
+  d1.subtipo=NUMBER;
  push(d1);    /* Apilar resultado */
 }
 
@@ -552,7 +605,7 @@ if( (d1.subtipo == NUMBER && d2.subtipo == NUMBER)  )
  }
 
 
- 
+  d1.subtipo=NUMBER;
  push(d1);    /* Apilar el resultado */
 }
 
@@ -575,7 +628,7 @@ void o_logico()
  }else{
     execerror("No son numericos", NULL);
  }
-
+  d1.subtipo=NUMBER;
  push(d1);    /* Apilar resultado */
 }
 
@@ -732,7 +785,11 @@ void lugar(){
  d2=pop();  /* Obtener parametro para la funcion */
  d1=pop();  /* Obtener parametro para la funcion */
 
- LUGAR((int)d1.val, (int)d2.val);
+
+ if(d1.subtipo == NUMBER && d2.subtipo == NUMBER)
+      LUGAR((int)d1.val, (int)d2.val);
+  else
+      execerror("No son numericos", NULL);
 }
 
 void borrar(){
