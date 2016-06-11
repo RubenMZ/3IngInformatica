@@ -98,7 +98,7 @@ para:     PARA  {$$= code3(forcode, STOP, STOP); code3(STOP, STOP, STOP);}
 
 repetir:  REPETIR   {$$= code3(dowhilecode,STOP,STOP);}
         ;
-        
+
 end :    /* nada: produccion epsilon */  {code(STOP); $$ = progp;}
         ;
 
@@ -200,7 +200,7 @@ void warning(char *s, char *t)
 void execerror(s,t) /* recuperacion de errores durante la ejecucion */
 char *s,*t;
 {
- warning(s,t);
+  warning(s,t);
   longjmp(begin,0);
 }
 

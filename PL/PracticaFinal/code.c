@@ -98,6 +98,7 @@ void assign() /* asignar el valor superior al siguiente valor */
  if (d1.sym->tipo != VAR && d1.sym->tipo != INDEFINIDA)
    execerror(" asignacion a un elemento que no es una variable ", 
 	     d1.sym->nombre);
+
   if(d1.sym->subtipo == CADENA) 
   {
       strcpy(d1.sym->u.chain, d1.chain);
@@ -112,8 +113,12 @@ void assign() /* asignar el valor superior al siguiente valor */
 void constpush()  /* meter una constante en la pila */
 {
  Datum d;
- 
+
+
  d.val= ((Symbol *)*pc++)->u.val;
+ d.tipo= NUMBER;
+ d.subtipo= NUMBER;
+
  push(d);
 }
 
@@ -155,16 +160,22 @@ void escribir() /* sacar de la pila el valor superior y escribirlo */
  Datum d;
 
  d=pop();  /* Obtener numero */
-
+  if(d.subtipo==NUMBER)
    printf("\t ---> %.8g\n",d.val);
+ else
+    execerror("No es un dato numerico", NULL);
+
 }
 
 void escribircadena(){
  Datum d;
  
  d=pop();
-
+ if(d.subtipo== CADENA)
    printf("\t ---> %s\n",d.chain);
+ else
+  execerror("No es una cadena", NULL);
+
 }
 
 
@@ -307,7 +318,11 @@ void varpush()  /* meter una variable en la pila */
 {
  Datum d;
 
+
  d.sym=(Symbol *)(*pc++);
+ d.subtipo=d.sym->subtipo;
+ d.tipo = d.sym->tipo;
+
  push(d);
 }
 /****************************************************************************/
@@ -327,6 +342,8 @@ void leervariable() /* Leer una variable numerica por teclado */
     while((c=getchar())=='\n') ;
     ungetc(c,stdin);
     scanf("%lf",&variable->u.val);
+    getchar();
+    strcpy(variable->u.chain, "");
     variable->tipo=VAR;
     variable->subtipo=NUMBER;
     pc++;
@@ -339,7 +356,9 @@ void leervariable() /* Leer una variable numerica por teclado */
 void leercadena() /* Leer una variable numerica por teclado */
 {
  Symbol *variable;
+
  char c[1000];
+ char n;
  int i=0, j=0;
 
  variable = (Symbol *)(*pc); 
@@ -348,8 +367,14 @@ void leercadena() /* Leer una variable numerica por teclado */
   if ((variable->tipo == INDEFINIDA) || variable->tipo == VAR) 
     { 
     printf("Valor--> ");
+    /*while((n=getchar())=='\n') ;
+    ungetc(n,stdin);*/
     fgets(c, 1000, stdin);
     c[strlen(c)-1]='\0';
+
+    if(c[0]=='\'')
+      i=1;
+
      while (c[i] != '\0')
         {
           if ( ('\\' != c[i]) )
@@ -369,10 +394,15 @@ void leercadena() /* Leer una variable numerica por teclado */
           j++;
           i++;
         }
-        c[j-1]='\0';
+        if(c[j-1]=='\'')
+          c[j-1]='\0';
+        else
+          c[j]='\0';
+    variable->u.val=0.0;
     strcpy(variable->u.chain, c);
     variable->tipo=VAR;
     variable->subtipo=CADENA;
+    
     pc++;
    }
  else
@@ -386,10 +416,26 @@ void mayor_que()
  d2=pop();   /* Obtener el primer numero  */
  d1=pop();   /* Obtener el segundo numero */
  
- if (d1.val > d2.val)
+
+if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
+{
+     if (d1.val > d2.val)
    d1.val= 1;
  else
    d1.val=0;
+}else{
+  if (d1.subtipo == CADENA && d2.subtipo== CADENA)
+  {
+      if ( strcmp (d1.chain, d2.chain) > 0)
+          d1.val= 1;
+      else
+          d1.val=0;
+  }else{
+     execerror("No se pueden comparar, son de distinto tipo", NULL);
+  }
+
+}
+
  
  push(d1);  /* Apilar resultado */
 }
@@ -402,11 +448,25 @@ void menor_que()
  d2=pop();    /* Obtener el primer numero  */
  d1=pop();    /* Obtener el segundo numero */
  
- if (d1.val < d2.val)
+if (d1.subtipo == NUMBER && d2.subtipo== NUMBER)
+{
+    if (d1.val < d2.val)
    d1.val= 1;
  else
    d1.val=0;
- 
+}else{
+  if (d1.subtipo == CADENA && d2.subtipo== CADENA)
+  {
+      if ( strcmp (d1.chain, d2.chain) < 0)
+          d1.val= 1;
+      else
+          d1.val=0;
+  }else{
+     execerror("No se pueden comparar, son de distinto tipo", NULL);
+  }
+
+}
+
  push(d1);    /* Apilar el resultado */
 }
 
@@ -480,10 +540,18 @@ void y_logico()
  d2=pop();    /* Obtener el primer numero  */
  d1=pop();    /* Obtener el segundo numero */
  
- if (d1.val==1 && d2.val==1)
+if( (d1.subtipo == NUMBER && d2.subtipo == NUMBER)  )
+  {
+  if (d1.val==1 && d2.val==1)
    d1.val= 1;
  else 
    d1.val=0;
+ 
+ }else{
+    execerror("No son numericos", NULL);
+ }
+
+
  
  push(d1);    /* Apilar el resultado */
 }
@@ -496,11 +564,18 @@ void o_logico()
  d2=pop();    /* Obtener el primer numero  */
  d1=pop();    /* Obtener el segundo numero */
  
+
+ if( (d1.subtipo == NUMBER && d2.subtipo == NUMBER)  )
+  {
  if (d1.val==1 || d2.val==1)
    d1.val= 1;
  else
    d1.val=0;
  
+ }else{
+    execerror("No son numericos", NULL);
+ }
+
  push(d1);    /* Apilar resultado */
 }
 
@@ -511,10 +586,18 @@ void negacion()
  
  d1=pop();   /* Obtener numero */
  
+if( (d1.subtipo == NUMBER )  )
+  {
  if (d1.val==0)
    d1.val= 1;
  else
    d1.val=0;
+ 
+ }else{
+    execerror("No es numerico", NULL);
+ }
+
+ 
  
  push(d1);   /* Apilar resultado */
 }
@@ -525,11 +608,16 @@ void concatenacion(){
  
  d2=pop();                   /* Obtener el primer numero  */
  d1=pop();                   /* Obtener el segundo numero */
- if(d1.chain != "" && d2.chain != "")
-   strcat(d1.chain, d2.chain);   /* Concatenar*/
- else
-  execerror("No es una cadena", d1.chain);
 
+
+ if(d1.subtipo == CADENA && d2.subtipo == CADENA)
+   strcat(d1.chain, d2.chain);   /* Concatenar*/
+ else{
+  if(d1.subtipo == NUMBER && d2.subtipo == NUMBER)
+   execerror("Son numeros", NULL);
+    else
+   execerror("No es una cadena", NULL);
+  }
  push(d1); 
 }
 

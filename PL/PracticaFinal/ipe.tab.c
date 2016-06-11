@@ -2040,7 +2040,7 @@ void warning(char *s, char *t)
 void execerror(s,t) /* recuperacion de errores durante la ejecucion */
 char *s,*t;
 {
- warning(s,t);
+  warning(s,t);
   longjmp(begin,0);
 }
 

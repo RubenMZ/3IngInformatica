@@ -825,11 +825,11 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 69 "lexico.l"
-{double d;  
-                                   sscanf(yytext,"%lf",&d);
-                                 /* Instala el numero en la tabla de simbolos */
-					   yylval.sym=install("",NUMBER, NUMBER,d); 
-				   return NUMBER;}
+{	double d;  
+                        sscanf(yytext,"%lf",&d);
+                        /* Instala el numero en la tabla de simbolos */
+					   	yylval.sym=install("",NUMBER, NUMBER,d); 
+				   		return NUMBER;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -839,7 +839,7 @@ YY_RULE_SETUP
 			int  i = 1;
 			int  j = 0;
 			   strcpy(c, yytext);
-			   while (c[i] != '\0')
+			while (c[i] != '\0')
 			  {
 			    if ( ('\\' != c[i]) )
 			    {
@@ -857,9 +857,9 @@ YY_RULE_SETUP
 			    }
 			    j++;
 			    i++;
-			  }
-			  c[j-1]='\0';
-				yylval.sym=install2("", CADENA, CADENA, c);
+			 }
+			 c[j-1]='\0';
+			yylval.sym=install2("", CADENA, CADENA, c);
 			return CADENA;
 			}
 	YY_BREAK
