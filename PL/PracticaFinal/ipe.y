@@ -148,6 +148,7 @@ expr :    NUMBER        {$$=code2(constpush,(Inst)$1);}
 #include <ctype.h>
 #include <signal.h>
 #include <setjmp.h>
+#include <string.h>
 
 jmp_buf begin;
 char *progname;
@@ -160,13 +161,28 @@ void fpecatch();
 int main(int argc, char *argv[])
 {
 
-
+  char punto='.';
+  char* format;
 
  /* Si se invoca el intérprete con un fichero de entrada */
  /* entonces se establece como dispositivo de entrada para yylex() */
- if (argc == 2) yyin = fopen(argv[1],"r");
+ if (argc == 2){
+    FILE *  fichero=fopen(argv[1],"r");
 
+    if(fichero!=NULL){
+      format = strrchr(argv[1], punto);
+     if(strcmp(format, ".e")==0){
+       yyin = fichero;
+     }else{
+       printf("El fichero no tiene extension adecuada .e  ---> %s\n", argv[1]);
+       return 0;
+     }
+    }else{
+        printf("El fichero no existe  ---> %s\n", argv[1]);
+       return 0;
+    }
 
+  }
  progname=argv[0];
 
  /* inicializacion de la tabla de simbolos */
@@ -186,7 +202,7 @@ int main(int argc, char *argv[])
 }
 
 void yyerror(char *s)
-{
+{ 
  warning(s,(char *) 0);
 }
 

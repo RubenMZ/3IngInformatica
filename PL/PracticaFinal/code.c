@@ -236,8 +236,12 @@ void modulo()
  
  if (d2.val == 0.0)
      execerror (" Division por cero ", (char *) 0);
- 
- d1.val = (int) d1.val % (int)  d2.val;  /* Resto */
+
+ if(d1.subtipo== NUMBER && d2.subtipo ==NUMBER)
+   d1.val = (int) d1.val % (int)  d2.val;  /* Resto */
+  else
+    execerror("Deben ser de tipo numerico", NULL);
+
  push(d1);                               /* Apilar el resultado */
 }
 
@@ -247,7 +251,12 @@ void multiplicar() /* multiplicar los dos valores superiores de la pila */
  
  d2=pop();                   /* Obtener el primer numero  */
  d1=pop();                   /* Obtener el segundo numero */
- d1.val = d1.val * d2.val;   /* Multiplicar               */
+
+  if(d1.subtipo== NUMBER && d2.subtipo ==NUMBER)
+    d1.val = d1.val * d2.val;   /* Multiplicar               */
+  else
+    execerror("Deben ser de tipo numerico", NULL);
+ 
  push(d1);                   /* Apilar el resultado       */
 }
 
@@ -256,7 +265,13 @@ void negativo() /* negacion del valor superior de la pila */
  Datum d1;
  
  d1=pop();              /* Obtener numero   */
- d1.val = - d1.val;     /* Aplicar menos    */
+
+ if(d1.subtipo== NUMBER)
+    d1.val = - d1.val;     /* Aplicar menos    */    
+  else
+    execerror("Deben ser de tipo numerico", NULL);
+
+ 
  push(d1);              /* Apilar resultado */
 }
 
@@ -277,7 +292,8 @@ void potencia()  /* exponenciacion de los valores superiores de la pila */
  d2=pop();                      /* Obtener exponente   */
  d1=pop();                      /* Obtener base        */
  
- if ( (d1.val>=0) || ((int)d2.val == d2.val) )
+if(d1.subtipo== NUMBER && d2.subtipo ==NUMBER){
+    if ( (d1.val>=0) || ((int)d2.val == d2.val) )
   {
    d1.val = pow(d1.val,d2.val);   /* Elevar a potencia   */
    push(d1);                      /* Apilar el resultado */
@@ -287,7 +303,11 @@ void potencia()  /* exponenciacion de los valores superiores de la pila */
    char digitos[20];
    sprintf(digitos,"%lf",d1.val);
    execerror(" radicando negativo ", digitos);
-  }
+  }  
+}else
+    execerror("Deben ser de tipo numerico", NULL);
+
+
 
 }
 
@@ -297,7 +317,12 @@ void restar()   /* restar los dos valores superiores de la pila */
  
  d2=pop();                   /* Obtener el primer numero  */
  d1=pop();                   /* Obtener el segundo numero */
- d1.val = d1.val - d2.val;   /* Restar                    */
+
+  if(d1.subtipo== NUMBER && d2.subtipo== NUMBER)
+     d1.val = d1.val - d2.val;   /* Restar                    */  
+  else
+    execerror("Deben ser de tipo numerico", NULL);
+
  push(d1);                   /* Apilar el resultado       */
 }
 
@@ -307,7 +332,12 @@ void sumar()   /* sumar los dos valores superiores de la pila */
  
  d2=pop();                   /* Obtener el primer numero  */
  d1=pop();                   /* Obtener el segundo numero */
- d1.val = d1.val + d2.val;   /* Sumar                     */
+
+  if(d1.subtipo== NUMBER && d2.subtipo== NUMBER)
+    d1.val = d1.val + d2.val;   /* Sumar                     */
+  else
+    execerror("Deben ser de tipo numerico", NULL);
+ 
  push(d1);                   /* Apilar el resultado       */
 }
 

@@ -3,6 +3,7 @@
 #include "ipe.h"
 #include "ipe.tab.h"
 #include <string.h>
+#include <ctype.h>
 
 extern char *progname;
 extern int lineno;

@@ -523,6 +523,7 @@ char *yytext;
 #include "ipe.h"
 #include "ipe.tab.h"
 #include <string.h>
+#include <ctype.h>
 
 extern char *progname;
 extern int lineno;
@@ -531,7 +532,7 @@ int numComentarioLinea=0;
 /* definiciones regulares */
 
 
-#line 535 "lex.yy.c"
+#line 536 "lex.yy.c"
 
 #define INITIAL 0
 #define ESTADO_COMENTARIO 1
@@ -723,11 +724,11 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 64 "lexico.l"
+#line 65 "lexico.l"
 
 
 
-#line 731 "lex.yy.c"
+#line 732 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -819,12 +820,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 67 "lexico.l"
+#line 68 "lexico.l"
 { ; } /* saltar los espacios y los tabuladores */
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 69 "lexico.l"
+#line 70 "lexico.l"
 {	double d;  
                         sscanf(yytext,"%lf",&d);
                         /* Instala el numero en la tabla de simbolos */
@@ -833,7 +834,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 75 "lexico.l"
+#line 76 "lexico.l"
 {char *c;
 			c=(char*)malloc(strlen(yytext)+1);
 			int  i = 1;
@@ -865,7 +866,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 104 "lexico.l"
+#line 105 "lexico.l"
 { Symbol *s;
 					int i=0;
 					for(i=0; yytext[i]; i++){
@@ -878,144 +879,144 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 114 "lexico.l"
+#line 115 "lexico.l"
 {return ASIGNACION;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 115 "lexico.l"
+#line 116 "lexico.l"
 {return SUMA;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 116 "lexico.l"
+#line 117 "lexico.l"
 {return RESTA;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 117 "lexico.l"
+#line 118 "lexico.l"
 {return PROD;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 118 "lexico.l"
+#line 119 "lexico.l"
 {return DIV;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 119 "lexico.l"
+#line 120 "lexico.l"
 {return TOKEN_BORRAR;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 120 "lexico.l"
+#line 121 "lexico.l"
 {return TOKEN_LUGAR;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 121 "lexico.l"
+#line 122 "lexico.l"
 {return DIV_INT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 122 "lexico.l"
+#line 123 "lexico.l"
 {return MOD;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 123 "lexico.l"
+#line 124 "lexico.l"
 {return POT;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 124 "lexico.l"
+#line 125 "lexico.l"
 {return CONCAT;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 125 "lexico.l"
+#line 126 "lexico.l"
 {return MENOR_QUE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 126 "lexico.l"
+#line 127 "lexico.l"
 {return MENOR_IGUAL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 127 "lexico.l"
+#line 128 "lexico.l"
 {return MAYOR_QUE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 128 "lexico.l"
+#line 129 "lexico.l"
 {return MAYOR_IGUAL;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 129 "lexico.l"
+#line 130 "lexico.l"
 {return IGUAL;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 130 "lexico.l"
+#line 131 "lexico.l"
 {return DISTINTO;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 131 "lexico.l"
+#line 132 "lexico.l"
 {return O_LOGICO;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 132 "lexico.l"
+#line 133 "lexico.l"
 {return Y_LOGICO;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 133 "lexico.l"
+#line 134 "lexico.l"
 {return NO_LOGICO;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 135 "lexico.l"
+#line 136 "lexico.l"
 {BEGIN ESTADO_COMENTARIO;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 136 "lexico.l"
+#line 137 "lexico.l"
 {BEGIN 0; ;}      
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 137 "lexico.l"
+#line 138 "lexico.l"
 {yymore();}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 138 "lexico.l"
+#line 139 "lexico.l"
 {yymore();}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 140 "lexico.l"
+#line 141 "lexico.l"
 {BEGIN ESTADO_COMENTARIO_LINEA;}
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 141 "lexico.l"
+#line 142 "lexico.l"
 {BEGIN 0;;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 142 "lexico.l"
+#line 143 "lexico.l"
 {yymore();}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 144 "lexico.l"
+#line 145 "lexico.l"
 { 
  	  BORRAR; 
 	  LUGAR(10,10);
@@ -1030,20 +1031,20 @@ YY_RULE_SETUP
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 154 "lexico.l"
+#line 155 "lexico.l"
 {lineno++; } /* no se devuelve nada, continúa el analisis léxico */
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 155 "lexico.l"
+#line 156 "lexico.l"
 {return yytext[0];}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 156 "lexico.l"
+#line 157 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 1047 "lex.yy.c"
+#line 1048 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ESTADO_COMENTARIO):
 case YY_STATE_EOF(ESTADO_COMENTARIO_LINEA):
@@ -2046,4 +2047,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 156 "lexico.l"
+#line 157 "lexico.l"
